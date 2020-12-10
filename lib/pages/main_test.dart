@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ice_app/models/delivery_route.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:flushbar/flushbar_helper.dart';
 
 import '../scoped-models/main.dart';
 import '../pages/products.dart';
@@ -57,6 +58,12 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
     });
   }
 
+  void showInfoFlushbar(BuildContext context) {
+    FlushbarHelper.createInformation(
+            message: 'บันทึกข้อมูลเรียบร้อย', title: 'แจ่งให้ทราบ')
+        .show(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> tabs = [
@@ -90,6 +97,7 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
               color: Colors.white,
             ),
             onPressed: () {
+              showInfoFlushbar(context);
               // showSearch(context: context, delegate: DataSearch());
             },
           ),

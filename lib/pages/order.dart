@@ -139,7 +139,7 @@ class _OrderPageState extends State<OrderPage> {
       //   'ตรวจสอบผลการเรียน',
       //   style: TextStyle(fontWeight: FontWeight.bold),
       // )),
-      // persistentFooterButtons: <Widget>[
+      // persistentTopButtons: <Widget>[
       //   new IconButton(icon: new Icon(Icons.timer), onPressed: () => ''),
       //   new IconButton(icon: new Icon(Icons.people), onPressed: () => ''),
       //   new IconButton(icon: new Icon(Icons.map), onPressed: () => ''),

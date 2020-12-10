@@ -39,6 +39,7 @@ dependencies:
   carousel_pro: ^0.0.13
   rflutter_alert: ^1.0.3
   connectivity: ^2.0.2
+  flushbar: ^1.5.0
 
 dev_dependencies:
   flutter_test:
