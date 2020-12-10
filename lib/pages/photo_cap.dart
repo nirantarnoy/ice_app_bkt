@@ -13,7 +13,7 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen> {
   File imageFile;
   final _picker = ImagePicker();
-  ActivitityConnection activity_con = new ActivitityConnection();
+
 
   Future _openGallery(BuildContext context) async {
     final picture = await _picker.getImage(source: ImageSource.gallery);
