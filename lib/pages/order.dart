@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:connectivity/connectivity.dart';
 
+import 'package:ice_app/helpers/activity_connection.dart';
 import 'package:ice_app/widgets/order/order_item.dart';
 import 'package:ice_app/widgets/order/order_product_item.dart';
 import '../scoped-models/main.dart';
@@ -19,7 +22,12 @@ class _OrderPageState extends State<OrderPage> {
   @override
   initState() {
     _checkinternet();
-    widget.model.fetchOrders();
+    try{
+       widget.model.fetchOrders();
+    } on TimeoutException catch(_){
+        _showdialog('Noity', 'Connection time out!');
+    }
+   
     super.initState();
   }
 
@@ -53,6 +61,8 @@ class _OrderPageState extends State<OrderPage> {
           );
         });
   }
+
+  
 
   Widget _buildOrdersList() {
     return ScopedModelDescendant(
@@ -150,7 +160,7 @@ class _OrderPageState extends State<OrderPage> {
           style: TextStyle(fontSize: 20),
         ),
         new Text(
-          '2,50000',
+          '25,000',
           style: TextStyle(fontSize: 20, color: Colors.orange),
         ),
         new Text(
