@@ -16,11 +16,11 @@ class OrderCreatePage extends StatefulWidget {
 class _OrderCreatePageState extends State<OrderCreatePage> {
   @override
   initState() {
-    widget.model.fetchOrders();
+    widget.model.fetchProducts();
     super.initState();
   }
 
-  Widget _buildOrdersList() {
+  Widget _buildOrderProductList() {
     return ScopedModelDescendant(
       builder: (BuildContext context, Widget child, MainModel model) {
         Widget content = Center(
@@ -29,76 +29,77 @@ class _OrderCreatePageState extends State<OrderCreatePage> {
           style: TextStyle(
               fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.grey),
         ));
-        print("data length = " + model.displayedOrders.length.toString());
-        if (model.displayedOrders.length > 0 && !model.isLoading) {
+        //  print("data length = " + model.displayedProducts.length.toString());
+        if (model.displayedProducts.length > 0 && !model.isLoading) {
           content = OrderProductItem();
         } else if (model.isLoading) {
           content = Center(child: CircularProgressIndicator());
         }
 
         return RefreshIndicator(
-          onRefresh: model.fetchOrders,
+          onRefresh: model.fetchProducts,
           child: content,
         );
       },
     );
   }
 
-  Widget _openPopup(context) {
-    Alert(
-        context: context,
-        title: "บันทึกรายการขาย",
-        content: Column(
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(
-                // icon: Icon(Icons.account_circle),
-                labelText: 'Username',
-              ),
-            ),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                // icon: Icon(Icons.lock),
-                labelText: 'Password',
-              ),
-            ),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                // icon: Icon(Icons.lock),
-                labelText: 'Password',
-              ),
-            ),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                // icon: Icon(Icons.lock),
-                labelText: 'Password',
-              ),
-            ),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                // icon: Icon(Icons.lock),
-                labelText: 'Password',
-              ),
-            ),
-          ],
-        ),
-        buttons: [
-          DialogButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              "บันทึก",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          )
-        ]).show();
-  }
+  // Widget _openPopup(context) {
+  //   Alert(
+  //       context: context,
+  //       title: "บันทึกรายการขาย",
+  //       content: Column(
+  //         children: <Widget>[
+  //           TextField(
+  //             decoration: InputDecoration(
+  //               // icon: Icon(Icons.account_circle),
+  //               labelText: 'Username',
+  //             ),
+  //           ),
+  //           TextField(
+  //             obscureText: true,
+  //             decoration: InputDecoration(
+  //               // icon: Icon(Icons.lock),
+  //               labelText: 'Password',
+  //             ),
+  //           ),
+  //           TextField(
+  //             obscureText: true,
+  //             decoration: InputDecoration(
+  //               // icon: Icon(Icons.lock),
+  //               labelText: 'Password',
+  //             ),
+  //           ),
+  //           TextField(
+  //             obscureText: true,
+  //             decoration: InputDecoration(
+  //               // icon: Icon(Icons.lock),
+  //               labelText: 'Password',
+  //             ),
+  //           ),
+  //           TextField(
+  //             obscureText: true,
+  //             decoration: InputDecoration(
+  //               // icon: Icon(Icons.lock),
+  //               labelText: 'Password',
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //       buttons: [
+  //         DialogButton(
+  //           onPressed: () => Navigator.pop(context),
+  //           child: Text(
+  //             "บันทึก",
+  //             style: TextStyle(color: Colors.white, fontSize: 20),
+  //           ),
+  //         )
+  //       ]).show();
+  // }
 
   @override
   Widget build(BuildContext context) {
+    print('Order product item create');
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -113,7 +114,7 @@ class _OrderCreatePageState extends State<OrderCreatePage> {
       //   new IconButton(icon: new Icon(Icons.map), onPressed: () => ''),
       // ],
 
-      body: _buildOrdersList(),
+      body: _buildOrderProductList(),
     );
   }
 }

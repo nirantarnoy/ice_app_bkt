@@ -15,7 +15,7 @@ mixin ConnectedOrdersModel on Model {
   // final url = "http://192.168.1.103/school/backend/web/index.php?r=site/apilogin";http://localhost/testapi/login.php
   //final url_orders = "http://192.168.1.103/school/frontend/web/api/user/exam";
   // final url_orders = "http://192.168.1.103/school/frontend/web/api/user/news";
-  final url_product =
+  final url_order =
       "http://192.168.1.101/icesystem/backend/web/index.php?r=member/get-order";
 }
 
@@ -64,7 +64,7 @@ mixin OrdersModel on ConnectedOrdersModel {
     http.Response response;
     if (1 > 0) {
       response = await http.post(
-        Uri.encodeFull(url_product),
+        Uri.encodeFull(url_order),
         body: json.encode(currStudent),
         headers: {'Content-Type': 'application/json'},
       );

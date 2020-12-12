@@ -16,13 +16,10 @@ mixin ConnectedProductsModel on Model {
   //final url_products = "http://192.168.1.103/school/frontend/web/api/user/exam";
   // final url_products = "http://192.168.1.103/school/frontend/web/api/user/news";
   final url_product =
-      "http://192.168.1.101/icesystem/backend/web/index.php?r=member/get-product";
+      "http://192.168.1.101/icesystem/backend/web/index.php?r=member/get-products";
 }
 
 mixin ProductsModel on ConnectedProductsModel {
-  PublishSubject<bool> _productsubject = PublishSubject();
-  PublishSubject<bool> _profileSubject = PublishSubject();
-
   Products get products {
     return _dataProducts;
   }
@@ -55,8 +52,8 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  PublishSubject<bool> get newsSubject {
-    return _productsubject;
+  bool get is_product_load {
+    return _isLoading;
   }
 
   Future<Null> fetchProducts({onlyForUser: false}) async {
@@ -72,25 +69,25 @@ mixin ProductsModel on ConnectedProductsModel {
         headers: {'Content-Type': 'application/json'},
       );
     }
-    print("api status: ${response.statusCode}");
+    print("api product status: ${response.statusCode}");
     if (response.statusCode == 200) {
-      print("api status: ${response.body}");
+      print("api product status: ${response.body}");
 
       final List<Products> fetchedProductList = [];
-      final Map<String, dynamic> producttListData = json.decode(response.body);
-      print("data news: ${producttListData['data'][0]}");
-      if (producttListData == null) {
+      final Map<String, dynamic> productListData = json.decode(response.body);
+      print("data product item: ${productListData['data'][0]}");
+      if (productListData == null) {
         _isLoading = false;
         notifyListeners();
         return;
       }
 
-      for (int i = 0; i <= producttListData['data'].length - 1; i++) {
+      for (int i = 0; i <= productListData['data'].length - 1; i++) {
         //print(newstListData['data'][i]['subject_code']);
         final Products productresult = Products(
-          id: producttListData['data'][i]['id'],
-          code: producttListData['data'][i]['code'],
-          name: producttListData['data'][i]['name'],
+          id: productListData['data'][i]['id'],
+          code: productListData['data'][i]['code'],
+          name: productListData['data'][i]['name'],
         );
         fetchedProductList.add(productresult);
       }

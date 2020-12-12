@@ -2,38 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../../scoped-models/main.dart';
-import '../../models/orders.dart';
+import '../../models/products.dart';
 
 class OrderProductItem extends StatelessWidget {
-  List<Orders> _orders = [];
-  Widget _buildordersList(List<Orders> orders) {
-    Widget orderCards;
-    if (orders.length > 0) {
-      print("has list");
-      // orderCards = GridView.count(
-      //     crossAxisCount: 4,
-      //     scrollDirection: Axis.horizontal,
-      //     children: List.generate(orders.length, (index) {
-      //       return Items(
-      //           orders[index].id,
-      //           orders[index].order_no,
-      //           orders[index].customer_name,
-      //           orders[index].order_date,
-      //           orders[index].note);
-      //     }));
-      orderCards = new GridView.builder(
-          itemCount: orders.length,
-          gridDelegate:
-              new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+  List<Products> _products = [];
+  Widget _buildproductList(List<Products> products) {
+    Widget productCards;
+    if (products.length > 0) {
+      print("has product item list");
+      productCards = new GridView.builder(
+          shrinkWrap: true,
+          itemCount: products.length,
+          physics: NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 1),
+          gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            mainAxisSpacing: 2,
+            crossAxisSpacing: 2,
+            childAspectRatio: 1,
+          ),
           itemBuilder: (BuildContext context, int index) {
             return Items(
-                orders[index].id,
-                orders[index].order_no,
-                orders[index].customer_name,
-                orders[index].order_date,
-                orders[index].note);
+              products[index].id,
+              products[index].code,
+              products[index].name,
+            );
           });
-      return orderCards;
+      return productCards;
     } else {
       print("no data");
     }
@@ -41,49 +36,263 @@ class OrderProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('[orders Widget] build()');
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget child, MainModel model) {
-        return _buildordersList(model.allorders);
+        return _buildproductList(model.allProducts);
       },
     );
   }
 }
 
 class Items extends StatelessWidget {
-  //orders _orders;
+  //orders _products;
   final int _id;
-  final String _order_no;
-  final String _customer_name;
-  final String _order_date;
-  final String _note;
+  final String _code;
+  final String _name;
 
-  Items(this._id, this._order_no, this._customer_name, this._order_date,
-      this._note);
+  Items(this._id, this._code, this._name);
+
+  _getDropdownItems() {
+    List<DropdownMenuItem<String>> items = new List();
+    items.add(new DropdownMenuItem(
+      child: Text('ร้านป้าสี สามพราน'),
+      value: '1',
+    ));
+    items.add(new DropdownMenuItem(
+      child: Text('ร้านน้องปัน'),
+      value: '2',
+    ));
+
+    return items;
+  }
+
+  void _editBottomSheet(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            height: MediaQuery.of(context).size.height * 0.9,
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      ),
+                      Text("สินค้าที่เลือก"),
+                      Spacer(),
+                      IconButton(
+                          icon: Icon(Icons.cancel, color: Colors.red, size: 25),
+                          onPressed: () => Navigator.of(context).pop())
+                    ],
+                  ),
+                  Row(children: <Widget>[
+                    Text(
+                      "PB น้ำแข็งแพ็คหลอดใหญ่",
+                      style: TextStyle(color: Colors.green[900], fontSize: 20),
+                    )
+                  ]),
+                  SizedBox(height: 20),
+                  Row(children: <Widget>[
+                    Padding(padding: EdgeInsets.all(2.0)),
+                    Expanded(
+                        child: TextField(
+                      textAlign: TextAlign.center,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          // border: InputBorder.none,
+                          hintText: "0",
+                          hintStyle: TextStyle(color: Colors.grey)),
+                      style: TextStyle(
+                          fontSize: 40, color: Colors.deepPurple[400]),
+                    )),
+                  ]),
+                  SizedBox(height: 10),
+                  // Row(children: <Widget>[
+                  //   Padding(padding: EdgeInsets.all(5.0)),
+                  //   Expanded(
+                  //       child: ),
+                  // ]),
+                  Expanded(
+                      flex: 2,
+                      child: Row(
+                        children: [
+                          Expanded(
+                              flex: 3,
+                              child: Container(
+                                  padding: EdgeInsets.all(20),
+                                  alignment: Alignment.center,
+                                  //color: Colors.green[500],
+                                  child: DropdownButton(
+                                    hint: Text(
+                                      'เลือกรายการลูกค้า',
+                                      style: TextStyle(fontSize: 20.0),
+                                    ),
+                                    items: _getDropdownItems,
+                                  ))),
+                          // Expanded(
+                          //     flex: 3,
+                          //     child: Container(
+                          //       padding: EdgeInsets.symmetric(
+                          //           horizontal: 15, vertical: 10),
+                          //       decoration: BoxDecoration(
+                          //           borderRadius: BorderRadius.circular(10),
+                          //           color: Colors.grey.withOpacity(.10)),
+                          //       child: TextField(
+                          //         style: TextStyle(color: Colors.white),
+                          //         decoration: InputDecoration(
+                          //             border: InputBorder.none,
+                          //             hintText: "เลือกรายการลูกค้า",
+                          //             hintStyle: TextStyle(color: Colors.grey)),
+                          //       ),
+                          //     )),
+                          Expanded(
+                              flex: 1,
+                              child: Container(
+                                  padding: EdgeInsets.all(2),
+                                  alignment: Alignment.center,
+                                  // color: Colors.amber,
+                                  child: MaterialButton(
+                                    padding: EdgeInsets.all(2),
+                                    color: Colors.orange,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(100)),
+                                    child: Align(
+                                      child: Text(
+                                        'ค้นหา',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 20),
+                                      ),
+                                    ),
+                                    onPressed: () => showSearch(
+                                        context: context,
+                                        delegate: CustomerSearch()),
+                                  ))),
+                        ],
+                      )),
+                  SizedBox(height: 90),
+                  Expanded(
+                      flex: 2,
+                      child: Row(
+                        children: [
+                          Expanded(
+                              flex: 2,
+                              child: Container(
+                                  padding: EdgeInsets.all(2),
+                                  alignment: Alignment.center,
+                                  //color: Colors.green[500],
+                                  child: MaterialButton(
+                                    padding: EdgeInsets.all(20),
+                                    color: Colors.green,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(50)),
+                                    child: Align(
+                                      child: Text(
+                                        'เงินสด',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 20),
+                                      ),
+                                    ),
+                                    onPressed: () => {},
+                                  ))),
+                          Expanded(
+                              flex: 2,
+                              child: Container(
+                                  padding: EdgeInsets.all(2),
+                                  alignment: Alignment.center,
+                                  // color: Colors.amber,
+                                  child: MaterialButton(
+                                    padding: EdgeInsets.all(20),
+                                    color: Colors.blue,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(50)),
+                                    child: Align(
+                                      child: Text(
+                                        'เงินเชื่อ',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 20),
+                                      ),
+                                    ),
+                                    onPressed: () => {},
+                                  ))),
+                        ],
+                      ))
+
+                  // Row(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: <Widget>[
+                  //       MaterialButton(
+                  //         padding: EdgeInsets.all(20),
+                  //         color: Colors.blue,
+                  //         shape: RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(10)),
+                  //         child: Align(
+                  //           child: Text(
+                  //             'ซื้อเงินสด',
+                  //             style: TextStyle(color: Colors.white),
+                  //           ),
+                  //         ),
+                  //         onPressed: () => {},
+                  //       )
+                  //     ]),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Card(
-          color: Colors.amberAccent,
-          child: ListTile(
-            // leading: Icon(
-            //   Icons.shopping_cart_outlined,
-            //   color: Colors.blueAccent,
-            //   size: 50.0,
-            // ),
-            leading: Text(
-              "$_id",
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        // child: Card(
+        //     color: Colors.blueGrey,
+        //     child: ListTile(
+        //       // leading: Icon(
+        //       //   Icons.shopping_cart_outlined,
+        //       //   color: Colors.blueAccent,
+        //       //   size: 50.0,
+        //       // ),
+        //       leading: Text(
+        //         "$_code",
+        //         style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        //       ),
+        //       title: Text(
+        //         "$_name",
+        //         style: TextStyle(
+        //           fontSize: 20,
+        //         ),
+        //       ),
+        //       subtitle: Text("xx"),
+        //     )),
+        child: Card(
+      child: Hero(
+        tag: "$_id",
+        child: Material(
+          child: InkWell(
+            onTap: () => _editBottomSheet(context),
+            child: Wrap(
+              children: [
+                Column(
+                  children: [
+                    Image.asset("assets/ice_cube.png"),
+                    Center(
+                      child: Text("$_name"),
+                    )
+                  ],
+                )
+              ],
             ),
-            title: Text(
-              "$_order_no $_note",
-              style: TextStyle(
-                fontSize: 20,
-              ),
-            ),
-            subtitle: Text("น้ำแข็งหลอดเล็ก"),
-          )),
-    );
+          ),
+        ),
+      ),
+    ));
     // return new GestureDetector(
     //   onTap: () =>
     //       Navigator.pushNamed(context, '/ordersdetail/' + this._id.toString()),
@@ -103,5 +312,29 @@ class Items extends StatelessWidget {
     //     subtitle: Text("$_order_date ($_customer_name)"),
     //   )),
     // );
+  }
+}
+
+class CustomerSearch extends SearchDelegate<Products> {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [IconButton(icon: Icon(Icons.clear), onPressed: () {})];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    IconButton(icon: Icon(Icons.arrow_back), onPressed: () {});
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // TODO: implement buildResults
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // TODO: implement buildSuggestions
+    throw UnimplementedError();
   }
 }

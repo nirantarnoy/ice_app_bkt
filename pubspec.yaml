@@ -68,6 +68,7 @@ flutter:
     - assets/student.jpg
     - assets/student2.jpg
     - assets/school.jpg
+    - assets/ice_cube.png
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

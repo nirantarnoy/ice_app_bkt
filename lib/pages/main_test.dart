@@ -3,6 +3,7 @@ import 'package:ice_app/models/delivery_route.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flushbar/flushbar_helper.dart';
+import 'package:flushbar/flushbar.dart';
 
 import '../scoped-models/main.dart';
 import '../pages/products.dart';
@@ -58,10 +59,26 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
     });
   }
 
+  void show_Title_n_message_Flushbar(BuildContext context) {
+    Flushbar(
+      title: 'Success',
+      message: 'Form Submitted successfully',
+      icon: Icon(
+        Icons.done_outline,
+        size: 28,
+        color: Colors.green.shade300,
+      ),
+      leftBarIndicatorColor: Colors.blue.shade300,
+      duration: Duration(seconds: 3),
+    )..show(context);
+  }
+
   void showInfoFlushbar(BuildContext context) {
     FlushbarHelper.createInformation(
-            message: 'บันทึกข้อมูลเรียบร้อย', title: 'แจ่งให้ทราบ')
-        .show(context);
+      message: 'บันทึกข้อมูลเรียบร้อย',
+      title: 'แจ้งให้ทราบ',
+      duration: const Duration(seconds: 5),
+    ).show(context);
   }
 
   @override
@@ -97,7 +114,8 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
               color: Colors.white,
             ),
             onPressed: () {
-              showInfoFlushbar(context);
+              //showInfoFlushbar(context);
+              show_Title_n_message_Flushbar(context);
               // showSearch(context: context, delegate: DataSearch());
             },
           ),

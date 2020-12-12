@@ -22,12 +22,12 @@ class _OrderPageState extends State<OrderPage> {
   @override
   initState() {
     _checkinternet();
-    try{
-       widget.model.fetchOrders();
-    } on TimeoutException catch(_){
-        _showdialog('Noity', 'Connection time out!');
+    try {
+      widget.model.fetchOrders();
+    } on TimeoutException catch (_) {
+      _showdialog('Noity', 'Connection time out!');
     }
-   
+
     super.initState();
   }
 
@@ -62,8 +62,6 @@ class _OrderPageState extends State<OrderPage> {
         });
   }
 
-  
-
   Widget _buildOrdersList() {
     return ScopedModelDescendant(
       builder: (BuildContext context, Widget child, MainModel model) {
@@ -75,7 +73,7 @@ class _OrderPageState extends State<OrderPage> {
         ));
         print("data length = " + model.displayedOrders.length.toString());
         if (model.displayedOrders.length > 0 && !model.is_order_load) {
-          content = OrderItem();
+          content = Container(child: OrderItem());
         } else if (model.is_order_load) {
           content = Center(child: CircularProgressIndicator());
         }
