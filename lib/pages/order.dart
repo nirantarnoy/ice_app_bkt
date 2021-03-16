@@ -1,19 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:ice_app_new/widgets/order/order_item.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:connectivity/connectivity.dart';
 
-import 'package:ice_app/helpers/activity_connection.dart';
-import 'package:ice_app/widgets/order/order_item.dart';
-import 'package:ice_app/widgets/order/order_product_item.dart';
-import '../scoped-models/main.dart';
+import 'package:ice_app_new/helpers/activity_connection.dart';
+import 'package:provider/provider.dart';
+
+import 'package:ice_app_new/providers/order.dart';
 
 class OrderPage extends StatefulWidget {
-  final MainModel model;
-
-  OrderPage(this.model);
   @override
   _OrderPageState createState() => _OrderPageState();
 }
@@ -22,11 +20,11 @@ class _OrderPageState extends State<OrderPage> {
   @override
   initState() {
     _checkinternet();
-    try {
-      widget.model.fetchOrders();
-    } on TimeoutException catch (_) {
-      _showdialog('Noity', 'Connection time out!');
-    }
+    // try {
+    //   widget.model.fetchOrders();
+    // } on TimeoutException catch (_) {
+    //   _showdialog('Noity', 'Connection time out!');
+    // }
 
     super.initState();
   }
@@ -63,26 +61,24 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   Widget _buildOrdersList() {
-    return ScopedModelDescendant(
-      builder: (BuildContext context, Widget child, MainModel model) {
-        Widget content = Center(
-            child: Text(
-          'ไม่พบข้อมูล!',
-          style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.grey),
-        ));
-        print("data length = " + model.displayedOrders.length.toString());
-        if (model.displayedOrders.length > 0 && !model.is_order_load) {
-          content = Container(child: OrderItem());
-        } else if (model.is_order_load) {
-          content = Center(child: CircularProgressIndicator());
-        }
+    final OrderData orders = Provider.of<OrderData>(context);
+    orders.fetOrders();
+    Widget content = Center(
+        child: Text(
+      'ไม่พบข้อมูล!',
+      style: TextStyle(
+          fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.grey),
+    ));
+    print("data length = " + orders.listorder.length.toString());
+    if (orders.listorder.length > 0 && !orders.is_loading) {
+      content = Container(child: OrderItem());
+    } else if (orders.is_loading) {
+      content = Center(child: CircularProgressIndicator());
+    }
 
-        return RefreshIndicator(
-          onRefresh: model.fetchOrders,
-          child: content,
-        );
-      },
+    return RefreshIndicator(
+      onRefresh: orders.fetOrders,
+      child: content,
     );
   }
 
@@ -142,31 +138,20 @@ class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //     title: Text(
-      //   'ตรวจสอบผลการเรียน',
-      //   style: TextStyle(fontWeight: FontWeight.bold),
-      // )),
-      // persistentTopButtons: <Widget>[
-      //   new IconButton(icon: new Icon(Icons.timer), onPressed: () => ''),
-      //   new IconButton(icon: new Icon(Icons.people), onPressed: () => ''),
-      //   new IconButton(icon: new Icon(Icons.map), onPressed: () => ''),
+      // persistentFooterButtons: <Widget>[
+      //   new Text(
+      //     'ยอดรวม',
+      //     style: TextStyle(fontSize: 20),
+      //   ),
+      //   new Text(
+      //     '25,000',
+      //     style: TextStyle(fontSize: 20, color: Colors.orange),
+      //   ),
+      //   new Text(
+      //     'บาท',
+      //     style: TextStyle(fontSize: 20),
+      //   ),
       // ],
-      persistentFooterButtons: <Widget>[
-        new Text(
-          'ยอดรวม',
-          style: TextStyle(fontSize: 20),
-        ),
-        new Text(
-          '25,000',
-          style: TextStyle(fontSize: 20, color: Colors.orange),
-        ),
-        new Text(
-          'บาท',
-          style: TextStyle(fontSize: 20),
-        ),
-      ],
-
       body: _buildOrdersList(),
     );
   }

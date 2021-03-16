@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
-import 'pages/auth.dart';
+//import 'pages/auth.dart';
 
-import 'pages/main_page.dart';
-import 'scoped-models/main.dart';
+import 'providers/product.dart';
+import 'providers/customer.dart';
 import 'pages/main_test.dart';
 import 'pages/photo_cap.dart';
 
-void main() => runApp(MyApp());
+//void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -18,25 +25,25 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final MainModel _model = MainModel();
   bool _isAuthenticated = false;
 
   @override
   void initState() {
-    _model.autoAuthenticate();
-    _model.userSubject.listen((bool isAuthenticated) {
-      setState(() {
-        _isAuthenticated = isAuthenticated;
-      });
+    setState(() {
+      _isAuthenticated = true;
     });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     print('building main page');
-    return ScopedModel<MainModel>(
-      model: _model,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ProductData>.value(value: ProductData()),
+        ChangeNotifierProvider<CustomerData>.value(value: CustomerData())
+      ],
       child: MaterialApp(
         // debugShowMaterialGrid: true,
         debugShowCheckedModeBanner: false,
@@ -49,15 +56,15 @@ class _MyAppState extends State<MyApp> {
         // home: AuthPage(),
         routes: {
           '/': (BuildContext context) => !_isAuthenticated
-              ? MainTest(_model)
-              : MainPage(_model), //LandingScreen MainTest(_model)
+              ? MainTest()
+              : MainTest(), //LandingScreen MainTest(_model)
           '/admin': (BuildContext context) =>
-              !_isAuthenticated ? MainTest(_model) : MainPage(_model),
+              !_isAuthenticated ? MainTest() : MainTest(),
         },
         onGenerateRoute: (RouteSettings settings) {
           if (!_isAuthenticated) {
             return MaterialPageRoute<bool>(
-              builder: (BuildContext context) => AuthPage(),
+              builder: (BuildContext context) => MainTest(),
             );
           }
           final List<String> pathElements = settings.name.split('/');
@@ -70,7 +77,7 @@ class _MyAppState extends State<MyApp> {
         onUnknownRoute: (RouteSettings settings) {
           return MaterialPageRoute(
               builder: (BuildContext context) =>
-                  !_isAuthenticated ? AuthPage() : MainPage(_model));
+                  !_isAuthenticated ? MainTest() : MainTest());
         },
       ),
     );

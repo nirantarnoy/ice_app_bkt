@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:scoped_model/scoped_model.dart';
-import 'package:ice_app/widgets/product/product_item.dart';
-import '../scoped-models/main.dart';
+
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:connectivity/connectivity.dart';
+
+import 'package:ice_app_new/helpers/activity_connection.dart';
+import 'package:provider/provider.dart';
+import 'package:ice_app_new/providers/product.dart';
+import 'package:ice_app_new/widgets/product/product_item.dart';
 
 class ProductPage extends StatefulWidget {
-  final MainModel model;
-
-  ProductPage(this.model);
   @override
   _ProductPageState createState() => _ProductPageState();
 }
@@ -14,42 +18,93 @@ class ProductPage extends StatefulWidget {
 class _ProductPageState extends State<ProductPage> {
   @override
   initState() {
-    widget.model.fetchProducts();
+    _checkinternet();
+    // try {
+    //   widget.model.fetchOrders();
+    // } on TimeoutException catch (_) {
+    //   _showdialog('Noity', 'Connection time out!');
+    // }
+
     super.initState();
   }
 
-  Widget _buildProductsList() {
-    return ScopedModelDescendant(
-      builder: (BuildContext context, Widget child, MainModel model) {
-        Widget content = Center(
-            child: Text(
-          'ไม่พบข้อมูล!',
-          style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.grey),
-        ));
-        print("data length = " + model.displayedProducts.length.toString());
-        if (model.displayedProducts.length > 0 && !model.isLoading) {
-          content = ProductItem();
-        } else if (model.isLoading) {
-          content = Center(child: CircularProgressIndicator());
-        }
-        return RefreshIndicator(
-          onRefresh: model.fetchProducts,
-          child: content,
-        );
-      },
+  Future<void> _checkinternet() async {
+    var result = await Connectivity().checkConnectivity();
+
+    if (result == ConnectivityResult.none) {
+      _showdialog('พบข้อผิดพลาด!',
+          'กรุณาตรวจสอบการเชื่อมต่ออินเตอร์เน็ตของคุณแล้วลองอีกครั้ง');
+    } else if (result == ConnectivityResult.mobile) {
+      //_showdialog('Intenet access', 'You are connect mobile data');
+    }
+    if (result == ConnectivityResult.wifi) {
+      //_showdialog('Intenet access', 'You are connect wifi');
+    }
+  }
+
+  _showdialog(title, text) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(title),
+            content: Text(text),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('ok'))
+            ],
+          );
+        });
+  }
+
+  Widget _buildProductList() {
+    final ProductData products = Provider.of<ProductData>(context);
+    products.fetProducts();
+    Widget content = Center(
+        child: Text(
+      'ไม่พบข้อมูล!',
+      style: TextStyle(
+          fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.grey),
+    ));
+    //print("data length = " + products.listproduct.toString());
+    if (products.listproduct.length > 0 && !products.is_loading) {
+      content = Container(child: ProductItem());
+    } else if (products.is_loading) {
+      content = Center(child: CircularProgressIndicator());
+    }
+
+    return RefreshIndicator(
+      onRefresh: products.fetProducts,
+      child: content,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(
-      //     title: Text(
-      //   'ตรวจสอบผลการเรียน',
-      //   style: TextStyle(fontWeight: FontWeight.bold),
-      // )),
-      body: _buildProductsList(),
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomPadding: false,
+        // persistentFooterButtons: <Widget>[
+        //   new Text(
+        //     'ยอดรวม',
+        //     style: TextStyle(fontSize: 20),
+        //   ),
+        //   new Text(
+        //     '25,000',
+        //     style: TextStyle(fontSize: 20, color: Colors.orange),
+        //   ),
+        //   new Text(
+        //     'บาท',
+        //     style: TextStyle(fontSize: 20),
+        //   ),
+        // ],
+        body: _buildProductList(),
+        // body: Text('Product Data'),
+      ),
     );
   }
 }

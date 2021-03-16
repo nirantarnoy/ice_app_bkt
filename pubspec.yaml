@@ -1,9 +1,9 @@
-name: ice_app
+name: ice_app_new
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -25,9 +25,8 @@ dependencies:
     sdk: flutter
   camera:
   path_provider:
-  path:  
+  path:
   image_picker: 0.6.7+14
-
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -40,6 +39,9 @@ dependencies:
   rflutter_alert: ^1.0.3
   connectivity: ^2.0.2
   flushbar: ^1.5.0
+  provider: ^4.3.2+3
+  sqflite: ^1.3.0
+  numberpicker: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -50,7 +52,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -93,7 +94,7 @@ flutter:
         - asset: assets/fonts/Cloud-Light.ttf
     - family: Kanit-Regular
       fonts:
-        - asset: assets/fonts/Kanit-Regular.ttf           
+        - asset: assets/fonts/Kanit-Regular.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:

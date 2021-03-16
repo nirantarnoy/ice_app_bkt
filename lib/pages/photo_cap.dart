@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:ice_app/helpers/activity_connection.dart';
+import 'package:ice_app_new/helpers/activity_connection.dart';
 
 class LandingScreen extends StatefulWidget {
   @override
@@ -13,7 +13,6 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen> {
   File imageFile;
   final _picker = ImagePicker();
-
 
   Future _openGallery(BuildContext context) async {
     final picture = await _picker.getImage(source: ImageSource.gallery);

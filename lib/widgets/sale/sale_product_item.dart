@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:scoped_model/scoped_model.dart';
+import 'package:provider/provider.dart';
+import 'package:numberpicker/numberpicker.dart';
 
-import '../../scoped-models/main.dart';
-import '../../models/products.dart';
+import 'package:ice_app_new/providers/product.dart';
+import 'package:ice_app_new/models/products.dart';
 
-class OrderProductItem extends StatelessWidget {
+class SaleProductItem extends StatelessWidget {
   List<Products> _products = [];
   Widget _buildproductList(List<Products> products) {
     Widget productCards;
@@ -13,7 +14,7 @@ class OrderProductItem extends StatelessWidget {
       productCards = new GridView.builder(
           shrinkWrap: true,
           itemCount: products.length,
-          physics: NeverScrollableScrollPhysics(),
+          //   physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.symmetric(horizontal: 1),
           gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
@@ -36,35 +37,19 @@ class OrderProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<MainModel>(
-      builder: (BuildContext context, Widget child, MainModel model) {
-        return _buildproductList(model.allProducts);
-      },
-    );
+    final ProductData products = Provider.of<ProductData>(context);
+    products.fetProducts();
+    return _buildproductList(products.listproduct);
   }
 }
 
 class Items extends StatelessWidget {
   //orders _products;
-  final int _id;
+  final String _id;
   final String _code;
   final String _name;
 
   Items(this._id, this._code, this._name);
-
-  _getDropdownItems() {
-    List<DropdownMenuItem<String>> items = new List();
-    items.add(new DropdownMenuItem(
-      child: Text('ร้านป้าสี สามพราน'),
-      value: '1',
-    ));
-    items.add(new DropdownMenuItem(
-      child: Text('ร้านน้องปัน'),
-      value: '2',
-    ));
-
-    return items;
-  }
 
   void _editBottomSheet(context) {
     showModalBottomSheet(
@@ -89,13 +74,27 @@ class Items extends StatelessWidget {
                           onPressed: () => Navigator.of(context).pop())
                     ],
                   ),
-                  Row(children: <Widget>[
-                    Text(
-                      "PB น้ำแข็งแพ็คหลอดใหญ่",
-                      style: TextStyle(color: Colors.green[900], fontSize: 20),
-                    )
-                  ]),
+                  Center(
+                    child: Row(children: <Widget>[
+                      Text(
+                        "${_name}",
+                        style:
+                            TextStyle(color: Colors.green[900], fontSize: 20),
+                      )
+                    ]),
+                  ),
                   SizedBox(height: 20),
+                  // Row(
+                  //   children: <Widget>[
+                  //     NumberPicker(
+                  //       value: _currentValue,
+                  //       minValue: 0,
+                  //       maxValue: 100,
+                  //       onChanged: (value) =>
+                  //           setState(() => _currentValue = value),
+                  //     ),
+                  //   ],
+                  // ),
                   Row(children: <Widget>[
                     Padding(padding: EdgeInsets.all(2.0)),
                     Expanded(
@@ -116,64 +115,53 @@ class Items extends StatelessWidget {
                   //   Expanded(
                   //       child: ),
                   // ]),
-                  Expanded(
-                      flex: 2,
-                      child: Row(
-                        children: [
-                          Expanded(
-                              flex: 3,
-                              child: Container(
-                                  padding: EdgeInsets.all(20),
-                                  alignment: Alignment.center,
-                                  //color: Colors.green[500],
-                                  child: DropdownButton(
-                                    hint: Text(
-                                      'เลือกรายการลูกค้า',
-                                      style: TextStyle(fontSize: 20.0),
-                                    ),
-                                    items: _getDropdownItems,
-                                  ))),
-                          // Expanded(
-                          //     flex: 3,
-                          //     child: Container(
-                          //       padding: EdgeInsets.symmetric(
-                          //           horizontal: 15, vertical: 10),
-                          //       decoration: BoxDecoration(
-                          //           borderRadius: BorderRadius.circular(10),
-                          //           color: Colors.grey.withOpacity(.10)),
-                          //       child: TextField(
-                          //         style: TextStyle(color: Colors.white),
-                          //         decoration: InputDecoration(
-                          //             border: InputBorder.none,
-                          //             hintText: "เลือกรายการลูกค้า",
-                          //             hintStyle: TextStyle(color: Colors.grey)),
-                          //       ),
-                          //     )),
-                          Expanded(
-                              flex: 1,
-                              child: Container(
-                                  padding: EdgeInsets.all(2),
-                                  alignment: Alignment.center,
-                                  // color: Colors.amber,
-                                  child: MaterialButton(
-                                    padding: EdgeInsets.all(2),
-                                    color: Colors.orange,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(100)),
-                                    child: Align(
-                                      child: Text(
-                                        'ค้นหา',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 20),
-                                      ),
-                                    ),
-                                    onPressed: () => showSearch(
-                                        context: context,
-                                        delegate: CustomerSearch()),
-                                  ))),
-                        ],
-                      )),
+                  // Expanded(
+                  //     flex: 2,
+                  //     child: Row(
+                  //       children: [
+                  //         //  CustomerDropdown(),
+                  //         // Expanded(
+                  //         //     flex: 3,
+                  //         //     child: Container(
+                  //         //       padding: EdgeInsets.symmetric(
+                  //         //           horizontal: 15, vertical: 10),
+                  //         //       decoration: BoxDecoration(
+                  //         //           borderRadius: BorderRadius.circular(10),
+                  //         //           color: Colors.grey.withOpacity(.10)),
+                  //         //       child: TextField(
+                  //         //         style: TextStyle(color: Colors.white),
+                  //         //         decoration: InputDecoration(
+                  //         //             border: InputBorder.none,
+                  //         //             hintText: "เลือกรายการลูกค้า",
+                  //         //             hintStyle: TextStyle(color: Colors.grey)),
+                  //         //       ),
+                  //         //     )),
+                  //         Expanded(
+                  //             flex: 1,
+                  //             child: Container(
+                  //                 padding: EdgeInsets.all(2),
+                  //                 alignment: Alignment.center,
+                  //                 // color: Colors.amber,
+                  //                 child: MaterialButton(
+                  //                   padding: EdgeInsets.all(2),
+                  //                   color: Colors.orange,
+                  //                   shape: RoundedRectangleBorder(
+                  //                       borderRadius:
+                  //                           BorderRadius.circular(100)),
+                  //                   child: Align(
+                  //                     child: Text(
+                  //                       'ค้นหา',
+                  //                       style: TextStyle(
+                  //                           color: Colors.white, fontSize: 20),
+                  //                     ),
+                  //                   ),
+                  //                   onPressed: () => showSearch(
+                  //                       context: context,
+                  //                       delegate: CustomerSearch()),
+                  //                 ))),
+                  //       ],
+                  //     )
+                  //     ),
                   SizedBox(height: 90),
                   Expanded(
                       flex: 2,
@@ -190,7 +178,7 @@ class Items extends StatelessWidget {
                                     color: Colors.green,
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(50)),
+                                            BorderRadius.circular(10)),
                                     child: Align(
                                       child: Text(
                                         'เงินสด',
@@ -211,7 +199,7 @@ class Items extends StatelessWidget {
                                     color: Colors.blue,
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(50)),
+                                            BorderRadius.circular(10)),
                                     child: Align(
                                       child: Text(
                                         'เงินเชื่อ',
