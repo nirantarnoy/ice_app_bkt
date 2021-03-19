@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:connectivity/connectivity.dart';
 
-import 'package:ice_app_new/helpers/activity_connection.dart';
 import 'package:provider/provider.dart';
 import 'package:ice_app_new/providers/product.dart';
 import 'package:ice_app_new/widgets/product/product_item.dart';
@@ -60,26 +59,51 @@ class _ProductPageState extends State<ProductPage> {
         });
   }
 
-  Widget _buildProductList() {
-    final ProductData products = Provider.of<ProductData>(context);
-    products.fetProducts();
-    Widget content = Center(
-        child: Text(
-      'ไม่พบข้อมูล!',
-      style: TextStyle(
-          fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.grey),
-    ));
-    //print("data length = " + products.listproduct.toString());
-    if (products.listproduct.length > 0 && !products.is_loading) {
-      content = Container(child: ProductItem());
-    } else if (products.is_loading) {
-      content = Center(child: CircularProgressIndicator());
-    }
+  // Widget _buildProductList() {
+  //   final ProductData products =
+  //       Provider.of<ProductData>(context, listen: false);
+  //   products.fetProducts();
+  //   Widget content = Center(
+  //       child: Text(
+  //     'ไม่พบข้อมูล!',
+  //     style: TextStyle(
+  //         fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.grey),
+  //   ));
+  //   // print("data length = " + products.listproduct.toString());
+  //   if (products.listproduct.length > 0 && !products.is_loading) {
+  //     content = Container(child: ProductItem());
+  //   } else if (products.is_loading) {
+  //     content = Center(child: CircularProgressIndicator());
+  //   }
 
-    return RefreshIndicator(
-      onRefresh: products.fetProducts,
-      child: content,
-    );
+  //   return RefreshIndicator(
+  //     onRefresh: products.fetProducts,
+  //     child: content,
+  //   );
+  // }
+
+  Widget _buildlistFromconsumer() {
+    return Consumer(builder: (context, ProductData products, Widget child) {
+      Widget content = Center(
+          child: Text(
+        'ไม่พบข้อมูล!',
+        style: TextStyle(
+            fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.grey),
+      ));
+      print("data length = " + products.listproduct.toString());
+      if (products != null) {
+        if (products.listproduct.length > 0 && !products.is_loading) {
+          content = Container(child: ProductItem());
+        } else if (products.is_loading) {
+          content = Center(child: CircularProgressIndicator());
+        }
+      }
+
+      return RefreshIndicator(
+        onRefresh: products.fetProducts,
+        child: content,
+      );
+    });
   }
 
   @override
@@ -87,7 +111,6 @@ class _ProductPageState extends State<ProductPage> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
         // persistentFooterButtons: <Widget>[
         //   new Text(
         //     'ยอดรวม',
@@ -102,7 +125,7 @@ class _ProductPageState extends State<ProductPage> {
         //     style: TextStyle(fontSize: 20),
         //   ),
         // ],
-        body: _buildProductList(),
+        body: _buildlistFromconsumer(),
         // body: Text('Product Data'),
       ),
     );

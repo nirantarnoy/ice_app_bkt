@@ -41,12 +41,18 @@ class ProductData with ChangeNotifier {
           headers: {'Content-Type': 'application/json'});
 
       if (response.statusCode == 200) {
+        print('api ok');
         Map<String, dynamic> res = json.decode(response.body);
         List<Products> data = [];
         print('data length is ${res["data"].length}');
         print('data server is ${res["data"]}');
 
         if (res == null) {
+          _isLoading = false;
+          notifyListeners();
+          return;
+        }
+        if (res['data'] == null) {
           _isLoading = false;
           notifyListeners();
           return;
@@ -71,8 +77,12 @@ class ProductData with ChangeNotifier {
         _isLoading = false;
         notifyListeners();
         return listproduct;
+      } else {
+        print('not status 200');
       }
-    } catch (_) {}
+    } catch (_) {
+      print('call api error');
+    }
   }
 
   // Future<void> addOrder(String product_id, int qty, int customer_id) async {

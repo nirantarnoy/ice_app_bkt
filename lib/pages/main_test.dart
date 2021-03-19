@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:ice_app_new/models/delivery_route.dart';
 import 'package:ice_app_new/pages/sale.dart';
+import 'package:ice_app_new/pages/journalissue.dart';
+import 'package:ice_app_new/widgets/journalissue/journalissue_item.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flushbar/flushbar.dart';
 
+import 'package:provider/provider.dart';
+
+import '../models/user.dart';
+import '../providers/user.dart';
 import '../pages/order.dart';
 import '../pages/products.dart';
 import '../pages/sale.dart';
@@ -85,54 +91,51 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
     }
   }
 
-  // void _logout() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return ScopedModelDescendant<MainModel>(
-  //           builder: (BuildContext context, Widget child, MainModel model) {
-  //         return AlertDialog(
-  //           title: Text(
-  //             'ยืนยันการออกจากระบบ!',
-  //             style: TextStyle(
-  //               fontSize: 20.0,
-  //               fontWeight: FontWeight.bold,
-  //             ),
-  //           ),
-  //           content: Text(
-  //             "คุณต้องการออกจากระบบใช่หรือไม่",
-  //             style: TextStyle(color: Colors.red),
-  //           ),
-  //           actions: <Widget>[
-  //             FlatButton(
-  //               child: Text('ใช่',
-  //                   style: TextStyle(
-  //                     fontSize: 20.0,
-  //                     fontWeight: FontWeight.bold,
-  //                   )),
-  //               onPressed: () => _logoutaction(model.logout),
-  //             ),
-  //             FlatButton(
-  //               child: Text('ไม่ใช่',
-  //                   style: TextStyle(
-  //                     fontSize: 20.0,
-  //                     fontWeight: FontWeight.bold,
-  //                   )),
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //               },
-  //             ),
-  //           ],
-  //         );
-  //       });
-  //     },
-  //   );
-  // }
+  void _logout(UserData users) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'ยืนยันการออกจากระบบ!',
+            style: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Text(
+            "คุณต้องการออกจากระบบใช่หรือไม่",
+            style: TextStyle(color: Colors.red),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('ใช่',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  )),
+              onPressed: () => _logoutaction(users.logout),
+            ),
+            FlatButton(
+              child: Text('ไม่ใช่',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  )),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     List<Widget> tabs = [
-      ProductPage(),
+      JournalissuePage(),
       SalePage(),
       null,
       OrderPage(),
@@ -234,10 +237,12 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
                 onTap: () => {},
               ),
               Divider(),
-              ListTile(
-                title: Text("ออกจากระบบ"),
-                trailing: Icon(Icons.power_settings_new_sharp),
-                onTap: () => Navigator.of(context).pop(),
+              Consumer<UserData>(
+                builder: (context, users, _) => ListTile(
+                  title: Text("ออกจากระบบ"),
+                  trailing: Icon(Icons.power_settings_new_sharp),
+                  onTap: () => _logout(users),
+                ),
               ),
             ],
           ),

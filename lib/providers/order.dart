@@ -9,6 +9,8 @@ class OrderData with ChangeNotifier {
       "http://192.168.60.118/icesystem/frontend/web/api/order/list";
   final String url_to_order_detail =
       "http://203.203.1.224/icesystem/frontend/web/api/order/detail";
+  final String url_to_add_order =
+      "http://192.168.60.118/icesystem/frontend/web/api/order/addorder";
 
   List<Orders> _order;
   List<Orders> get listorder => _order;
@@ -72,10 +74,12 @@ class OrderData with ChangeNotifier {
     } catch (_) {}
   }
 
-  Future<void> addOrder(String product_id, int qty, int customer_id) async {
+  Future<void> addOrder(
+      String product_id, int qty, int price, int customer_id) async {
     final Map<String, dynamic> orderData = {
       'product_id': product_id,
       'qty': qty,
+      'price': price,
       'customer_id': customer_id
     };
     try {
