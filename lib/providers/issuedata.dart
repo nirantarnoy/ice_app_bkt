@@ -6,7 +6,8 @@ import 'package:ice_app_new/models/issueitems.dart';
 
 class IssueData with ChangeNotifier {
   final String url_to_issue_list =
-      "http://192.168.60.118/icesystem/frontend/web/api/journalissue/list";
+      "http://192.168.1.120/icesystem/frontend/web/api/journalissue/list";
+  // "http://192.168.60.118/icesystem/frontend/web/api/journalissue/list";
   //"http://119.59.100.74/icesystem/frontend/web/api/customer/list";
 
   List<Issueitems> _issue;
@@ -37,7 +38,7 @@ class IssueData with ChangeNotifier {
   Future<dynamic> fetIssueitems() async {
     final Map<String, dynamic> filterData = {'route_id': 5};
     // _isLoading = true;
-    notifyListeners();
+    // notifyListeners();
     try {
       http.Response response;
       response = await http.post(

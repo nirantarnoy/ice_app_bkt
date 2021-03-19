@@ -136,12 +136,12 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     List<Widget> tabs = [
       JournalissuePage(),
-      SalePage(),
+      OrderPage(),
       null,
       OrderPage(),
     ];
     // List<Widget> tabs = [null, null, null];
-    print('building main test page');
+    // print('building main test page');
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(

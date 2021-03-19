@@ -6,7 +6,8 @@ import 'package:ice_app_new/models/products.dart';
 
 class ProductData with ChangeNotifier {
   final String url_to_product_list =
-      "http://192.168.60.118/icesystem/frontend/web/api/product/list";
+      "http://192.168.1.120/icesystem/frontend/web/api/product/list";
+  //   "http://192.168.60.118/icesystem/frontend/web/api/product/list";
   // "http://119.59.100.74/icesystem/frontend/web/api/product/list";
   final String url_to_product_detail =
       //    "http://203.203.1.224/icesystem/frontend/web/api/product/detail";

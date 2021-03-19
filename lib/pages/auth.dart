@@ -225,46 +225,60 @@ class _AuthPageState extends State<AuthPage> {
               width: targetWidth,
               child: Form(
                 key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    _showLogo(),
-                    _buildUsernameTextField(),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    _buildPasswordTextField(),
-
-                    // FlatButton(
-                    //   child: Text(
-                    //       'Switch to ${_authMode == AuthMode.Login ? 'Signup' : 'Login'}'),
-                    //   onPressed: () {
-                    //     setState(() {
-                    //       _authMode = _authMode == AuthMode.Login
-                    //           ? AuthMode.Signup
-                    //           : AuthMode.Login;
-                    //     });
-                    //   },
-                    // ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0.0, 45.0, 10.0, 0.0),
-                      child: SizedBox(
-                        height: 45.0,
-                        width: targetWidth,
-                        child: new RaisedButton(
-                            elevation: 0.2,
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(30.0)),
-                            color: Colors.blue[700],
-                            child: new Text('เข้าสู่ระบบ',
-                                style: new TextStyle(
-                                    fontSize: 20.0, color: Colors.white)),
-                            onPressed: () => _submitForm(users.login)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: <Widget>[
+                      _showLogo(),
+                      SizedBox(
+                        height: 20,
                       ),
-                    ),
-                  ],
+                      _buildUsernameTextField(),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      _buildPasswordTextField(),
+
+                      // FlatButton(
+                      //   child: Text(
+                      //       'Switch to ${_authMode == AuthMode.Login ? 'Signup' : 'Login'}'),
+                      //   onPressed: () {
+                      //     setState(() {
+                      //       _authMode = _authMode == AuthMode.Login
+                      //           ? AuthMode.Signup
+                      //           : AuthMode.Login;
+                      //     });
+                      //   },
+                      // ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0.0, 45.0, 10.0, 0.0),
+                        child: SizedBox(
+                          height: 45.0,
+                          width: targetWidth,
+                          child: new RaisedButton(
+                              elevation: 0.2,
+                              shape: new RoundedRectangleBorder(
+                                  borderRadius:
+                                      new BorderRadius.circular(30.0)),
+                              color: Colors.blue[700],
+                              child: new Text('เข้าสู่ระบบ',
+                                  style: new TextStyle(
+                                      fontSize: 20.0, color: Colors.white)),
+                              onPressed: () => _submitForm(users.login)),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[Text('version 0.1')],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

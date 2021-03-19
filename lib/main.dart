@@ -7,6 +7,7 @@ import 'pages/auth.dart';
 import 'providers/product.dart';
 import 'providers/customer.dart';
 import 'providers/user.dart';
+import 'providers/order.dart';
 import 'providers/issuedata.dart';
 import 'pages/main_test.dart';
 //import 'pages/photo_cap.dart';
@@ -62,6 +63,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<UserData>.value(value: UserData()),
         ChangeNotifierProvider<ProductData>.value(value: ProductData()),
         ChangeNotifierProvider<CustomerData>.value(value: CustomerData()),
+        ChangeNotifierProvider<OrderData>.value(value: OrderData()),
         ChangeNotifierProvider<IssueData>.value(value: IssueData())
       ],
       child: Consumer(builder: (context, UserData users, _) {
