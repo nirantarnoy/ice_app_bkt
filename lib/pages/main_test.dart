@@ -5,6 +5,7 @@ import 'package:ice_app_new/pages/journalissue.dart';
 import 'package:ice_app_new/widgets/journalissue/journalissue_item.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flushbar/flushbar.dart';
 
@@ -26,12 +27,25 @@ class MainTest extends StatefulWidget {
 class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
   TabController _tabController;
   int _currentIndex = 0;
-  String appTitle = 'วรภัทร ไอซ์';
+  String appTitle = 'เบิกสินค้า';
+  String user_name = '';
+  String user_email = '';
+  String user_photo = '';
 
   @override
   void initState() {
+    _getUserPrefer();
     super.initState();
     _tabController = new TabController(length: 4, vsync: this);
+  }
+
+  void _getUserPrefer() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      user_name = prefs.getString("emp_name");
+      user_photo = prefs.getString("emp_photo");
+      //user_email = prefs.getString("");
+    });
   }
 
   void _onTaped(int index) {
@@ -39,7 +53,7 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
     setState(() {
       _currentIndex = index;
       if (index == 0) {
-        appTitle = 'สินค้า';
+        appTitle = 'เบิกสินค้า';
       }
       if (index == 1) {
         appTitle = 'ขายสินค้า';
@@ -188,7 +202,7 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
             children: <Widget>[
               UserAccountsDrawerHeader(
                 accountName: Text(
-                  "Niran Tarlek",
+                  "${user_name}",
                   style: TextStyle(color: Colors.white),
                 ),
                 accountEmail: Text(
@@ -196,14 +210,15 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
                   style: TextStyle(color: Colors.white),
                 ),
                 currentAccountPicture: CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: Text("NT"),
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: NetworkImage("${user_photo}"),
+                  //  child: Text("NT"),
                 ),
                 otherAccountsPictures: <Widget>[
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Text("NT"),
-                  ),
+                  // CircleAvatar(
+                  //   backgroundColor: Colors.white,
+                  //   child: Text("NT"),
+                  // ),
                 ],
               ),
               ListTile(
@@ -263,14 +278,14 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
               onTap: _onTaped,
               items: [
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.pages_rounded), title: Text('สินค้า')),
+                    icon: Icon(Icons.pages_rounded), title: Text('เบิกสินค้า')),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.shopping_cart), title: Text('ขายสินค้า')),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.transform_sharp), title: Text('รับ-โอน')),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.beenhere),
-                  title: Text('ปิดการขาย'),
+                  title: Text('รับเงิน'),
                 ),
               ],
             ),

@@ -10,6 +10,10 @@ import 'providers/user.dart';
 import 'providers/order.dart';
 import 'providers/issuedata.dart';
 import 'pages/main_test.dart';
+
+import 'pages/order.dart';
+import 'pages/orderdetail.dart';
+
 //import 'pages/photo_cap.dart';
 
 //void main() => runApp(MyApp());
@@ -79,6 +83,10 @@ class _MyAppState extends State<MyApp> {
               buttonColor: Colors.blue,
               fontFamily: 'Kanit-Regular'),
           home: users.is_authenuser ? MainTest() : AuthPage(),
+          routes: {
+            OrderPage.routeName: (ctx) => OrderPage(),
+            OrderDetailPage.routeName: (ctx) => OrderDetailPage(),
+          },
         );
       }),
     );

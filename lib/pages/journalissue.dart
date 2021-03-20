@@ -21,6 +21,8 @@ class JournalissuePage extends StatefulWidget {
 }
 
 class _JournalissuePageState extends State<JournalissuePage> {
+  var _isInit = true;
+  var _isLoading = false;
   @override
   initState() {
     ActivityCon();
@@ -32,6 +34,22 @@ class _JournalissuePageState extends State<JournalissuePage> {
     // }
 
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<IssueData>(context, listen: false).fetIssueitems().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   // Future<void> _checkinternet() async {
@@ -90,7 +108,7 @@ class _JournalissuePageState extends State<JournalissuePage> {
 
   Widget _buildProductList() {
     return Consumer(builder: (context, IssueData issueitems, Widget child) {
-      issueitems.fetIssueitems();
+      //issueitems.fetIssueitems();
       Widget content = Center(
           child: Text(
         'ไม่พบข้อมูล!',

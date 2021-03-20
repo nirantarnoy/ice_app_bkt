@@ -13,6 +13,7 @@ import 'package:ice_app_new/providers/order.dart';
 import 'package:ice_app_new/widgets/error/err_api.dart';
 
 class OrderPage extends StatefulWidget {
+  static const routeName = '/order';
   @override
   _OrderPageState createState() => _OrderPageState();
 }
@@ -82,7 +83,7 @@ class _OrderPageState extends State<OrderPage> {
 
   Widget _buildOrdersList() {
     return Consumer(builder: (context, OrderData orders, Widget child) {
-      orders.fetOrders();
+      // orders.fetOrders();
       Widget content = Center(
           child: Text(
         'ไม่พบข้อมูล!',

@@ -10,7 +10,7 @@ class Journalissueitem extends StatelessWidget {
     Widget productCards;
     if (issue_items != null) {
       if (issue_items.length > 0) {
-        print("has list");
+        //print("has list");
         productCards = new ListView.builder(
           itemCount: issue_items.length,
           itemBuilder: (BuildContext context, int index) {
@@ -34,8 +34,9 @@ class Journalissueitem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final IssueData item_issues = Provider.of<IssueData>(context);
-    item_issues.fetIssueitems();
+    final IssueData item_issues =
+        Provider.of<IssueData>(context, listen: false);
+    // item_issues.fetIssueitems();
     return _buildissueitemList(item_issues.listissue);
   }
 }

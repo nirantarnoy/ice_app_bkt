@@ -3,13 +3,14 @@ import 'package:ice_app_new/providers/order.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/orders.dart';
+import '../../pages/orderdetail.dart';
 
 class OrderItem extends StatelessWidget {
   List<Orders> _orders = [];
   Widget _buildordersList(List<Orders> orders) {
     Widget orderCards;
     if (orders.length > 0) {
-      print("has list");
+      // print("has list");
       orderCards = new ListView.builder(
         itemCount: orders.length,
         itemBuilder: (BuildContext context, int index) {
@@ -34,29 +35,40 @@ class OrderItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final OrderData orders = Provider.of<OrderData>(context, listen: false);
-    orders.fetOrders();
+    //orders.fetOrders();
     return Column(
       children: [
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: Text(
-                "ยอดขายรวม",
-                style: TextStyle(fontSize: 18, color: Colors.blue[700]),
-              ),
-            )
-          ],
-        ),
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: Text(
-                "รายการขาย",
-                style: TextStyle(fontSize: 16),
-              ),
-            )
-          ],
-        ),
+        Column(children: <Widget>[
+          Card(
+            margin: EdgeInsets.all(15),
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      "รวมยอดขาย",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    SizedBox(width: 10),
+                    Chip(
+                      label: Text(
+                        "${orders.totalAmount.toString()}",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      backgroundColor: Theme.of(context).primaryColor,
+                    ),
+                    FloatingActionButton(
+                        backgroundColor: Colors.green[700],
+                        onPressed: () {},
+                        child: Icon(Icons.add, color: Colors.white)
+                        //   FlatButton(onPressed: () {}, child: Text("เพิ่มรายการขาย")),
+                        )
+                  ]),
+            ),
+          )
+        ]),
+        SizedBox(height: 10),
         Expanded(child: _buildordersList(orders.listorder)),
         SizedBox(
           height: 10,
@@ -88,26 +100,45 @@ class Items extends StatelessWidget {
       this._payment_method);
   @override
   Widget build(BuildContext context) {
-    return new GestureDetector(
-      onTap: () =>
-          Navigator.pushNamed(context, '/ordersdetail/' + this._id.toString()),
-      child: Card(
-          child: ListTile(
-        leading: RaisedButton(
-            color: _payment_method_id == "1" ? Colors.green : Colors.blue,
-            onPressed: () => {},
-            child: Text(
-              "$_payment_method",
-              style: TextStyle(color: Colors.white),
-            )),
-        title: Text(
-          "$_order_no $_note",
-          style: TextStyle(
-            fontSize: 16,
-          ),
+    return Dismissible(
+      key: ValueKey(_id),
+      background: Container(
+        color: Theme.of(context).errorColor,
+        child: Icon(
+          Icons.delete,
+          color: Colors.white,
+          size: 40,
         ),
-        subtitle: Text("$_order_date ($_customer_name)"),
-      )),
+        alignment: Alignment.centerRight,
+        padding: EdgeInsets.only(right: 20),
+        margin: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+      ),
+      direction: DismissDirection.endToStart,
+      onDismissed: (direction) {
+        print("");
+      },
+      child: GestureDetector(
+        onTap: () => Navigator.of(context).pushNamed(OrderDetailPage.routeName),
+        child: Card(
+            child: ListTile(
+          leading: RaisedButton(
+              color:
+                  _payment_method_id == "1" ? Colors.green : Colors.purple[300],
+              onPressed: () {},
+              child: Text(
+                "$_payment_method",
+                style: TextStyle(color: Colors.white),
+              )),
+          title: Text(
+            "$_customer_name $_note",
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+          subtitle: Text("$_order_date ($_order_no)"),
+          trailing: Text("$_total_amount"),
+        )),
+      ),
     );
   }
 }

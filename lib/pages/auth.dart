@@ -38,14 +38,14 @@ class _AuthPageState extends State<AuthPage> {
       child: Padding(
         padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
         child: CircleAvatar(
-          // backgroundColor: Colors.transparent,
-          radius: 80.0,
-          // child: Image.asset('assets/logo.jpg'),
-          child: Text('ICE',
-              style: TextStyle(
-                  fontSize: 38.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white)),
+          backgroundColor: Colors.transparent,
+          radius: 70.0,
+          child: Image.asset('assets/logo_head.png'),
+          // child: Text('ICE',
+          //     style: TextStyle(
+          //         fontSize: 38.0,
+          //         fontWeight: FontWeight.bold,
+          //         color: Colors.white)),
         ),
       ),
     );
