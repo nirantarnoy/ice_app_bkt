@@ -8,17 +8,6 @@ import 'package:ice_app_new/models/orders.dart';
 
 class OrderDetailPage extends StatefulWidget {
   static const routeName = '/orderdetail';
-  final String customer_code;
-  final String customer_name;
-  final String customer_id;
-
-  // ignore: non_constant_identifier_names
-  const OrderDetailPage({
-    Key key,
-    this.customer_code,
-    this.customer_name,
-    this.customer_id,
-  }) : super(key: key);
 
   @override
   _OrderDetailPageState createState() => _OrderDetailPageState();
@@ -38,8 +27,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       setState(() {
         _isLoading = true;
       });
+
       Provider.of<OrderData>(context, listen: false)
-          .getCustomerDetails(widget.customer_id)
+          .getCustomerDetails("2850")
           .then((_) {
         setState(() {
           _isLoading = false;
@@ -87,9 +77,25 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             direction: DismissDirection.endToStart,
             onDismissed: (direction) {
               setState(() {
-                // Provider.of<OrderData>(context).removeOrderDetail(item.line_id);
+                Provider.of<OrderData>(context).removeOrderDetail(item.line_id);
                 orders.removeAt(index);
               });
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.check_circle_outline,
+                      color: Colors.white,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'ลบข้อมูลเรียบร้อย',
+                      style: TextStyle(fontFamily: "Kanit-Regular"),
+                    ),
+                  ],
+                ),
+                backgroundColor: Colors.green,
+              ));
             },
             child: GestureDetector(
               onTap: () =>
@@ -141,6 +147,12 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final customer_order_id =
+        ModalRoute.of(context).settings.arguments as String; // is id
+
+    final loadCustomerorder = Provider.of<OrderData>(context, listen: false)
+        .findById(customer_order_id);
+
     final OrderData orders = Provider.of<OrderData>(context, listen: false);
     //orders.getCustomerDetails(widget.customer_id);
     return Scaffold(
@@ -175,12 +187,12 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                         height: 10,
                                       ),
                                       Text(
-                                        '${widget.customer_code}',
+                                        loadCustomerorder.customer_code,
                                         style: TextStyle(
                                             fontSize: 16, color: Colors.white),
                                       ),
                                       SizedBox(height: 10),
-                                      Text("${widget.customer_name}",
+                                      Text(loadCustomerorder.customer_name,
                                           style: TextStyle(
                                               fontSize: 16,
                                               color: Colors.white))

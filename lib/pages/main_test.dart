@@ -15,7 +15,7 @@ import '../models/user.dart';
 import '../providers/user.dart';
 import '../pages/order.dart';
 import '../pages/products.dart';
-import '../pages/sale.dart';
+import '../pages/payment.dart';
 
 class MainTest extends StatefulWidget {
   @override
@@ -156,7 +156,7 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
       JournalissuePage(),
       OrderPage(),
       null,
-      OrderPage(),
+      PaymentPage(),
     ];
     // List<Widget> tabs = [null, null, null];
     // print('building main test page');

@@ -9,11 +9,13 @@ import 'providers/customer.dart';
 import 'providers/user.dart';
 import 'providers/order.dart';
 import 'providers/issuedata.dart';
+import 'providers/paymentreceive.dart';
 import 'pages/main_test.dart';
 
 import 'pages/order.dart';
 import 'pages/orderdetail.dart';
 import 'pages/createorder.dart';
+import 'pages/payment.dart';
 
 //import 'pages/photo_cap.dart';
 
@@ -69,7 +71,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<ProductData>.value(value: ProductData()),
         ChangeNotifierProvider<CustomerData>.value(value: CustomerData()),
         ChangeNotifierProvider<OrderData>.value(value: OrderData()),
-        ChangeNotifierProvider<IssueData>.value(value: IssueData())
+        ChangeNotifierProvider<IssueData>.value(value: IssueData()),
+        ChangeNotifierProvider<PaymentreceiveData>.value(
+            value: PaymentreceiveData())
       ],
       child: Consumer(builder: (context, UserData users, _) {
         // checkAuthen(users);
@@ -88,6 +92,7 @@ class _MyAppState extends State<MyApp> {
             OrderPage.routeName: (ctx) => OrderPage(),
             OrderDetailPage.routeName: (ctx) => OrderDetailPage(),
             CreateorderPage.routeName: (ctx) => CreateorderPage(),
+            PaymentPage.routeName: (ctx) => PaymentPage(),
           },
         );
       }),

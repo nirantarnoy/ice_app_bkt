@@ -65,6 +65,8 @@ class OrderItem extends StatelessWidget {
                       ),
                       backgroundColor: Theme.of(context).primaryColor,
                     ),
+                    Text("บาท",
+                        style: TextStyle(fontSize: 20, color: Colors.black87)),
                     FloatingActionButton(
                         backgroundColor: Colors.green[500],
                         onPressed: () => Navigator.of(context)
@@ -127,18 +129,12 @@ class Items extends StatelessWidget {
       ),
       direction: DismissDirection.endToStart,
       onDismissed: (direction) {
-        print("");
+        Provider.of<OrderData>(context, listen: false).removeOrder(_id);
       },
       child: GestureDetector(
         onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => OrderDetailPage(
-                        customer_code: _customer_code,
-                        customer_name: _customer_name,
-                        customer_id: _customer_id,
-                      )));
+          Navigator.of(context)
+              .pushNamed(OrderDetailPage.routeName, arguments: _customer_id);
         }, // Navigator.of(context).pushNamed(OrderDetailPage.routeName),
         child: Card(
             child: ListTile(
