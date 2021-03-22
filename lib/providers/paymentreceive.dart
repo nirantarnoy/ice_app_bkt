@@ -6,13 +6,13 @@ import 'package:ice_app_new/models/paymentreceive.dart';
 
 class PaymentreceiveData with ChangeNotifier {
   final String url_to_payment_list =
-      "http://192.168.60.118/icesystem/frontend/web/api/paymentreceive/list";
+      "http://192.168.1.120/icesystem/frontend/web/api/paymentreceive/list";
   //   "http://192.168.60.118/icesystem/frontend/web/api/product/list";
   // "http://119.59.100.74/icesystem/frontend/web/api/product/list";
   final String url_to_add_payment =
-      "http://192.168.60.118/icesystem/frontend/web/api/paymentreceive/addpay";
+      "http://192.168.1.120/icesystem/frontend/web/api/paymentreceive/addpay";
   final String url_to_delete_payment_line =
-      "http://192.168.60.118/icesystem/frontend/web/api/paymentreceive/deletepay";
+      "http://192.168.1.120/icesystem/frontend/web/api/paymentreceive/deletepay";
 
   List<Paymentreceive> _paymentreceive;
   List<Paymentreceive> get listpaymentreceive => _paymentreceive;
