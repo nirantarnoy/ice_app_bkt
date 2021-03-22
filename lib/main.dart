@@ -13,6 +13,7 @@ import 'pages/main_test.dart';
 
 import 'pages/order.dart';
 import 'pages/orderdetail.dart';
+import 'pages/createorder.dart';
 
 //import 'pages/photo_cap.dart';
 
@@ -86,6 +87,7 @@ class _MyAppState extends State<MyApp> {
           routes: {
             OrderPage.routeName: (ctx) => OrderPage(),
             OrderDetailPage.routeName: (ctx) => OrderDetailPage(),
+            CreateorderPage.routeName: (ctx) => CreateorderPage(),
           },
         );
       }),

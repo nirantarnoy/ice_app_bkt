@@ -3,11 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:ice_app_new/models/issueitems.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class IssueData with ChangeNotifier {
   final String url_to_issue_list =
-      //  "http://192.168.1.120/icesystem/frontend/web/api/journalissue/list";
-      "http://192.168.60.118/icesystem/frontend/web/api/journalissue/list";
+      "http://192.168.1.120/icesystem/frontend/web/api/journalissue/list";
+  //   "http://192.168.60.118/icesystem/frontend/web/api/journalissue/list";
   //"http://119.59.100.74/icesystem/frontend/web/api/customer/list";
 
   List<Issueitems> _issue;
@@ -36,9 +37,14 @@ class IssueData with ChangeNotifier {
   }
 
   Future<dynamic> fetIssueitems() async {
-    final Map<String, dynamic> filterData = {'route_id': 5};
-    // _isLoading = true;
-    // notifyListeners();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String _routeid = '';
+    if (prefs.getString('user_id') != null) {
+      _routeid = prefs.getString('emp_route_id');
+    }
+    final Map<String, dynamic> filterData = {'route_id': _routeid};
+    _isLoading = true;
+    notifyListeners();
     try {
       http.Response response;
       response = await http.post(
@@ -77,7 +83,7 @@ class IssueData with ChangeNotifier {
             product_id: res['data'][i]['product_id'].toString(),
             product_name: res['data'][i]['product_name'].toString(),
             product_image: res['data'][i]['product_image'].toString(),
-            qty: res['data'][i]['qty'].toString(),
+            qty: res['data'][i]['issue_qty'].toString(),
             price: res['data'][i]['price'].toString(),
           );
 

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:ice_app_new/providers/order.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/orders.dart';
 import '../../pages/orderdetail.dart';
+import '../../pages/createorder.dart';
 
 class OrderItem extends StatelessWidget {
   List<Orders> _orders = [];
@@ -15,20 +17,24 @@ class OrderItem extends StatelessWidget {
         itemCount: orders.length,
         itemBuilder: (BuildContext context, int index) {
           return Items(
-            orders[index].id,
-            orders[index].order_no,
-            orders[index].customer_name,
-            orders[index].order_date,
-            orders[index].note,
-            orders[index].total_amount,
-            orders[index].payment_method_id,
-            orders[index].payment_method,
-          );
+              orders[index].id,
+              orders[index].order_no,
+              orders[index].customer_name,
+              orders[index].order_date,
+              orders[index].note,
+              orders[index].total_amount,
+              orders[index].payment_method_id,
+              orders[index].payment_method,
+              orders[index].customer_id,
+              orders[index].customer_code);
         },
       );
       return orderCards;
     } else {
-      print("no data");
+      return Text(
+        "ไม่พบข้อมูล",
+        style: TextStyle(fontSize: 20, color: Colors.grey),
+      );
     }
   }
 
@@ -36,6 +42,7 @@ class OrderItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final OrderData orders = Provider.of<OrderData>(context, listen: false);
     //orders.fetOrders();
+    var formatter = NumberFormat('#,##,##0');
     return Column(
       children: [
         Column(children: <Widget>[
@@ -47,20 +54,21 @@ class OrderItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      "รวมยอดขาย",
-                      style: TextStyle(fontSize: 20),
+                      "ยอดขาย",
+                      style: TextStyle(fontSize: 20, color: Colors.black87),
                     ),
                     SizedBox(width: 10),
                     Chip(
                       label: Text(
-                        "${orders.totalAmount.toString()}",
+                        "${formatter.format(orders.totalAmount)}",
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                       backgroundColor: Theme.of(context).primaryColor,
                     ),
                     FloatingActionButton(
-                        backgroundColor: Colors.green[700],
-                        onPressed: () {},
+                        backgroundColor: Colors.green[500],
+                        onPressed: () => Navigator.of(context)
+                            .pushNamed(CreateorderPage.routeName),
                         child: Icon(Icons.add, color: Colors.white)
                         //   FlatButton(onPressed: () {}, child: Text("เพิ่มรายการขาย")),
                         )
@@ -68,7 +76,7 @@ class OrderItem extends StatelessWidget {
             ),
           )
         ]),
-        SizedBox(height: 10),
+        SizedBox(height: 5),
         Expanded(child: _buildordersList(orders.listorder)),
         SizedBox(
           height: 10,
@@ -83,6 +91,8 @@ class Items extends StatelessWidget {
   final String _id;
   final String _order_no;
   final String _customer_name;
+  final String _customer_id;
+  final String _customer_code;
   final String _order_date;
   final String _note;
   final String _total_amount;
@@ -97,7 +107,9 @@ class Items extends StatelessWidget {
       this._note,
       this._total_amount,
       this._payment_method_id,
-      this._payment_method);
+      this._payment_method,
+      this._customer_id,
+      this._customer_code);
   @override
   Widget build(BuildContext context) {
     return Dismissible(
@@ -118,25 +130,43 @@ class Items extends StatelessWidget {
         print("");
       },
       child: GestureDetector(
-        onTap: () => Navigator.of(context).pushNamed(OrderDetailPage.routeName),
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => OrderDetailPage(
+                        customer_code: _customer_code,
+                        customer_name: _customer_name,
+                        customer_id: _customer_id,
+                      )));
+        }, // Navigator.of(context).pushNamed(OrderDetailPage.routeName),
         child: Card(
             child: ListTile(
-          leading: RaisedButton(
-              color:
-                  _payment_method_id == "1" ? Colors.green : Colors.purple[300],
-              onPressed: () {},
-              child: Text(
-                "$_payment_method",
-                style: TextStyle(color: Colors.white),
-              )),
+          // leading: RaisedButton(
+          //     color:
+          //         _payment_method_id == "1" ? Colors.green : Colors.purple[300],
+          //     onPressed: () {},
+          //     child: Text(
+          //       "$_payment_method",
+          //       style: TextStyle(color: Colors.white),
+          //     )),
+          leading: Chip(
+            label: Text("${_order_no}", style: TextStyle(color: Colors.white)),
+            backgroundColor: Colors.green[500],
+          ),
           title: Text(
             "$_customer_name $_note",
-            style: TextStyle(
-              fontSize: 16,
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.cyan),
           ),
           subtitle: Text("$_order_date ($_order_no)"),
-          trailing: Text("$_total_amount"),
+          trailing: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("$_total_amount",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.red)),
+            ],
+          ),
         )),
       ),
     );

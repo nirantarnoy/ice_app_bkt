@@ -37,7 +37,35 @@ class Journalissueitem extends StatelessWidget {
     final IssueData item_issues =
         Provider.of<IssueData>(context, listen: false);
     // item_issues.fetIssueitems();
-    return _buildissueitemList(item_issues.listissue);
+    return Column(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Text("รายการสินค้าประจำวัน",
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Chip(
+                  label: Text("อ้างอิง ${item_issues.listissue[0].issue_no}",
+                      style: TextStyle(color: Colors.white)),
+                  backgroundColor: Colors.purple,
+                )
+              ],
+            )
+          ],
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Expanded(child: _buildissueitemList(item_issues.listissue)),
+      ],
+    );
   }
 }
 

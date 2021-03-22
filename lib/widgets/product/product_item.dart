@@ -55,12 +55,14 @@ class Items extends StatelessWidget {
           child: ListTile(
         leading: ConstrainedBox(
           constraints: BoxConstraints(minHeight: 100, minWidth: 100),
-          child: FadeInImage.assetNetwork(
-            width: 100,
-            height: 100,
-            placeholder: '',
-            image: "$_image",
-          ),
+          child: _image != null
+              ? FadeInImage.assetNetwork(
+                  width: 100,
+                  height: 100,
+                  placeholder: '',
+                  image: "$_image",
+                )
+              : Icon(Icons.image_rounded),
         ),
         title: Text(
           "$_name",

@@ -4,15 +4,18 @@ import 'package:http/http.dart' as http;
 
 import 'package:ice_app_new/models/orders.dart';
 import 'package:ice_app_new/models/order_detail.dart';
+import 'package:ice_app_new/models/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OrderData with ChangeNotifier {
   final String url_to_order =
-      //   "http://192.168.1.120/icesystem/frontend/web/api/order/list";
-      "http://192.168.60.118/icesystem/frontend/web/api/order/listbycustomer";
+      "http://192.168.1.120/icesystem/frontend/web/api/order/list";
+  //  "http://192.168.60.118/icesystem/frontend/web/api/order/listbycustomer";
   final String url_to_order_detail =
-      "http://192.168.60.118/icesystem/frontend/web/api/order/detail";
+      "http://192.168.1.120/icesystem/frontend/web/api/order/listbycustomer";
+  // "http://192.168.60.118/icesystem/frontend/web/api/order/detail";
   final String url_to_add_order =
-      "http://192.168.60.118/icesystem/frontend/web/api/order/addorder";
+      "http://192.168.1.120/icesystem/frontend/web/api/order/addorder";
   final String url_to_update_order =
       "http://192.168.60.118/icesystem/frontend/web/api/order/updateorder";
   final String url_to_delete_order =
@@ -20,7 +23,7 @@ class OrderData with ChangeNotifier {
   final String url_to_update_order_detail =
       "http://192.168.60.118/icesystem/frontend/web/api/order/updateorderdetail";
   final String url_to_delete_order_detail =
-      "http://192.168.60.118/icesystem/frontend/web/api/order/deleteorderdetail";
+      "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorderline";
 
   ///// for common
   bool _isLoading = false;
@@ -78,7 +81,12 @@ class OrderData with ChangeNotifier {
   }
 
   Future<dynamic> fetOrders() async {
-    final Map<String, dynamic> filterData = {'car_id': 0};
+    String _car_id;
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('user_id') != null) {
+      _car_id = prefs.getString('emp_car_id');
+    }
+    final Map<String, dynamic> filterData = {'car_id': _car_id};
     _isLoading = true;
     notifyListeners();
     try {
@@ -91,7 +99,7 @@ class OrderData with ChangeNotifier {
         Map<String, dynamic> res = json.decode(response.body);
         List<Orders> data = [];
         print('data length is ${res["data"].length}');
-        print('data is ${res["data"]}');
+        //  print('data is ${res["data"]}');
 
         if (res == null) {
           _isLoading = false;
@@ -100,14 +108,12 @@ class OrderData with ChangeNotifier {
         }
 
         for (var i = 0; i < res['data'].length; i++) {
-          // var product = Products.fromJson(res[i]);
-          // print(product);
-          // data.add(product);
           final Orders orderresult = Orders(
             id: res['data'][i]['id'].toString(),
             order_no: res['data'][i]['order_no'].toString(),
             order_date: res['data'][i]['order_date'].toString(),
             customer_id: res['data'][i]['customer_id'].toString(),
+            customer_code: res['data'][i]['customer_code'].toString(),
             customer_name: res['data'][i]['customer_name'].toString(),
             note: res['data'][i]['note'].toString(),
             total_amount: res['data'][i]['total_amount'].toString(),
@@ -132,24 +138,47 @@ class OrderData with ChangeNotifier {
 
   Future<void> addOrder(
       String product_id, int qty, int price, int customer_id) async {
+    String _user_id = "";
+    String _route_id = "";
+    String _car_id = "";
+
+    String _order_date = new DateTime.now().toString();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('user_id') != null) {
+      _user_id = prefs.getString('user_id');
+      _route_id = prefs.getString('emp_route_id');
+      _car_id = prefs.getString('emp_car_id');
+    }
+
     final Map<String, dynamic> orderData = {
+      'order_date': _order_date,
       'product_id': product_id,
+      'customer_id': customer_id,
       'qty': qty,
-      'price': price,
-      'customer_id': customer_id
+      'user_id': _user_id,
+      'issue_id': "0",
+      'route_id': _route_id,
+      'car_id': _car_id,
     };
+    print(orderData);
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_order),
+      response = await http.post(Uri.encodeFull(url_to_add_order),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(orderData));
-
-      if (response.statusCode == 200) {}
+      if (response.statusCode == 200) {
+        Map<String, dynamic> res = json.decode(response.body);
+        print('data add order is  ${res["data"]}');
+      }
     } catch (_) {}
   }
 
-  Future<dynamic> getDetails(String order_id) async {
-    final Map<String, dynamic> filterData = {'order_id': order_id};
+  Future<dynamic> getCustomerDetails(String customer_id) async {
+    String _order_date = new DateTime.now().toString();
+    final Map<String, dynamic> filterData = {
+      'order_date': _order_date,
+      'customer_id': customer_id
+    };
     try {
       http.Response response;
       response = await http.post(Uri.encodeFull(url_to_order_detail),
@@ -168,15 +197,17 @@ class OrderData with ChangeNotifier {
         for (var i = 0; i < res['data'].length - 1; i++) {
           final OrderDetail orderlineresult = new OrderDetail(
             order_id: res['data'][i]['order_id'].toString(),
-            order_no: res['data'][i]['order_id'].toString(),
-            line_id: res['data'][i]['order_id'].toString(),
-            customer_id: res['data'][i]['order_id'].toString(),
-            customer_name: res['data'][i]['order_id'].toString(),
-            product_id: res['data'][i]['order_id'].toString(),
-            producnt_name: res['data'][i]['order_id'].toString(),
-            qty: res['data'][i]['order_id'].toString(),
-            price: res['data'][i]['order_id'].toString(),
-            price_group_id: res['data'][i]['order_id'].toString(),
+            order_no: res['data'][i]['order_no'].toString(),
+            order_date: res['data'][i]['order_date'].toString(),
+            line_id: res['data'][i]['line_id'].toString(),
+            customer_id: res['data'][i]['customer_id'].toString(),
+            customer_name: res['data'][i]['customer_name'].toString(),
+            product_id: res['data'][i]['product_id'].toString(),
+            product_name: res['data'][i]['product_name'].toString(),
+            product_code: res['data'][i]['product_code'].toString(),
+            qty: res['data'][i]['qty'].toString(),
+            price: res['data'][i]['price'].toString(),
+            price_group_id: res['data'][i]['price_group_id'].toString(),
           );
 
           data.add(orderlineresult);
@@ -192,6 +223,26 @@ class OrderData with ChangeNotifier {
 
   void removeOrder() {
     print('remove order');
+    notifyListeners();
+  }
+
+  void removeOrderDetail(String line_id) async {
+    final Map<String, dynamic> delete_id = {
+      'id': line_id,
+    };
+
+    try {
+      http.Response response;
+      response = await http.post(Uri.encodeFull(url_to_delete_order_detail),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(delete_id));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> res = json.decode(response.body);
+        print('data delete length is ${res["data"]}');
+      }
+    } catch (_) {}
+    print('remove order line');
     notifyListeners();
   }
 }

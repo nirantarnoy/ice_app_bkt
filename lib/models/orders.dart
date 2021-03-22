@@ -4,6 +4,7 @@ class Orders {
   final String id;
   final String order_no;
   final String customer_id;
+  final String customer_code;
   final String customer_name;
   final String order_date;
   final String note;
@@ -15,6 +16,7 @@ class Orders {
       {@required this.id,
       @required this.order_no,
       @required this.customer_id,
+      @required this.customer_code,
       @required this.customer_name,
       @required this.order_date,
       @required this.note,

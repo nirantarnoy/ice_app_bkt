@@ -45,8 +45,8 @@ class ProductData with ChangeNotifier {
         print('api ok');
         Map<String, dynamic> res = json.decode(response.body);
         List<Products> data = [];
-        print('data length is ${res["data"].length}');
-        print('data server is ${res["data"]}');
+        // print('data length is ${res["data"].length}');
+        // print('data server is ${res["data"]}');
 
         if (res == null) {
           _isLoading = false;

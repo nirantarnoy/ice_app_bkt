@@ -31,6 +31,8 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
   String user_name = '';
   String user_email = '';
   String user_photo = '';
+  String user_route_code = '';
+  String user_car_name = '';
 
   @override
   void initState() {
@@ -44,6 +46,8 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
     setState(() {
       user_name = prefs.getString("emp_name");
       user_photo = prefs.getString("emp_photo");
+      user_route_code = prefs.getString("emp_route_name");
+      user_car_name = prefs.getString("emp_car_name");
       //user_email = prefs.getString("");
     });
   }
@@ -62,7 +66,7 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
         appTitle = 'รับ-โอน';
       }
       if (index == 3) {
-        appTitle = 'ปิดการขาย';
+        appTitle = 'รับชำระเงิน';
         // Navigator.push(
         //   context,
         //   MaterialPageRoute(builder: (context) => OrderPage(widget.model)),
@@ -164,37 +168,37 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
             appTitle,
             style: TextStyle(fontFamily: 'Cloud-Bold', color: Colors.white),
           ),
-          actions: <Widget>[
-            IconButton(
-              //color: Colors.white,
-              icon: Icon(
-                Icons.search,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                //showInfoFlushbar(context);
-                show_Title_n_message_Flushbar(context);
-                // showSearch(context: context, delegate: DataSearch());
-              },
-            ),
-            (_currentIndex == 3)
-                ? IconButton(
-                    //color: Colors.white,
-                    onPressed: () => {},
-                    icon: Icon(
-                      Icons.add_circle_outline,
-                      color: Colors.white,
-                    ),
-                  )
-                : Container(),
-            // IconButton(
-            //     //color: Colors.white,
-            //     icon: Icon(Icons.shopping_cart, color: Colors.white),
-            //     onPressed: () {
-            //       // Navigator.push(context,
-            //       //     MaterialPageRoute(builder: (context) => CardPage()));
-            //     }),
-          ],
+          // actions: <Widget>[
+          //   IconButton(
+          //     //color: Colors.white,
+          //     icon: Icon(
+          //       Icons.search,
+          //       color: Colors.white,
+          //     ),
+          //     onPressed: () {
+          //       //showInfoFlushbar(context);
+          //       show_Title_n_message_Flushbar(context);
+          //       // showSearch(context: context, delegate: DataSearch());
+          //     },
+          //   ),
+          //   (_currentIndex == 3)
+          //       ? IconButton(
+          //           //color: Colors.white,
+          //           onPressed: () => {},
+          //           icon: Icon(
+          //             Icons.add_circle_outline,
+          //             color: Colors.white,
+          //           ),
+          //         )
+          //       : Container(),
+          //   // IconButton(
+          //   //     //color: Colors.white,
+          //   //     icon: Icon(Icons.shopping_cart, color: Colors.white),
+          //   //     onPressed: () {
+          //   //       // Navigator.push(context,
+          //   //       //     MaterialPageRoute(builder: (context) => CardPage()));
+          //   //     }),
+          // ],
         ),
         drawer: Drawer(
           child: ListView(
@@ -206,7 +210,7 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
                   style: TextStyle(color: Colors.white),
                 ),
                 accountEmail: Text(
-                  "sale01@vorapat.com",
+                  "${user_car_name}",
                   style: TextStyle(color: Colors.white),
                 ),
                 currentAccountPicture: CircleAvatar(
@@ -215,10 +219,11 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
                   //  child: Text("NT"),
                 ),
                 otherAccountsPictures: <Widget>[
-                  // CircleAvatar(
-                  //   backgroundColor: Colors.white,
-                  //   child: Text("NT"),
-                  // ),
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    // child: Text("${user_route_code}"),
+                    child: Text("${user_route_code}"),
+                  ),
                 ],
               ),
               ListTile(
@@ -285,7 +290,7 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
                     icon: Icon(Icons.transform_sharp), title: Text('รับ-โอน')),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.beenhere),
-                  title: Text('รับเงิน'),
+                  title: Text('รับชำระเงิน'),
                 ),
               ],
             ),

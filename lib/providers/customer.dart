@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:ice_app_new/models/customers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomerData with ChangeNotifier {
   final String url_to_customer_list =
@@ -17,6 +18,7 @@ class CustomerData with ChangeNotifier {
   List<Customers> get listcustomer => _customer;
   bool _isLoading = false;
   int _id = 0;
+
   int get idCustomer => _id;
 
   set idCustomer(int val) {
@@ -34,7 +36,13 @@ class CustomerData with ChangeNotifier {
   }
 
   Future<dynamic> fetCustomers() async {
-    final Map<String, dynamic> filterData = {'route_id': 5};
+    String _current_route_id = "";
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('user_id') != null) {
+      _current_route_id = prefs.getString('emp_route_id');
+    }
+
+    final Map<String, dynamic> filterData = {'route_id': _current_route_id};
     // _isLoading = true;
     notifyListeners();
     try {

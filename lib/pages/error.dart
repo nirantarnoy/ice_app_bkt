@@ -9,7 +9,7 @@ class ErrorPage extends StatelessWidget {
       children: <Widget>[
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[Text('เชื่อมต่อ api ไม่ได้')],
+          children: <Widget>[Text('ไม่สามารถเชื่อมต่อ Server ได้')],
         ),
       ],
     ));

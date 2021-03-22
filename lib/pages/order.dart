@@ -92,7 +92,7 @@ class _OrderPageState extends State<OrderPage> {
       ));
       // print("data length = " + products.listproduct.toString());
       if (orders.is_apicon) {
-        if (orders.listorder.length > 0 && !orders.is_loading) {
+        if (!orders.is_loading) {
           content = Container(child: OrderItem());
         } else if (orders.is_loading) {
           content = Center(child: CircularProgressIndicator());
@@ -102,63 +102,63 @@ class _OrderPageState extends State<OrderPage> {
       }
       return RefreshIndicator(
         onRefresh: orders.fetOrders,
-        child: content,
+        child: Container(child: OrderItem()),
       );
     });
   }
 
-  Widget _openPopup(context) {
-    Alert(
-        context: context,
-        title: "บันทึกรายการขาย",
-        content: Column(
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(
-                // icon: Icon(Icons.account_circle),
-                labelText: 'Username',
-              ),
-            ),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                // icon: Icon(Icons.lock),
-                labelText: 'Password',
-              ),
-            ),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                // icon: Icon(Icons.lock),
-                labelText: 'Password',
-              ),
-            ),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                // icon: Icon(Icons.lock),
-                labelText: 'Password',
-              ),
-            ),
-            TextField(
-              obscureText: true,
-              decoration: InputDecoration(
-                // icon: Icon(Icons.lock),
-                labelText: 'Password',
-              ),
-            ),
-          ],
-        ),
-        buttons: [
-          DialogButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              "บันทึก",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          )
-        ]).show();
-  }
+  // Widget _openPopup(context) {
+  //   Alert(
+  //       context: context,
+  //       title: "บันทึกรายการขาย",
+  //       content: Column(
+  //         children: <Widget>[
+  //           TextField(
+  //             decoration: InputDecoration(
+  //               // icon: Icon(Icons.account_circle),
+  //               labelText: 'Username',
+  //             ),
+  //           ),
+  //           TextField(
+  //             obscureText: true,
+  //             decoration: InputDecoration(
+  //               // icon: Icon(Icons.lock),
+  //               labelText: 'Password',
+  //             ),
+  //           ),
+  //           TextField(
+  //             obscureText: true,
+  //             decoration: InputDecoration(
+  //               // icon: Icon(Icons.lock),
+  //               labelText: 'Password',
+  //             ),
+  //           ),
+  //           TextField(
+  //             obscureText: true,
+  //             decoration: InputDecoration(
+  //               // icon: Icon(Icons.lock),
+  //               labelText: 'Password',
+  //             ),
+  //           ),
+  //           TextField(
+  //             obscureText: true,
+  //             decoration: InputDecoration(
+  //               // icon: Icon(Icons.lock),
+  //               labelText: 'Password',
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //       buttons: [
+  //         DialogButton(
+  //           onPressed: () => Navigator.pop(context),
+  //           child: Text(
+  //             "บันทึก",
+  //             style: TextStyle(color: Colors.white, fontSize: 20),
+  //           ),
+  //         )
+  //       ]).show();
+  // }
 
   @override
   Widget build(BuildContext context) {

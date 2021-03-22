@@ -8,12 +8,12 @@ import 'package:ice_app_new/models/user.dart';
 
 class UserData with ChangeNotifier {
   final String url_to_user_list =
-      // "http://192.168.1.120/icesystem/frontend/web/api/customer/list";
-      "http://192.168.60.118/icesystem/frontend/web/api/customer/list";
+      "http://192.168.1.120/icesystem/frontend/web/api/customer/list";
+  // "http://192.168.60.118/icesystem/frontend/web/api/customer/list";
   //"http://119.59.100.74/icesystem/frontend/web/api/customer/list";
   final String url_to_user_login =
-      //  "http://192.168.1.120/icesystem/frontend/web/api/authen/login";
-      "http://192.168.60.118/icesystem/frontend/web/api/authen/login";
+      "http://192.168.1.120/icesystem/frontend/web/api/authen/login";
+  //"http://192.168.60.118/icesystem/frontend/web/api/authen/login";
   // "http://119.59.100.74/icesystem/frontend/web/api/customer/detail";
 
   User _authenticatedUser;
@@ -76,11 +76,16 @@ class UserData with ChangeNotifier {
         }
 
         final User userresult = User(
-            id: res['data'][0]['user_id'].toString(),
-            username: res['data'][0]['username'].toString(),
-            emp_code: res['data'][0]['emp_code'].toString(),
-            emp_name: res['data'][0]['emp_name'].toString(),
-            emp_photo: res['data'][0]['emp_photo'].toString());
+          id: res['data'][0]['user_id'].toString(),
+          username: res['data'][0]['username'].toString(),
+          emp_code: res['data'][0]['emp_code'].toString(),
+          emp_name: res['data'][0]['emp_name'].toString(),
+          emp_photo: res['data'][0]['emp_photo'].toString(),
+          emp_route_id: res['data'][0]['emp_route_id'].toString(),
+          emp_route_name: res['data'][0]['emp_route_name'].toString(),
+          emp_car_id: res['data'][0]['emp_car_id'].toString(),
+          emp_car_name: res['data'][0]['emp_car_name'].toString(),
+        );
 
         data.add(userresult);
 
@@ -92,6 +97,13 @@ class UserData with ChangeNotifier {
         prefs.setString('emp_code', res['data'][0]['emp_code'].toString());
         prefs.setString('emp_name', res['data'][0]['emp_name'].toString());
         prefs.setString('emp_photo', res['data'][0]['emp_photo'].toString());
+        prefs.setString(
+            'emp_route_name', res['data'][0]['emp_route_name'].toString());
+        prefs.setString(
+            'emp_route_id', res['data'][0]['emp_route_id'].toString());
+        prefs.setString('emp_car_id', res['data'][0]['emp_car_id'].toString());
+        prefs.setString(
+            'emp_car_name', res['data'][0]['emp_car_name'].toString());
 
         prefs.setString('expiryTime', expiryTime.toIso8601String());
 
@@ -123,13 +135,21 @@ class UserData with ChangeNotifier {
     final String emp_name = prefs.getString('emp_name');
     final String userId = prefs.getString('user_id');
     final String emp_photo = prefs.getString('user_photo');
+    final String emp_route_id = prefs.getString('emp_route_id');
+    final String emp_route_name = prefs.getString('emp_route_name');
+    final String emp_car_id = prefs.getString('emp_car_id');
+    final String emp_car_name = prefs.getString('emp_car_name');
     final int tokenLifespan = parsedExpiryTime.difference(now).inSeconds;
     _authenticatedUser = User(
         id: userId,
         emp_code: emp_code,
         emp_name: emp_name,
         emp_photo: emp_photo,
-        username: null);
+        username: null,
+        emp_route_id: emp_route_id,
+        emp_car_id: emp_car_id,
+        emp_car_name: emp_car_name,
+        emp_route_name: emp_route_name);
     _isauthenuser = true;
     setAuthTimeout(tokenLifespan);
     notifyListeners();
@@ -141,12 +161,15 @@ class UserData with ChangeNotifier {
       User _currentinfo;
 
       _currentinfo = new User(
-        id: prefs.getString('userId'),
-        emp_code: prefs.getString('emp_code'),
-        emp_name: prefs.getString('emp_name'),
-        emp_photo: prefs.getString('emp_photo'),
-        username: null,
-      );
+          id: prefs.getString('userId'),
+          emp_code: prefs.getString('emp_code'),
+          emp_name: prefs.getString('emp_name'),
+          emp_photo: prefs.getString('emp_photo'),
+          username: null,
+          emp_route_id: prefs.getString('emp_route_id'),
+          emp_car_id: prefs.getString('emp_car_id'),
+          emp_car_name: prefs.getString('emp_car_name'),
+          emp_route_name: prefs.getString('emp_route_name'));
       return _currentinfo;
     } else {
       return null;

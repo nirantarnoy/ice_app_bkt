@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 import 'package:ice_app_new/providers/product.dart';
+import 'package:ice_app_new/providers/order.dart';
+import 'package:ice_app_new/models/addorder.dart';
 import 'package:ice_app_new/models/products.dart';
+import 'package:ice_app_new/providers/customer.dart';
 
 class SaleProductItem extends StatelessWidget {
+  static String selectedCustomer;
   List<Products> _products = [];
   Widget _buildproductList(List<Products> products) {
     Widget productCards;
     if (products.length > 0) {
-      print("has product item list");
+      // print("has product item list");
       productCards = new GridView.builder(
           shrinkWrap: true,
           itemCount: products.length,
@@ -24,10 +29,11 @@ class SaleProductItem extends StatelessWidget {
           ),
           itemBuilder: (BuildContext context, int index) {
             return Items(
-              products[index].id,
-              products[index].code,
-              products[index].name,
-            );
+                products[index].id,
+                products[index].code,
+                products[index].name,
+                products[index].sale_price,
+                selectedCustomer);
           });
       return productCards;
     } else {
@@ -39,6 +45,7 @@ class SaleProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final ProductData products = Provider.of<ProductData>(context);
     products.fetProducts();
+
     return _buildproductList(products.listproduct);
   }
 }
@@ -48,8 +55,12 @@ class Items extends StatelessWidget {
   final String _id;
   final String _code;
   final String _name;
+  final String _price;
+  final String _selectedCustomer;
 
-  Items(this._id, this._code, this._name);
+  Addorder _orderData;
+
+  Items(this._id, this._code, this._name, this._price, this._selectedCustomer);
 
   void _editBottomSheet(context) {
     showModalBottomSheet(
@@ -74,14 +85,19 @@ class Items extends StatelessWidget {
                           onPressed: () => Navigator.of(context).pop())
                     ],
                   ),
-                  Center(
-                    child: Row(children: <Widget>[
-                      Text(
-                        "${_name}",
-                        style:
-                            TextStyle(color: Colors.green[900], fontSize: 20),
-                      )
-                    ]),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: Row(children: <Widget>[
+                          Text(
+                            "${_name}",
+                            style: TextStyle(
+                                color: Colors.green[900], fontSize: 20),
+                          )
+                        ]),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 20),
                   // Row(
@@ -107,6 +123,12 @@ class Items extends StatelessWidget {
                           hintStyle: TextStyle(color: Colors.grey)),
                       style: TextStyle(
                           fontSize: 40, color: Colors.deepPurple[400]),
+                      onChanged: (String value) {
+                        _orderData = new Addorder(
+                            customer_id: _selectedCustomer,
+                            product_id: _id,
+                            qty: value);
+                      },
                     )),
                   ]),
                   SizedBox(height: 10),
@@ -186,7 +208,7 @@ class Items extends StatelessWidget {
                                             color: Colors.white, fontSize: 20),
                                       ),
                                     ),
-                                    onPressed: () => {},
+                                    onPressed: () => _addorder(context),
                                   ))),
                           Expanded(
                               flex: 2,
@@ -236,6 +258,32 @@ class Items extends StatelessWidget {
         });
   }
 
+  void _addorder(context) {
+    print(_orderData.customer_id);
+    // final String product_id = _id;
+    // final String qty = "10";
+    Provider.of<OrderData>(context, listen: false)
+        .addOrder(_orderData.product_id, int.parse(_orderData.qty), 0,
+            int.parse(_orderData.customer_id))
+        .then((_) => {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Successfully'),
+                      content: Text('บันทึกรายการเรียบร้อยแล้ว'),
+                      actions: <Widget>[
+                        FlatButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('ok'))
+                      ],
+                    );
+                  })
+            });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -267,13 +315,21 @@ class Items extends StatelessWidget {
             onTap: () => _editBottomSheet(context),
             child: Wrap(
               children: [
-                Column(
-                  children: [
-                    Image.asset("assets/ice_cube.png"),
-                    Center(
-                      child: Text("$_name"),
-                    )
-                  ],
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Image.asset("assets/ice_cube.png"),
+                      Icon(
+                        Icons.image_rounded,
+                        color: Colors.deepPurple,
+                      ),
+                      Center(
+                        child: Text("$_name"),
+                      )
+                    ],
+                  ),
                 )
               ],
             ),
