@@ -138,22 +138,7 @@ class _JournalissuePageState extends State<JournalissuePage> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        // persistentFooterButtons: <Widget>[
-        //   new Text(
-        //     'ยอดรวม',
-        //     style: TextStyle(fontSize: 20),
-        //   ),
-        //   new Text(
-        //     '25,000',
-        //     style: TextStyle(fontSize: 20, color: Colors.orange),
-        //   ),
-        //   new Text(
-        //     'บาท',
-        //     style: TextStyle(fontSize: 20),
-        //   ),
-        // ],
         body: _buildProductList(),
-        // body: Text('Product Data'),
       ),
     );
   }

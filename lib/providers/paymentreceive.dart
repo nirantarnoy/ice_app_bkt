@@ -48,7 +48,7 @@ class PaymentreceiveData with ChangeNotifier {
   }
 
   Future<dynamic> fetPaymentreceive() async {
-    final Map<String, dynamic> filterData = {'customer_id': 1};
+    final Map<String, dynamic> filterData = {'customer_id': 2850};
     // _isLoading = true;
     notifyListeners();
     try {
@@ -62,7 +62,7 @@ class PaymentreceiveData with ChangeNotifier {
         Map<String, dynamic> res = json.decode(response.body);
         List<Paymentreceive> data = [];
         // print('data length is ${res["data"].length}');
-        // print('data server is ${res["data"]}');
+        print('data payment is ${res["data"]}');
 
         if (res == null) {
           _isLoading = false;
@@ -75,7 +75,7 @@ class PaymentreceiveData with ChangeNotifier {
           return;
         }
 
-        for (var i = 0; i < res['data'].length - 1; i++) {
+        for (var i = 0; i < res['data'].length; i++) {
           // var product = Paymentreceive.fromJson(res[i]);
           //print(res['data'][i]['code']);
           // data.add(product);
@@ -89,7 +89,7 @@ class PaymentreceiveData with ChangeNotifier {
             remain_amount: res['data'][i]['remain_amount'].toString(),
           );
 
-          //print('data from server is ${productresult}');
+          print('data from server is ${productresult}');
           data.add(productresult);
         }
 

@@ -77,7 +77,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             direction: DismissDirection.endToStart,
             onDismissed: (direction) {
               setState(() {
-                Provider.of<OrderData>(context).removeOrderDetail(item.line_id);
+                //Provider.of<OrderData>(context).removeOrderDetail(item.line_id);
                 orders.removeAt(index);
               });
               Scaffold.of(context).showSnackBar(SnackBar(

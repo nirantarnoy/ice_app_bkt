@@ -59,7 +59,7 @@ class ProductData with ChangeNotifier {
           return;
         }
 
-        for (var i = 0; i < res['data'].length - 1; i++) {
+        for (var i = 0; i < res['data'].length; i++) {
           // var product = Products.fromJson(res[i]);
           //print(res['data'][i]['code']);
           // data.add(product);

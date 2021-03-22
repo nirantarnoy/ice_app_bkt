@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:ice_app_new/providers/customer.dart';
 import 'package:ice_app_new/providers/paymentreceive.dart';
 import 'package:intl/intl.dart';
-import 'package:ice_app_new/providers/order.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/paymentreceive.dart';
-import '../../pages/orderdetail.dart';
-import '../../pages/createorder.dart';
 
 class PaymentItem extends StatefulWidget {
   @override
@@ -84,7 +81,7 @@ class _PaymentItemState extends State<PaymentItem> {
     final CustomerData customers =
         Provider.of<CustomerData>(context, listen: false);
     //customers.fetCustomers();
-    //payments.fetpayments();
+    //payments.fetPaymentreceive();
     var formatter = NumberFormat('#,##,##0');
     return Column(
       children: [
@@ -223,7 +220,7 @@ class Items extends StatelessWidget {
           "${_order_no}",
           style: TextStyle(fontSize: 16, color: Colors.cyan),
         ),
-        subtitle: Text("$_order_date}"),
+        subtitle: Text("${_order_date}"),
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
