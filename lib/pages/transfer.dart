@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ice_app_new/pages/order.dart';
-import 'package:ice_app_new/pages/payment.dart';
+import 'package:ice_app_new/pages/transferout.dart';
+import 'package:ice_app_new/pages/transferin.dart';
 
 class TransferPage extends StatefulWidget {
   @override
@@ -16,6 +16,7 @@ class _TransferPageState extends State<TransferPage> {
           appBar: AppBar(
             // title: Text('รับโอนสินค้า'),
             bottom: TabBar(
+              labelColor: Colors.white,
               tabs: <Widget>[
                 Tab(
                   icon: Icon(Icons.move_to_inbox),
@@ -28,7 +29,8 @@ class _TransferPageState extends State<TransferPage> {
               ],
             ),
           ),
-          body: TabBarView(children: <Widget>[OrderPage(), PaymentPage()]),
+          body: TabBarView(
+              children: <Widget>[TransferoutPage(), TransferinPage()]),
         ));
   }
 }

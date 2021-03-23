@@ -136,34 +136,39 @@ class Items extends StatelessWidget {
           Navigator.of(context)
               .pushNamed(OrderDetailPage.routeName, arguments: _customer_id);
         }, // Navigator.of(context).pushNamed(OrderDetailPage.routeName),
-        child: Card(
-            child: ListTile(
-          // leading: RaisedButton(
-          //     color:
-          //         _payment_method_id == "1" ? Colors.green : Colors.purple[300],
-          //     onPressed: () {},
-          //     child: Text(
-          //       "$_payment_method",
-          //       style: TextStyle(color: Colors.white),
-          //     )),
-          leading: Chip(
-            label: Text("${_order_no}", style: TextStyle(color: Colors.white)),
-            backgroundColor: Colors.green[500],
-          ),
-          title: Text(
-            "$_customer_name $_note",
-            style: TextStyle(fontSize: 16, color: Colors.cyan),
-          ),
-          subtitle: Text("$_order_date ($_order_no)"),
-          trailing: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("$_total_amount",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.red)),
-            ],
-          ),
-        )),
+        child: Column(
+          children: <Widget>[
+            ListTile(
+              // leading: RaisedButton(
+              //     color:
+              //         _payment_method_id == "1" ? Colors.green : Colors.purple[300],
+              //     onPressed: () {},
+              //     child: Text(
+              //       "$_payment_method",
+              //       style: TextStyle(color: Colors.white),
+              //     )),
+              leading: Chip(
+                label:
+                    Text("${_order_no}", style: TextStyle(color: Colors.white)),
+                backgroundColor: Colors.green[500],
+              ),
+              title: Text(
+                "$_customer_name $_note",
+                style: TextStyle(fontSize: 16, color: Colors.cyan),
+              ),
+              subtitle: Text("$_order_date ($_order_no)"),
+              trailing: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("$_total_amount",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.red)),
+                ],
+              ),
+            ),
+            Divider(),
+          ],
+        ),
       ),
     );
   }

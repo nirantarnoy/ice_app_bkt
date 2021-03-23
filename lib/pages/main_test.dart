@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ice_app_new/models/delivery_route.dart';
-import 'package:ice_app_new/pages/sale.dart';
 import 'package:ice_app_new/pages/journalissue.dart';
 import 'package:ice_app_new/widgets/journalissue/journalissue_item.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -68,10 +67,8 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
       }
       if (index == 3) {
         appTitle = 'รับชำระเงิน';
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => OrderPage(widget.model)),
-        // );
+        // Navigator.of(context).pushNamed(PaymentPage
+        //     .routeName); //กระโดดไปหน้าใหม่ ไม่แสดง bottontab ข้างล่าง
       }
       if (index == 3) {
         //_logout();
@@ -165,6 +162,7 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
+          iconTheme: IconThemeData(color: Colors.white),
           title: Text(
             appTitle,
             style: TextStyle(fontFamily: 'Cloud-Bold', color: Colors.white),

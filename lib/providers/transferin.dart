@@ -7,11 +7,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class TransferinData with ChangeNotifier {
   final String url_to_in_list =
-      "http://192.168.1.120/icesystem/frontend/web/api/transfer/inlist";
+      //  "http://192.168.1.120/icesystem/frontend/web/api/transfer/inlist";
+      "http://192.168.60.118/icesystem/frontend/web/api/transfer/inlist";
 
   List<Transferin> _transferin;
   List<Transferin> get listtransferin => _transferin;
   bool _isLoading = false;
+  bool _isApicon = false;
   int _id = 0;
 
   int get idTransferin => _id;
@@ -28,6 +30,10 @@ class TransferinData with ChangeNotifier {
 
   bool get is_loading {
     return _isLoading;
+  }
+
+  bool get is_apicon {
+    return _isApicon;
   }
 
   Future<dynamic> fetTransferin() async {
@@ -77,9 +83,12 @@ class TransferinData with ChangeNotifier {
 
         listtransferin = data;
         _isLoading = false;
+        _isApicon = true;
         notifyListeners();
         return listtransferin;
       }
-    } catch (_) {}
+    } catch (_) {
+      _isApicon = false;
+    }
   }
 }

@@ -8,12 +8,13 @@ import 'package:ice_app_new/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OrderData with ChangeNotifier {
+  final String server_api = "";
   final String url_to_order =
-      "http://192.168.1.120/icesystem/frontend/web/api/order/list";
-  //  "http://192.168.60.118/icesystem/frontend/web/api/order/listbycustomer";
+      //   "http://192.168.1.120/icesystem/frontend/web/api/order/list";
+      "http://192.168.60.118/icesystem/frontend/web/api/order/list";
   final String url_to_order_detail =
-      "http://192.168.1.120/icesystem/frontend/web/api/order/listbycustomer";
-  // "http://192.168.60.118/icesystem/frontend/web/api/order/detail";
+      //    "http://192.168.1.120/icesystem/frontend/web/api/order/listbycustomer";
+      "http://192.168.60.118/icesystem/frontend/web/api/order/listbycustomer";
   final String url_to_add_order =
       "http://192.168.1.120/icesystem/frontend/web/api/order/addorder";
   final String url_to_update_order =
@@ -23,7 +24,8 @@ class OrderData with ChangeNotifier {
   final String url_to_update_order_detail =
       "http://192.168.1.120/icesystem/frontend/web/api/order/updateorderdetail";
   final String url_to_delete_order_detail =
-      "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorderline";
+      "http://192.168.60.118/icesystem/frontend/web/api/order/deleteorderline";
+  // "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorderline";
 
   ///// for common
   bool _isLoading = false;
@@ -178,6 +180,8 @@ class OrderData with ChangeNotifier {
   }
 
   Future<dynamic> getCustomerDetails(String customer_id) async {
+    _isLoading = true;
+    notifyListeners();
     String _order_date = new DateTime.now().toString();
     final Map<String, dynamic> filterData = {
       'order_date': _order_date,

@@ -83,102 +83,109 @@ class _PaymentItemState extends State<PaymentItem> {
     //customers.fetCustomers();
     //payments.fetPaymentreceive();
     var formatter = NumberFormat('#,##,##0');
-    return Column(
-      children: [
-        Column(children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  color: Colors.purple,
-                  child: DropdownButtonHideUnderline(
-                    child: Container(
-                      padding: EdgeInsets.only(left: 1, right: 1),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.purple, width: 0.1),
-                          borderRadius: BorderRadius.circular(1)),
-                      child: ButtonTheme(
-                        alignedDropdown: true,
-                        child: DropdownButton(
-                          value: selectedValue,
-                          iconSize: 30,
-                          icon: Icon(Icons.find_in_page, color: Colors.white),
-                          style: TextStyle(color: Colors.black54, fontSize: 16),
-                          hint: Text(
-                            'เลือกลูกค้า',
-                            style: TextStyle(
-                                fontFamily: 'Kanit-Regular',
-                                color: Colors.white),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: <Widget>[
+          Column(children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                    color: Colors.purple,
+                    child: DropdownButtonHideUnderline(
+                      child: Container(
+                        padding: EdgeInsets.only(left: 1, right: 1),
+                        decoration: BoxDecoration(
+                            border:
+                                Border.all(color: Colors.purple, width: 0.1),
+                            borderRadius: BorderRadius.circular(1)),
+                        child: ButtonTheme(
+                          alignedDropdown: true,
+                          child: DropdownButton(
+                            value: selectedValue,
+                            iconSize: 30,
+                            icon: Icon(Icons.find_in_page, color: Colors.white),
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 16),
+                            hint: Text(
+                              'เลือกลูกค้า',
+                              style: TextStyle(
+                                  fontFamily: 'Kanit-Regular',
+                                  color: Colors.white),
+                            ),
+                            dropdownColor: Colors.purple,
+                            items: customers.listcustomer
+                                .map((e) => DropdownMenuItem(
+                                    value: e.id,
+                                    child: Text(
+                                      e.name,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Kanit-Regular'),
+                                    )))
+                                .toList(),
+                            onChanged: (String value) {
+                              setState(() {
+                                selectedValue = value;
+                              });
+                            },
                           ),
-                          dropdownColor: Colors.purple,
-                          items: customers.listcustomer
-                              .map((e) => DropdownMenuItem(
-                                  value: e.id,
-                                  child: Text(
-                                    e.name,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'Kanit-Regular'),
-                                  )))
-                              .toList(),
-                          onChanged: (String value) {
-                            setState(() {
-                              selectedValue = value;
-                            });
-                          },
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Card(
-            margin: EdgeInsets.all(15),
-            child: Padding(
-              padding: EdgeInsets.all(8),
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          "ยอดค้างชำระ",
-                          style: TextStyle(fontSize: 20, color: Colors.red),
-                        ),
-                        SizedBox(width: 10),
-                        Chip(
-                          label: Text(
-                            "${formatter.format(payments.totalAmount)}",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                          backgroundColor: Theme.of(context).primaryColor,
-                        ),
-                        Text("บาท",
-                            style:
-                                TextStyle(fontSize: 20, color: Colors.black87))
-                      ]),
-                ],
-              ),
+              ],
             ),
+            Card(
+              margin: EdgeInsets.all(15),
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            "ยอดค้างชำระ",
+                            style: TextStyle(fontSize: 20, color: Colors.red),
+                          ),
+                          SizedBox(width: 10),
+                          Chip(
+                            label: Text(
+                              "${formatter.format(payments.totalAmount)}",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            backgroundColor: Theme.of(context).primaryColor,
+                          ),
+                          Text("บาท",
+                              style: TextStyle(
+                                  fontSize: 20, color: Colors.black87))
+                        ]),
+                  ],
+                ),
+              ),
+            )
+          ]),
+          SizedBox(height: 5),
+          Expanded(child: _buildpaymentsList(payments.listpaymentreceive)),
+          SizedBox(
+            height: 10,
           )
-        ]),
-        SizedBox(height: 5),
-        Expanded(child: _buildpaymentsList(payments.listpaymentreceive)),
-        SizedBox(
-          height: 10,
-        )
-      ],
+        ],
+      ),
     );
   }
 }
 
 class Items extends StatelessWidget {
+  GlobalKey<FormState> _formkey;
   //payments _payments;
   final String _id;
   final String _order_no;
@@ -200,36 +207,148 @@ class Items extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap:
-          () {}, // Navigator.of(context).pushNamed(OrderDetailPage.routeName),
-      child: Card(
-          child: ListTile(
-        // leading: RaisedButton(
-        //     color:
-        //         _payment_method_id == "1" ? Colors.green : Colors.purple[300],
-        //     onPressed: () {},
-        //     child: Text(
-        //       "$_payment_method",
-        //       style: TextStyle(color: Colors.white),
-        //     )),
-        // leading: Chip(
-        //   label: Text("${_order_no}", style: TextStyle(color: Colors.white)),
-        //   backgroundColor: Colors.green[500],
-        // ),
-        title: Text(
-          "${_order_no}",
-          style: TextStyle(fontSize: 16, color: Colors.cyan),
-        ),
-        subtitle: Text("${_order_date}"),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("${_remain_amount}",
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
-          ],
-        ),
-      )),
+      onTap: () {
+        return showDialog(
+            context: context,
+            builder: (context) {
+              final TextEditingController _textEditingController =
+                  TextEditingController();
+              bool isChecked = false;
+              return Material(
+                shadowColor: Colors.grey,
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(height: 10),
+                      Center(
+                          child: Text(
+                        "บันทึกชำระเงิน",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      )),
+                      SizedBox(height: 10),
+                      Form(
+                        key: _formkey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            TextFormField(
+                              controller: _textEditingController,
+                              validator: (value) {
+                                return value.isNotEmpty
+                                    ? null
+                                    : "Invalid Fields";
+                              },
+                              decoration:
+                                  InputDecoration(hintText: "Enter some text"),
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Text("check"),
+                                Checkbox(
+                                  value: false,
+                                  onChanged: (checked) {},
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      Divider(),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              FlatButton(
+                                color: Colors.green,
+                                onPressed: () {},
+                                child: Text("บันทีก"),
+                              ),
+                              FlatButton(
+                                onPressed: () {},
+                                child: Text("บันทีก"),
+                              )
+                            ],
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              );
+            });
+        // return showDialog(
+        //     context: context,
+        //     builder: (context) {
+        //       final TextEditingController _textEditingController =
+        //           TextEditingController();
+        //       bool isChecked = false;
+        //       return AlertDialog(
+        //         content: Form(
+        //           key: _formkey,
+        //           child: Column(
+        //             mainAxisSize: MainAxisSize.min,
+        //             children: <Widget>[
+        //               TextFormField(
+        //                 controller: _textEditingController,
+        //                 validator: (value) {
+        //                   return value.isNotEmpty ? null : "Invalid Fields";
+        //                 },
+        //                 decoration:
+        //                     InputDecoration(hintText: "Enter some text"),
+        //               ),
+        //               Row(
+        //                 children: <Widget>[
+        //                   Text("check"),
+        //                   Checkbox(
+        //                     value: false,
+        //                     onChanged: (checked) {},
+        //                   ),
+        //                 ],
+        //               )
+        //             ],
+        //           ),
+        //         ),
+        //       );
+        //     });
+      }, // Navigator.of(context).pushNamed(OrderDetailPage.routeName),
+      child: Column(
+        children: <Widget>[
+          ListTile(
+            // leading: RaisedButton(
+            //     color:
+            //         _payment_method_id == "1" ? Colors.green : Colors.purple[300],
+            //     onPressed: () {},
+            //     child: Text(
+            //       "$_payment_method",
+            //       style: TextStyle(color: Colors.white),
+            //     )),
+            // leading: Chip(
+            //   label: Text("${_order_no}", style: TextStyle(color: Colors.white)),
+            //   backgroundColor: Colors.green[500],
+            // ),
+            title: Text(
+              "${_order_no}",
+              style: TextStyle(fontSize: 16, color: Colors.cyan),
+            ),
+            subtitle: Text("${_order_date}"),
+            trailing: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("${_remain_amount}",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.red)),
+              ],
+            ),
+          ),
+          Divider(),
+        ],
+      ),
     );
   }
 }

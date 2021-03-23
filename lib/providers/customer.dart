@@ -7,8 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomerData with ChangeNotifier {
   final String url_to_customer_list =
-      "http://192.168.1.120/icesystem/frontend/web/api/customer/list";
-  //    "http://192.168.60.118/icesystem/frontend/web/api/customer/list";
+      //   "http://192.168.1.120/icesystem/frontend/web/api/customer/list";
+      "http://192.168.60.118/icesystem/frontend/web/api/customer/list";
   //"http://119.59.100.74/icesystem/frontend/web/api/customer/list";
   final String url_to_customer_detail =
       "http://203.203.1.224/icesystem/frontend/web/api/product/detail";

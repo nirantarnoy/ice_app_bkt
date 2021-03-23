@@ -7,15 +7,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class TransferoutData with ChangeNotifier {
   final String url_to_out_list =
-      "http://192.168.1.120/icesystem/frontend/web/api/transfer/outlist";
+      //     "http://192.168.1.120/icesystem/frontend/web/api/transfer/outlist";
+      "http://192.168.60.118/icesystem/frontend/web/api/transfer/outlist";
   final String url_to_in_list =
-      "http://192.168.1.120/icesystem/frontend/web/api/transfer/inlist";
-  //    "http://192.168.60.118/icesystem/frontend/web/api/customer/list";
+      //   "http://192.168.1.120/icesystem/frontend/web/api/transfer/inlist";
+      "http://192.168.60.118/icesystem/frontend/web/api/transfer/inlist";
   //"http://119.59.100.74/icesystem/frontend/web/api/customer/list";
 
   List<Transferout> _transferout;
   List<Transferout> get listtransferout => _transferout;
   bool _isLoading = false;
+  bool _isApicon = true;
   int _id = 0;
 
   int get idTransferout => _id;
@@ -34,6 +36,10 @@ class TransferoutData with ChangeNotifier {
     return _isLoading;
   }
 
+  bool get is_apicon {
+    return _isApicon;
+  }
+
   Future<dynamic> fetTransferout() async {
     String _current_route_id = "";
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -42,7 +48,7 @@ class TransferoutData with ChangeNotifier {
     }
 
     final Map<String, dynamic> filterData = {'route_id': _current_route_id};
-    // _isLoading = true;
+    _isLoading = true;
     notifyListeners();
     try {
       http.Response response;
@@ -56,7 +62,7 @@ class TransferoutData with ChangeNotifier {
         Map<String, dynamic> res = json.decode(response.body);
         List<Transferout> data = [];
         print('data customer length is ${res["data"].length}');
-        //    print('data server is ${res["data"]}');
+        print('data transfer is ${res["data"]}');
 
         if (res == null) {
           _isLoading = false;
@@ -81,9 +87,12 @@ class TransferoutData with ChangeNotifier {
 
         listtransferout = data;
         _isLoading = false;
+        _isApicon = true;
         notifyListeners();
         return listtransferout;
       }
-    } catch (_) {}
+    } catch (_) {
+      _isApicon = false;
+    }
   }
 }

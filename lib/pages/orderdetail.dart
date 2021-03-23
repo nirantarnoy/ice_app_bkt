@@ -75,63 +75,74 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               margin: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
             ),
             direction: DismissDirection.endToStart,
+            confirmDismiss: (direction) {
+              return showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('แจ้งเตือน'),
+                  content: Text('ต้องการลบข้อมูลใช่หรือไม่'),
+                  actions: <Widget>[
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: Text('ไม่'),
+                    ),
+                    FlatButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(true);
+                        },
+                        child: Text('ยืนยัน'))
+                  ],
+                ),
+              );
+            },
             onDismissed: (direction) {
               setState(() {
                 //Provider.of<OrderData>(context).removeOrderDetail(item.line_id);
                 orders.removeAt(index);
               });
-              Scaffold.of(context).showSnackBar(SnackBar(
-                content: Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.check_circle_outline,
-                      color: Colors.white,
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      'ลบข้อมูลเรียบร้อย',
-                      style: TextStyle(fontFamily: "Kanit-Regular"),
-                    ),
-                  ],
-                ),
-                backgroundColor: Colors.green,
-              ));
             },
             child: GestureDetector(
               onTap: () =>
                   Navigator.of(context).pushNamed(OrderDetailPage.routeName),
-              child: Card(
-                  child: ListTile(
-                // leading: RaisedButton(
-                //     color:
-                //         _payment_method_id == "1" ? Colors.green : Colors.purple[300],
-                //     onPressed: () {},
-                //     child: Text(
-                //       "$_payment_method",
-                //       style: TextStyle(color: Colors.white),
-                //     )),
-                leading: Chip(
-                  label: Text("${item.product_code}",
-                      style: TextStyle(color: Colors.white)),
-                  backgroundColor: Colors.purple[700],
-                ),
-                title: Text(
-                  "${item.product_name}",
-                  style: TextStyle(fontSize: 16, color: Colors.cyan),
-                ),
-                subtitle: Text(
-                  "ราคาขาย ${item.price} วันที่ ${item.order_date}",
-                  style: TextStyle(fontSize: 12),
-                ),
-                trailing: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("${item.qty}",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.red)),
-                  ],
-                ),
-              )),
+              child: Column(
+                children: <Widget>[
+                  ListTile(
+                    // leading: RaisedButton(
+                    //     color:
+                    //         _payment_method_id == "1" ? Colors.green : Colors.purple[300],
+                    //     onPressed: () {},
+                    //     child: Text(
+                    //       "$_payment_method",
+                    //       style: TextStyle(color: Colors.white),
+                    //     )),
+                    leading: Chip(
+                      label: Text("${item.product_code}",
+                          style: TextStyle(color: Colors.white)),
+                      backgroundColor: Colors.purple[700],
+                    ),
+                    title: Text(
+                      "${item.product_name}",
+                      style: TextStyle(fontSize: 16, color: Colors.cyan),
+                    ),
+                    subtitle: Text(
+                      "ราคาขาย ${item.price} วันที่ ${item.order_date}",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("${item.qty}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red)),
+                      ],
+                    ),
+                  ),
+                  Divider(),
+                ],
+              ),
             ),
           );
         },
@@ -157,6 +168,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     //orders.getCustomerDetails(widget.customer_id);
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
         title: Text(
           "รายละเอียด",
           style: TextStyle(color: Colors.white),
@@ -338,38 +350,42 @@ class Items extends StatelessWidget {
         child: GestureDetector(
           onTap: () =>
               Navigator.of(context).pushNamed(OrderDetailPage.routeName),
-          child: Card(
-              child: ListTile(
-            // leading: RaisedButton(
-            //     color:
-            //         _payment_method_id == "1" ? Colors.green : Colors.purple[300],
-            //     onPressed: () {},
-            //     child: Text(
-            //       "$_payment_method",
-            //       style: TextStyle(color: Colors.white),
-            //     )),
-            leading: Chip(
-              label: Text("${_product_code}",
-                  style: TextStyle(color: Colors.white)),
-              backgroundColor: Colors.purple[700],
-            ),
-            title: Text(
-              "$_product_name",
-              style: TextStyle(fontSize: 16, color: Colors.cyan),
-            ),
-            subtitle: Text(
-              "ราคาขาย ${_price} วันที่ ${_order_date}",
-              style: TextStyle(fontSize: 12),
-            ),
-            trailing: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("$_qty",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.red)),
-              ],
-            ),
-          )),
+          child: Column(
+            children: <Widget>[
+              ListTile(
+                // leading: RaisedButton(
+                //     color:
+                //         _payment_method_id == "1" ? Colors.green : Colors.purple[300],
+                //     onPressed: () {},
+                //     child: Text(
+                //       "$_payment_method",
+                //       style: TextStyle(color: Colors.white),
+                //     )),
+                leading: Chip(
+                  label: Text("${_product_code}",
+                      style: TextStyle(color: Colors.white)),
+                  backgroundColor: Colors.purple[700],
+                ),
+                title: Text(
+                  "$_product_name",
+                  style: TextStyle(fontSize: 16, color: Colors.cyan),
+                ),
+                subtitle: Text(
+                  "ราคาขาย ${_price} วันที่ ${_order_date}",
+                  style: TextStyle(fontSize: 12),
+                ),
+                trailing: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("$_qty",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.red)),
+                  ],
+                ),
+              ),
+              Divider(),
+            ],
+          ),
         ),
       ),
     );

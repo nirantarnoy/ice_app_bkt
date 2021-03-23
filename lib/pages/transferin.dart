@@ -2,25 +2,26 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:ice_app_new/models/transferout.dart';
+import 'package:ice_app_new/providers/transferin.dart';
 
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:connectivity/connectivity.dart';
 
 import 'package:provider/provider.dart';
 import 'package:ice_app_new/providers/transferout.dart';
-import 'package:ice_app_new/widgets/transferout/transferout_item.dart';
+import 'package:ice_app_new/widgets/transferin/transferin_item.dart';
 import 'package:ice_app_new/widgets/error/err_api.dart';
 import 'package:ice_app_new/widgets/error/err_internet_con.dart';
 import '../pages/error.dart';
 
 import 'package:ice_app_new/helpers/activity_connection.dart';
 
-class TransferoutPage extends StatefulWidget {
+class TransferinPage extends StatefulWidget {
   @override
   _JournalissuePageState createState() => _JournalissuePageState();
 }
 
-class _JournalissuePageState extends State<TransferoutPage> {
+class _JournalissuePageState extends State<TransferinPage> {
   var _isInit = true;
   var _isLoading = false;
   @override
@@ -42,8 +43,8 @@ class _JournalissuePageState extends State<TransferoutPage> {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<TransferoutData>(context, listen: false)
-          .fetTransferout()
+      Provider.of<TransferinData>(context, listen: false)
+          .fetTransferin()
           .then((_) {
         setState(() {
           _isLoading = false;
@@ -56,8 +57,8 @@ class _JournalissuePageState extends State<TransferoutPage> {
 
   Widget _buildProductList() {
     return Consumer(
-        builder: (context, TransferoutData transferoutitems, Widget child) {
-      //transferoutitems.fettransferoutitems();
+        builder: (context, TransferinData transferoutitems, Widget child) {
+      //transferoutitems.fetTransferinitems();
       Widget content = Center(
           child: Text(
         'ไม่พบข้อมูล!',
@@ -66,9 +67,9 @@ class _JournalissuePageState extends State<TransferoutPage> {
       ));
       // print("data length = " + products.listproduct.toString());
       if (transferoutitems.is_apicon) {
-        if (transferoutitems.listtransferout.length > 0 &&
+        if (transferoutitems.listtransferin.length > 0 &&
             !transferoutitems.is_loading) {
-          content = Container(child: Transferoutitem());
+          content = Container(child: Transferinitem());
         } else if (transferoutitems.is_loading) {
           content = Center(child: CircularProgressIndicator());
         }
@@ -77,7 +78,7 @@ class _JournalissuePageState extends State<TransferoutPage> {
       }
 
       return RefreshIndicator(
-        onRefresh: transferoutitems.fetTransferout,
+        onRefresh: transferoutitems.fetTransferin,
         child: content,
       );
     });

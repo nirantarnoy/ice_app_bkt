@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../models/transferout.dart';
 
-class Transferoutitem extends StatelessWidget {
+class Transferinitem extends StatelessWidget {
   List<Transferout> _orders = [];
   Widget _buildissueitemList(List<Transferout> transferout_items) {
     Widget productCards;

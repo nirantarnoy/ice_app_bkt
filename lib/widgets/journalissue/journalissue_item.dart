@@ -86,30 +86,34 @@ class Items extends StatelessWidget {
     return new GestureDetector(
       onTap: () => Navigator.pushNamed(
           context, '/ordersdetail/' + this._line_issue_id.toString()),
-      child: Card(
-          child: ListTile(
-        leading: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: 100, minWidth: 100),
-          child: FadeInImage.assetNetwork(
-            width: 100,
-            height: 100,
-            placeholder: '',
-            image: "$_product_image",
+      child: Column(
+        children: <Widget>[
+          ListTile(
+            leading: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: 100, minWidth: 100),
+              child: FadeInImage.assetNetwork(
+                width: 100,
+                height: 100,
+                placeholder: '',
+                image: "$_product_image",
+              ),
+            ),
+            title: Text(
+              "$_product_name",
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            subtitle: Text("ราคาขาย $_price บาท"),
+            trailing: Text('$_qty',
+                style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orange[800])),
           ),
-        ),
-        title: Text(
-          "$_product_name",
-          style: TextStyle(
-            fontSize: 16,
-          ),
-        ),
-        subtitle: Text("ราคาขาย $_price บาท"),
-        trailing: Text('$_qty',
-            style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.orange[800])),
-      )),
+          Divider(),
+        ],
+      ),
     );
   }
 }

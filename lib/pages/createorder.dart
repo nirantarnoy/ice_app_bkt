@@ -83,7 +83,7 @@ class _CreateorderPageState extends State<CreateorderPage> {
   Widget build(BuildContext context) {
     final CustomerData customers =
         Provider.of<CustomerData>(context, listen: false);
-    customers.fetCustomers();
+    //customers.fetCustomers();
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -95,41 +95,51 @@ class _CreateorderPageState extends State<CreateorderPage> {
       ),
       body: Container(
         //body: SaleProductItem(),
-        padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+        padding: EdgeInsets.only(left: 10, right: 10, top: 15),
         color: Colors.white,
         child: Column(
           children: <Widget>[
             Row(
               children: <Widget>[
                 Expanded(
-                  child: DropdownButtonHideUnderline(
-                    child: Container(
-                      padding: EdgeInsets.only(left: 16, right: 16),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey, width: 0.1),
-                          borderRadius: BorderRadius.circular(1)),
-                      child: ButtonTheme(
-                        alignedDropdown: true,
-                        child: DropdownButton(
-                          value: selectedValue,
-                          iconSize: 30,
-                          icon: (null),
-                          style: TextStyle(color: Colors.black54, fontSize: 16),
-                          hint: Text(
-                            'เลือกลูกค้า',
-                            style: TextStyle(fontFamily: 'kanit'),
+                  child: Container(
+                    color: Colors.purple,
+                    child: DropdownButtonHideUnderline(
+                      child: Container(
+                        padding: EdgeInsets.only(left: 16, right: 16),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey, width: 0.1),
+                            borderRadius: BorderRadius.circular(1)),
+                        child: ButtonTheme(
+                          alignedDropdown: true,
+                          child: DropdownButton(
+                            value: selectedValue,
+                            iconSize: 30,
+                            icon: Icon(Icons.find_in_page, color: Colors.white),
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 16),
+                            hint: Text(
+                              'เลือกลูกค้า',
+                              style: TextStyle(
+                                  fontFamily: 'Kanit-Regular',
+                                  color: Colors.white),
+                            ),
+                            dropdownColor: Colors.purple,
+                            items: customers.listcustomer
+                                .map((e) => DropdownMenuItem(
+                                    value: e.id,
+                                    child: Text(e.name,
+                                        style: TextStyle(
+                                            fontFamily: 'Kanit-Regular',
+                                            color: Colors.white))))
+                                .toList(),
+                            onChanged: (String value) {
+                              setState(() {
+                                selectedValue = value;
+                                SaleProductItem.selectedCustomer = value;
+                              });
+                            },
                           ),
-                          dropdownColor: Colors.white,
-                          items: customers.listcustomer
-                              .map((e) => DropdownMenuItem(
-                                  value: e.id, child: Text(e.name)))
-                              .toList(),
-                          onChanged: (String value) {
-                            setState(() {
-                              selectedValue = value;
-                              SaleProductItem.selectedCustomer = value;
-                            });
-                          },
                         ),
                       ),
                     ),
@@ -143,7 +153,7 @@ class _CreateorderPageState extends State<CreateorderPage> {
             ),
             Text(
               "รายการสินค้า",
-              style: TextStyle(color: Colors.purple[500], fontSize: 18),
+              style: TextStyle(color: Colors.grey[500], fontSize: 18),
             ),
             SizedBox(
               height: 10,

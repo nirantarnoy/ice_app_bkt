@@ -81,7 +81,8 @@ class Items extends StatelessWidget {
                       Text("สินค้าที่เลือก"),
                       Spacer(),
                       IconButton(
-                          icon: Icon(Icons.cancel, color: Colors.red, size: 25),
+                          icon: Icon(Icons.cancel,
+                              color: Colors.orange, size: 25),
                           onPressed: () => Navigator.of(context).pop())
                     ],
                   ),

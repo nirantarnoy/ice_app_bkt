@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ice_app_new/providers/transferin.dart';
+import 'package:ice_app_new/providers/transferout.dart';
 import 'package:provider/provider.dart';
 
 import 'pages/auth.dart';
@@ -73,7 +75,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<OrderData>.value(value: OrderData()),
         ChangeNotifierProvider<IssueData>.value(value: IssueData()),
         ChangeNotifierProvider<PaymentreceiveData>.value(
-            value: PaymentreceiveData())
+            value: PaymentreceiveData()),
+        ChangeNotifierProvider<TransferoutData>.value(value: TransferoutData()),
+        ChangeNotifierProvider<TransferinData>.value(value: TransferinData())
       ],
       child: Consumer(builder: (context, UserData users, _) {
         // checkAuthen(users);

@@ -115,6 +115,13 @@ class _PaymentPageState extends State<PaymentPage> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
+        // appBar: AppBar(
+        //   iconTheme: IconThemeData(color: Colors.white),
+        //   // title: Text(
+        //   //   "รับชำระเงิน",
+        //   //   style: TextStyle(color: Colors.white),
+        //   // ),
+        // ),
         body: _buildpaymentsList(),
       ),
     );
