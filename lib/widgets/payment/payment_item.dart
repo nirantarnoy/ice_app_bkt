@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ice_app_new/providers/customer.dart';
 import 'package:ice_app_new/providers/paymentreceive.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/paymentreceive.dart';
+import '../../models/enum_paytype.dart';
 
 class PaymentItem extends StatefulWidget {
   @override
@@ -29,7 +31,7 @@ class _PaymentItemState extends State<PaymentItem> {
         _isLoading = true;
       });
       Provider.of<PaymentreceiveData>(context, listen: false)
-          .fetPaymentreceive()
+          .fetPaymentreceive("")
           .then((_) {
         setState(() {
           _isLoading = false;
@@ -184,9 +186,7 @@ class _PaymentItemState extends State<PaymentItem> {
   }
 }
 
-class Items extends StatelessWidget {
-  GlobalKey<FormState> _formkey;
-  //payments _payments;
+class Items extends StatefulWidget {
   final String _id;
   final String _order_no;
   final String _order_date;
@@ -204,6 +204,16 @@ class Items extends StatelessWidget {
     this._line_total,
     this._remain_amount,
   );
+
+  @override
+  _ItemsState createState() => _ItemsState();
+}
+
+class _ItemsState extends State<Items> {
+  GlobalKey<FormState> _formkey;
+
+  Paytype _paytype = Paytype.Cash;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -214,108 +224,129 @@ class Items extends StatelessWidget {
               final TextEditingController _textEditingController =
                   TextEditingController();
               bool isChecked = false;
-              return Material(
-                shadowColor: Colors.grey,
+              // return Material( // fullscreen
+              //   shadowColor: Colors.grey,
+              //   child: Container(
+              //     padding: EdgeInsets.all(16),
+              //     // width: double.infinity,
+              //     // height: double.infinity,
+              //     width: MediaQuery.of(context).size.width - 100,
+              //     height: MediaQuery.of(context).size.height - 10,
+
+              //   ),
+              // );
+
+              return Dialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
                 child: Container(
-                  padding: EdgeInsets.all(16),
+                  // width: MediaQuery.of(context).size.width - 10,
+                  // height: MediaQuery.of(context).size.height - 100,
                   width: double.infinity,
                   height: double.infinity,
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(height: 10),
-                      Center(
-                          child: Text(
-                        "บันทึกชำระเงิน",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      )),
-                      SizedBox(height: 10),
-                      Form(
-                        key: _formkey,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            TextFormField(
-                              controller: _textEditingController,
-                              validator: (value) {
-                                return value.isNotEmpty
-                                    ? null
-                                    : "Invalid Fields";
-                              },
-                              decoration:
-                                  InputDecoration(hintText: "Enter some text"),
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Text("check"),
-                                Checkbox(
-                                  value: false,
-                                  onChanged: (checked) {},
-                                ),
-                              ],
-                            )
-                          ],
+                  child: Form(
+                    key: _formkey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        SizedBox(height: 10),
+                        Center(
+                            child: Text(
+                          "บันทึกชำระเงิน",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        )),
+                        SizedBox(height: 10),
+                        ListTile(
+                          title: Text("เงินสด"),
+                          leading: Radio<Paytype>(
+                            value: Paytype.Cash,
+                            groupValue: _paytype,
+                            onChanged: (Paytype value) {
+                              setState(() {
+                                _paytype = value;
+                              });
+                            },
+                          ),
                         ),
-                      ),
-                      Divider(),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                        ListTile(
+                          title: Text("โอนธนาคาร"),
+                          leading: Radio<Paytype>(
+                            value: Paytype.Transfer,
+                            groupValue: _paytype,
+                            onChanged: (Paytype value) {
+                              setState(() {
+                                _paytype = value;
+                              });
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        SizedBox(height: 10),
+                        Form(
+                          key: _formkey,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              FlatButton(
-                                color: Colors.green,
-                                onPressed: () {},
-                                child: Text("บันทีก"),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                child: TextFormField(
+                                  controller: _textEditingController,
+                                  textAlign: TextAlign.center,
+                                  keyboardType: TextInputType.number,
+                                  validator: (value) {
+                                    return value.isNotEmpty
+                                        ? null
+                                        : "Invalid Fields";
+                                  },
+                                  decoration:
+                                      InputDecoration(hintText: "จำนวนเงิน"),
+                                ),
                               ),
-                              FlatButton(
-                                onPressed: () {},
-                                child: Text("บันทีก"),
-                              )
+                              SizedBox(
+                                height: 10,
+                              ),
                             ],
                           ),
-                        ],
-                      )
-                    ],
+                        ),
+                        Divider(),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                RaisedButton(
+                                  padding: EdgeInsets.only(right: 8),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  color: Colors.blue[500],
+                                  textColor: Colors.white,
+                                  onPressed: () {},
+                                  child: Text("บันทีก"),
+                                ),
+                                RaisedButton(
+                                  padding: EdgeInsets.only(left: 8),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  color: Colors.orange,
+                                  textColor: Colors.white,
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("ยกเลิก"),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
               );
             });
-        // return showDialog(
-        //     context: context,
-        //     builder: (context) {
-        //       final TextEditingController _textEditingController =
-        //           TextEditingController();
-        //       bool isChecked = false;
-        //       return AlertDialog(
-        //         content: Form(
-        //           key: _formkey,
-        //           child: Column(
-        //             mainAxisSize: MainAxisSize.min,
-        //             children: <Widget>[
-        //               TextFormField(
-        //                 controller: _textEditingController,
-        //                 validator: (value) {
-        //                   return value.isNotEmpty ? null : "Invalid Fields";
-        //                 },
-        //                 decoration:
-        //                     InputDecoration(hintText: "Enter some text"),
-        //               ),
-        //               Row(
-        //                 children: <Widget>[
-        //                   Text("check"),
-        //                   Checkbox(
-        //                     value: false,
-        //                     onChanged: (checked) {},
-        //                   ),
-        //                 ],
-        //               )
-        //             ],
-        //           ),
-        //         ),
-        //       );
-        //     });
       }, // Navigator.of(context).pushNamed(OrderDetailPage.routeName),
       child: Column(
         children: <Widget>[
@@ -333,14 +364,14 @@ class Items extends StatelessWidget {
             //   backgroundColor: Colors.green[500],
             // ),
             title: Text(
-              "${_order_no}",
+              "${widget._order_no}",
               style: TextStyle(fontSize: 16, color: Colors.cyan),
             ),
-            subtitle: Text("${_order_date}"),
+            subtitle: Text("${widget._order_date}"),
             trailing: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("${_remain_amount}",
+                Text("${widget._remain_amount}",
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.red)),
               ],

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:ice_app_new/models/transferout.dart';
+import 'package:ice_app_new/models/issueitems.dart';
 
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:connectivity/connectivity.dart';
@@ -56,8 +56,8 @@ class _JournalissuePageState extends State<TransferoutPage> {
 
   Widget _buildProductList() {
     return Consumer(
-        builder: (context, TransferoutData transferoutitems, Widget child) {
-      //transferoutitems.fettransferoutitems();
+        builder: (context, TransferoutData issueitems, Widget child) {
+      //issueitems.fetIssueitems();
       Widget content = Center(
           child: Text(
         'ไม่พบข้อมูล!',
@@ -65,11 +65,10 @@ class _JournalissuePageState extends State<TransferoutPage> {
             fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.grey),
       ));
       // print("data length = " + products.listproduct.toString());
-      if (transferoutitems.is_apicon) {
-        if (transferoutitems.listtransferout.length > 0 &&
-            !transferoutitems.is_loading) {
+      if (issueitems.is_apicon) {
+        if (issueitems.listtransferout.length > 0 && !issueitems.is_loading) {
           content = Container(child: Transferoutitem());
-        } else if (transferoutitems.is_loading) {
+        } else if (issueitems.is_loading) {
           content = Center(child: CircularProgressIndicator());
         }
       } else {
@@ -77,7 +76,7 @@ class _JournalissuePageState extends State<TransferoutPage> {
       }
 
       return RefreshIndicator(
-        onRefresh: transferoutitems.fetTransferout,
+        onRefresh: issueitems.fetTransferout,
         child: content,
       );
     });

@@ -60,9 +60,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           //   orders[index].qty,
           //   orders[index].price,
           // );
-          final item = orders[index];
+          // final item = orders[index];
           return Dismissible(
-            key: ValueKey(item),
+            key: ValueKey(orders[index]),
             background: Container(
               color: Theme.of(context).errorColor,
               child: Icon(
@@ -84,24 +84,45 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   actions: <Widget>[
                     FlatButton(
                       onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: Text('ยืนยัน'),
+                    ),
+                    FlatButton(
+                      onPressed: () {
                         Navigator.of(context).pop(false);
                       },
                       child: Text('ไม่'),
                     ),
-                    FlatButton(
-                        onPressed: () {
-                          Navigator.of(context).pop(true);
-                        },
-                        child: Text('ยืนยัน'))
                   ],
                 ),
               );
             },
             onDismissed: (direction) {
+              print(orders[index].line_id);
               setState(() {
-                //Provider.of<OrderData>(context).removeOrderDetail(item.line_id);
+                Provider.of<OrderData>(context, listen: false)
+                    .removeOrderDetail(orders[index].line_id);
                 orders.removeAt(index);
               });
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.check_circle,
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "ทำรายการสำเร็จ",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+                backgroundColor: Colors.green,
+              ));
             },
             child: GestureDetector(
               onTap: () =>
@@ -118,22 +139,22 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     //       style: TextStyle(color: Colors.white),
                     //     )),
                     leading: Chip(
-                      label: Text("${item.product_code}",
+                      label: Text("${orders[index].product_code}",
                           style: TextStyle(color: Colors.white)),
                       backgroundColor: Colors.purple[700],
                     ),
                     title: Text(
-                      "${item.product_name}",
+                      "${orders[index].product_name}",
                       style: TextStyle(fontSize: 16, color: Colors.cyan),
                     ),
                     subtitle: Text(
-                      "ราคาขาย ${item.price} วันที่ ${item.order_date}",
+                      "ราคาขาย ${orders[index].price} วันที่ ${orders[index].order_date}",
                       style: TextStyle(fontSize: 12),
                     ),
                     trailing: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("${item.qty}",
+                        Text("${orders[index].qty}",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.red)),
