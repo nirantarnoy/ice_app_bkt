@@ -51,23 +51,30 @@ class _PaymentItemState extends State<PaymentItem> {
 
   Widget _buildpaymentsList(List<Paymentreceive> payments) {
     Widget orderCards;
-    if (payments.length > 0) {
-      // print("has list");
-      orderCards = new ListView.builder(
-        itemCount: payments.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Items(
-            payments[index].order_id,
-            payments[index].order_no,
-            payments[index].order_date,
-            payments[index].customer_id,
-            payments[index].customer_code,
-            payments[index].line_total,
-            payments[index].remain_amount,
-          );
-        },
-      );
-      return orderCards;
+    if (payments.isNotEmpty) {
+      if (payments.length > 0) {
+        // print("has list");
+        orderCards = new ListView.builder(
+          itemCount: payments.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Items(
+              payments[index].order_id,
+              payments[index].order_no,
+              payments[index].order_date,
+              payments[index].customer_id,
+              payments[index].customer_code,
+              payments[index].line_total,
+              payments[index].remain_amount,
+            );
+          },
+        );
+        return orderCards;
+      } else {
+        return Text(
+          "ไม่พบข้อมูล",
+          style: TextStyle(fontSize: 20, color: Colors.grey),
+        );
+      }
     } else {
       return Text(
         "ไม่พบข้อมูล",

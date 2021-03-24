@@ -11,25 +11,32 @@ class OrderItem extends StatelessWidget {
   List<Orders> _orders = [];
   Widget _buildordersList(List<Orders> orders) {
     Widget orderCards;
-    if (orders.length > 0) {
-      // print("has list");
-      orderCards = new ListView.builder(
-        itemCount: orders.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Items(
-              orders[index].id,
-              orders[index].order_no,
-              orders[index].customer_name,
-              orders[index].order_date,
-              orders[index].note,
-              orders[index].total_amount,
-              orders[index].payment_method_id,
-              orders[index].payment_method,
-              orders[index].customer_id,
-              orders[index].customer_code);
-        },
-      );
-      return orderCards;
+    if (orders != null) {
+      if (orders.length > 0) {
+        // print("has list");
+        orderCards = new ListView.builder(
+          itemCount: orders.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Items(
+                orders[index].id,
+                orders[index].order_no,
+                orders[index].customer_name,
+                orders[index].order_date,
+                orders[index].note,
+                orders[index].total_amount,
+                orders[index].payment_method_id,
+                orders[index].payment_method,
+                orders[index].customer_id,
+                orders[index].customer_code);
+          },
+        );
+        return orderCards;
+      } else {
+        return Text(
+          "ไม่พบข้อมูล",
+          style: TextStyle(fontSize: 20, color: Colors.grey),
+        );
+      }
     } else {
       return Text(
         "ไม่พบข้อมูล",
@@ -41,7 +48,7 @@ class OrderItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final OrderData orders = Provider.of<OrderData>(context, listen: false);
-    //orders.fetOrders();
+    // orders.fetOrders();
     var formatter = NumberFormat('#,##,##0');
     return Column(
       children: [
@@ -79,7 +86,10 @@ class OrderItem extends StatelessWidget {
           )
         ]),
         SizedBox(height: 5),
-        Expanded(child: _buildordersList(orders.listorder)),
+        Expanded(
+            child: orders.listorder.isNotEmpty
+                ? _buildordersList(orders.listorder)
+                : Text('Not Data')),
         SizedBox(
           height: 10,
         )

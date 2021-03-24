@@ -77,9 +77,11 @@ class OrderData with ChangeNotifier {
 
   double get totalAmount {
     double total = 0.0;
-    listorder.forEach((orderItem) {
-      total += double.parse(orderItem.total_amount);
-    });
+    if (listorder.isNotEmpty) {
+      listorder.forEach((orderItem) {
+        total += double.parse(orderItem.total_amount);
+      });
+    }
     return total;
   }
 
