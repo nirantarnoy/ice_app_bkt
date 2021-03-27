@@ -22,9 +22,29 @@ class _OrderPageState extends State<OrderPage> {
   var _isInit = true;
   var _isLoading = false;
 
+  Future _orderFuture;
+
+  Future _obtainOrderFuture() {
+    return Provider.of<OrderData>(context, listen: false).fetOrders();
+  }
+
   @override
   initState() {
     _checkinternet();
+
+    _orderFuture = _obtainOrderFuture();
+    // setState(() {
+    //   _isLoading = true;
+    // });
+    // Future.delayed(Duration.zero).then((_) async {
+    //   await Provider.of<OrderData>(context, listen: false)
+    //       .fetOrders()
+    //       .then((_) {
+    //     setState(() {
+    //       _isLoading = false;
+    //     });
+    //   });
+    // });
     // try {
     //   widget.model.fetchOrders();
     // } on TimeoutException catch (_) {
@@ -36,17 +56,13 @@ class _OrderPageState extends State<OrderPage> {
 
   @override
   void didChangeDependencies() {
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<OrderData>(context, listen: false).fetOrders().then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    }
-    _isInit = false;
+    print('order didCangeDependencies');
+    // if (_isInit) {
+    //   setState(() {
+    //     _isLoading = true;
+    //   });
+    // }
+    // _isInit = false;
     super.didChangeDependencies();
   }
 
@@ -81,105 +97,77 @@ class _OrderPageState extends State<OrderPage> {
         });
   }
 
-  Widget _buildOrdersList() {
-    return Consumer(builder: (context, OrderData orders, Widget child) {
-      // orders.fetOrders();
-      Widget content = Center(
-          child: Text(
-        'ไม่พบข้อมูล!',
-        style: TextStyle(
-            fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.grey),
-      ));
-      // print("data length = " + products.listproduct.toString());
-      if (orders.is_apicon) {
-        if (!orders.is_loading) {
-          content = Container(child: OrderItem());
-        } else if (orders.is_loading) {
-          content = Center(child: CircularProgressIndicator());
-        }
-      } else {
-        content = ErrorApi();
-      }
-      return RefreshIndicator(
-        onRefresh: orders.fetOrders,
-        child: Container(child: OrderItem()),
-      );
-    });
-  }
+  // Widget _buildOrdersList() {
+  //   return Consumer(builder: (context, OrderData orders, Widget child) {
+  //     // orders.fetOrders();
+  //     Widget content = Center(
+  //         child: Text(
+  //       'ไม่พบข้อมูล!',
+  //       style: TextStyle(
+  //           fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.grey),
+  //     ));
+  //     // print("data length = " + products.listproduct.toString());
+  //     if (orders.is_apicon) {
+  //       content = FutureBuilder(
+  //           future: ,
+  //           builder: (context, dataSnapshort) => {
+  //                 if (dataSnapshort.connectionState == ConnectionState.waiting)
+  //                   {
+  //                     Center(child: CircularProgressIndicator()),
+  //                   }else{
 
-  // Widget _openPopup(context) {
-  //   Alert(
-  //       context: context,
-  //       title: "บันทึกรายการขาย",
-  //       content: Column(
-  //         children: <Widget>[
-  //           TextField(
-  //             decoration: InputDecoration(
-  //               // icon: Icon(Icons.account_circle),
-  //               labelText: 'Username',
-  //             ),
-  //           ),
-  //           TextField(
-  //             obscureText: true,
-  //             decoration: InputDecoration(
-  //               // icon: Icon(Icons.lock),
-  //               labelText: 'Password',
-  //             ),
-  //           ),
-  //           TextField(
-  //             obscureText: true,
-  //             decoration: InputDecoration(
-  //               // icon: Icon(Icons.lock),
-  //               labelText: 'Password',
-  //             ),
-  //           ),
-  //           TextField(
-  //             obscureText: true,
-  //             decoration: InputDecoration(
-  //               // icon: Icon(Icons.lock),
-  //               labelText: 'Password',
-  //             ),
-  //           ),
-  //           TextField(
-  //             obscureText: true,
-  //             decoration: InputDecoration(
-  //               // icon: Icon(Icons.lock),
-  //               labelText: 'Password',
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //       buttons: [
-  //         DialogButton(
-  //           onPressed: () => Navigator.pop(context),
-  //           child: Text(
-  //             "บันทึก",
-  //             style: TextStyle(color: Colors.white, fontSize: 20),
-  //           ),
-  //         )
-  //       ]).show();
+  //                   }
+  //               });
+
+  //       // if (_isLoading == true) {
+  //       //   print("Page is loading");
+  //       //   content = Center(child: CircularProgressIndicator());
+  //       // } else {
+  //       //   // content = Center(child: CircularProgressIndicator());
+  //       //   content = Container(child: OrderItem());
+  //       // }
+  //     } else {
+  //       content = ErrorApi();
+  //     }
+  //     //return content;
+  //     return RefreshIndicator(
+  //       onRefresh: orders.fetOrders,
+  //       child: content,
+  //     );
+  //   });
   // }
+
+  Widget _buidorderlist() {
+    OrderData orders = Provider.of<OrderData>(context, listen: false);
+    Widget content;
+    content = FutureBuilder(
+      future: _orderFuture,
+      builder: (context, dataSnapshort) {
+        if (dataSnapshort.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          if (dataSnapshort.error != null) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            return Container(child: OrderItem());
+          }
+        }
+      },
+    );
+
+    return RefreshIndicator(
+      child: content,
+      onRefresh: orders.getCustomerDetails,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    print('build context created');
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        // persistentFooterButtons: <Widget>[
-        //   new Text(
-        //     'ยอดรวม',
-        //     style: TextStyle(fontSize: 20),
-        //   ),
-        //   new Text(
-        //     '25,000',
-        //     style: TextStyle(fontSize: 20, color: Colors.orange),
-        //   ),
-        //   new Text(
-        //     'บาท',
-        //     style: TextStyle(fontSize: 20),
-        //   ),
-        // ],
-        body: _buildOrdersList(),
+        body: _buidorderlist(),
       ),
     );
   }

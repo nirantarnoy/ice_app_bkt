@@ -9,7 +9,7 @@ class Transferoutitem extends StatelessWidget {
   List<Transferout> _orders = [];
   Widget _buildissueitemList(List<Transferout> transferout_items) {
     Widget productCards;
-    if (transferout_items != null) {
+    if (transferout_items.isNotEmpty) {
       if (transferout_items.length > 0) {
         //print("has list");
         productCards = new ListView.builder(
@@ -24,11 +24,23 @@ class Transferoutitem extends StatelessWidget {
             );
           },
         );
+      } else {
+        return Center(
+          child: Text(
+            "ไม่พบข้อมูล",
+            style: TextStyle(fontSize: 20, color: Colors.grey),
+          ),
+        );
       }
 
       return productCards;
     } else {
-      print("no data");
+      return Center(
+        child: Text(
+          "ไม่พบข้อมูล",
+          style: TextStyle(fontSize: 20, color: Colors.grey),
+        ),
+      );
     }
   }
 
@@ -49,7 +61,7 @@ class Transferoutitem extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  "รายการโอนสินค้าหน่วยรถ",
+                  "โอนสินค้าออก",
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -63,6 +75,37 @@ class Transferoutitem extends StatelessWidget {
           height: 10,
         ),
         Expanded(child: _buildissueitemList(item_transferout.listtransferout)),
+        Card(
+          margin: EdgeInsets.all(15),
+          child: Padding(
+            padding: EdgeInsets.all(8),
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "จำนวน",
+                        style: TextStyle(fontSize: 20, color: Colors.purple),
+                      ),
+                      SizedBox(width: 10),
+                      Chip(
+                        label: Consumer<IssueData>(
+                            builder: (context, payments, _) => Text(
+                                  payments.totalAmount == null ? 0 : "0",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                )),
+                        backgroundColor: Theme.of(context).primaryColor,
+                      ),
+                    ]),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -113,7 +156,7 @@ class Items extends StatelessWidget {
                 SizedBox(
                   width: 10,
                 ),
-                Text("รถ"),
+                Text("ทะเบียน"),
                 SizedBox(
                   width: 10,
                 ),
@@ -123,12 +166,11 @@ class Items extends StatelessWidget {
                 ),
               ],
             ),
-            // trailing: Text('$_qty',
-            //     style: TextStyle(
-            //         fontSize: 20.0,
-            //         fontWeight: FontWeight.bold,
-            //         color: Colors.orange[800])
-            //         ),
+            trailing: Text('0',
+                style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orange[800])),
           ),
           Divider(),
         ],

@@ -9,6 +9,7 @@ class Issueitems {
   final String qty;
   final String price;
   final String product_image;
+  final String avl_qty;
 
   Issueitems(
       {@required this.line_issue_id,
@@ -18,5 +19,6 @@ class Issueitems {
       @required this.issue_no,
       @required this.qty,
       @required this.price,
-      this.product_image});
+      this.product_image,
+      this.avl_qty});
 }

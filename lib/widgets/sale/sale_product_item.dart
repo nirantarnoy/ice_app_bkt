@@ -44,7 +44,7 @@ class SaleProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ProductData products = Provider.of<ProductData>(context);
-    products.fetProducts();
+    products.fetProducts("");
 
     return _buildproductList(products.listproduct);
   }
@@ -263,26 +263,26 @@ class Items extends StatelessWidget {
     print(_orderData.customer_id);
     // final String product_id = _id;
     // final String qty = "10";
-    Provider.of<OrderData>(context, listen: false)
-        .addOrder(_orderData.product_id, int.parse(_orderData.qty), 0,
-            int.parse(_orderData.customer_id))
-        .then((_) => {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text('Successfully'),
-                      content: Text('บันทึกรายการเรียบร้อยแล้ว'),
-                      actions: <Widget>[
-                        FlatButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text('ok'))
-                      ],
-                    );
-                  })
-            });
+    // Provider.of<OrderData>(context, listen: false)
+    //     .addOrder(_orderData.product_id, int.parse(_orderData.qty), 0,
+    //         int.parse(_orderData.customer_id))
+    //     .then((_) => {
+    //           showDialog(
+    //               context: context,
+    //               builder: (context) {
+    //                 return AlertDialog(
+    //                   title: Text('Successfully'),
+    //                   content: Text('บันทึกรายการเรียบร้อยแล้ว'),
+    //                   actions: <Widget>[
+    //                     FlatButton(
+    //                         onPressed: () {
+    //                           Navigator.of(context).pop();
+    //                         },
+    //                         child: Text('ok'))
+    //                   ],
+    //                 );
+    //               })
+    //         });
   }
 
   @override

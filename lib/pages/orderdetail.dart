@@ -1,4 +1,6 @@
+import 'package:currencies/currencies.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:ice_app_new/models/order_detail.dart';
 
 import 'package:provider/provider.dart';
@@ -16,51 +18,45 @@ class OrderDetailPage extends StatefulWidget {
 class _OrderDetailPageState extends State<OrderDetailPage> {
   var _isInit = true;
   var _isLoading = false;
+
+  Future _orderFuture;
+
+  Future _obtainOrderFuture() {
+    return Provider.of<OrderData>(context, listen: false).getCustomerDetails();
+  }
+
   @override
   initState() {
+    _orderFuture = _obtainOrderFuture();
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-
-      Provider.of<OrderData>(context, listen: false)
-          .getCustomerDetails("2850")
-          .then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    }
-    _isInit = false;
+    // if (_isInit) {
+    //   setState(() {
+    //     _isLoading = true;
+    //   });
+    //   Provider.of<OrderData>(context, listen: false)
+    //       .getCustomerDetails()
+    //       .then((_) {
+    //     setState(() {
+    //       _isLoading = false;
+    //     });
+    //   });
+    // }
+    // _isInit = false;
     super.didChangeDependencies();
   }
 
   Widget _buildordersList(List<OrderDetail> orders) {
+    var formatter2 = NumberFormat('#,##,##0');
     Widget orderCards;
     if (orders.length > 0) {
       // print("has list");
       orderCards = new ListView.builder(
         itemCount: orders.length,
         itemBuilder: (BuildContext context, int index) {
-          // return Items(
-          //   orders[index].order_id,
-          //   orders[index].order_no,
-          //   orders[index].order_date,
-          //   orders[index].customer_name,
-          //   orders[index].line_id,
-          //   orders[index].product_id,
-          //   orders[index].product_code,
-          //   orders[index].product_name,
-          //   orders[index].price_group_id,
-          //   orders[index].qty,
-          //   orders[index].price,
-          // );
-          // final item = orders[index];
           return Dismissible(
             key: ValueKey(orders[index]),
             background: Container(
@@ -125,19 +121,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               ));
             },
             child: GestureDetector(
-              onTap: () =>
-                  Navigator.of(context).pushNamed(OrderDetailPage.routeName),
+              onTap: () {},
               child: Column(
                 children: <Widget>[
                   ListTile(
-                    // leading: RaisedButton(
-                    //     color:
-                    //         _payment_method_id == "1" ? Colors.green : Colors.purple[300],
-                    //     onPressed: () {},
-                    //     child: Text(
-                    //       "$_payment_method",
-                    //       style: TextStyle(color: Colors.white),
-                    //     )),
                     leading: Chip(
                       label: Text("${orders[index].product_code}",
                           style: TextStyle(color: Colors.white)),
@@ -145,19 +132,38 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     ),
                     title: Text(
                       "${orders[index].product_name}",
-                      style: TextStyle(fontSize: 16, color: Colors.cyan),
+                      style: TextStyle(fontSize: 16, color: Colors.black),
                     ),
-                    subtitle: Text(
-                      "ราคาขาย ${orders[index].price} วันที่ ${orders[index].order_date}",
-                      style: TextStyle(fontSize: 12),
+                    subtitle: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "วันที่ ${orders[index].order_date}",
+                              style: TextStyle(
+                                  fontSize: 12, color: Colors.cyan[700]),
+                            ),
+                            Text(
+                              "ราคาขาย ${orders[index].price}",
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.black),
+                            ),
+                          ],
+                        )
+                      ],
                     ),
                     trailing: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("${orders[index].qty}",
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Text("x${orders[index].qty}"),
+                        Text(
+                            "${formatter2.format(double.parse(orders[index].qty) * double.parse(orders[index].price))}",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.red)),
+                                color: Colors.red,
+                                fontSize: 16)),
                       ],
                     ),
                   ),
@@ -179,14 +185,17 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final customer_order_id =
-        ModalRoute.of(context).settings.arguments as String; // is id
+    var formatter = NumberFormat('#,##,##0');
+    // final customer_order_id =
+    //     ModalRoute.of(context).settings.arguments as String; // is id
+    final order_data =
+        ModalRoute.of(context).settings.arguments as Map; // is id
 
     final loadCustomerorder = Provider.of<OrderData>(context, listen: false)
-        .findById(customer_order_id);
+        .findById(order_data['customer_id']);
 
-    final OrderData orders = Provider.of<OrderData>(context, listen: false);
-    //orders.getCustomerDetails(widget.customer_id);
+    final loadordertotal = Provider.of<OrderData>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
@@ -195,127 +204,151 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: Container(
-        child: Padding(
-          padding: EdgeInsets.all(0),
-          child: Column(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      height: 80,
-                      color: Theme.of(context).accentColor,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+      body: FutureBuilder(
+        future: _orderFuture,
+        builder: (context, dataSnapshort) {
+          if (dataSnapshort.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            if (dataSnapshort.error != null) {
+              return Center(child: CircularProgressIndicator());
+            } else {
+              return Container(
+                child: Padding(
+                  padding: EdgeInsets.all(0),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Column(
-                            children: <Widget>[
-                              Row(
+                          Expanded(
+                            child: Container(
+                              height: 80,
+                              color: Theme.of(context).accentColor,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Column(
                                     children: <Widget>[
-                                      SizedBox(
-                                        height: 10,
+                                      Row(
+                                        children: <Widget>[
+                                          Column(
+                                            children: <Widget>[
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(
+                                                loadCustomerorder.customer_code,
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.white),
+                                              ),
+                                              SizedBox(height: 10),
+                                              Text(
+                                                  loadCustomerorder
+                                                      .customer_name,
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.white))
+                                            ],
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        loadCustomerorder.customer_code,
-                                        style: TextStyle(
-                                            fontSize: 16, color: Colors.white),
-                                      ),
-                                      SizedBox(height: 10),
-                                      Text(loadCustomerorder.customer_name,
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white))
                                     ],
                                   ),
                                 ],
                               ),
-                            ],
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      padding: EdgeInsets.all(5),
-                      height: 80,
-                      color: Colors.green[500],
-                      child: Column(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Text(
-                            'จำนวน',
-                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          Expanded(
+                            child: Container(
+                              padding: EdgeInsets.all(5),
+                              height: 80,
+                              color: Colors.green[500],
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    'จำนวน',
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    "${formatter.format(loadordertotal.sumqtydetail)}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
-                          SizedBox(
-                            height: 10,
+                          Expanded(
+                            child: Container(
+                              height: 80,
+                              color: Colors.purple[400],
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    'จำนวนเงิน',
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    "${formatter.format(loadordertotal.sumamoutdetail)}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
-                          Text(
-                            "150",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          )
                         ],
                       ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      height: 80,
-                      color: Colors.purple[400],
-                      child: Column(
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
                         children: <Widget>[
-                          Text(
-                            'จำนวนเงิน',
-                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "รายการขาย",
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 18),
+                            ),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "150",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          )
                         ],
                       ),
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "รายการขาย",
-                      style: TextStyle(color: Colors.black, fontSize: 18),
-                    ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Expanded(
+                        child: Consumer<OrderData>(
+                          builder: (context, orderdetails, _) =>
+                              _buildordersList(orderdetails.listorder_detail),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Expanded(child: _buildordersList(orders.listorder_detail))
-            ],
-          ),
-        ),
+                ),
+              );
+            }
+          }
+        },
       ),
     );
   }
@@ -389,16 +422,16 @@ class Items extends StatelessWidget {
                 ),
                 title: Text(
                   "$_product_name",
-                  style: TextStyle(fontSize: 16, color: Colors.cyan),
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
                 subtitle: Text(
-                  "ราคาขาย ${_price} วันที่ ${_order_date}",
-                  style: TextStyle(fontSize: 12),
+                  "วันที่ ${_order_date}",
+                  style: TextStyle(fontSize: 12, color: Colors.cyan[700]),
                 ),
                 trailing: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("$_qty",
+                    Text("$_qty x $_price = $_qty * $_price}",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.red)),
                   ],

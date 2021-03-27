@@ -23,9 +23,16 @@ class TransferoutPage extends StatefulWidget {
 class _JournalissuePageState extends State<TransferoutPage> {
   var _isInit = true;
   var _isLoading = false;
+
+  Future _transferoutFuture;
+  Future _obtainTransferoutFuture() {
+    return Provider.of<TransferoutData>(context).fetTransferout();
+  }
+
   @override
   initState() {
-    ActivityCon();
+    _transferoutFuture = _obtainTransferoutFuture();
+    //ActivityCon();
     //_checkinternet();
     // try {
     //   widget.model.fetchOrders();
@@ -38,57 +45,55 @@ class _JournalissuePageState extends State<TransferoutPage> {
 
   @override
   void didChangeDependencies() {
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<TransferoutData>(context, listen: false)
-          .fetTransferout()
-          .then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    }
-    _isInit = false;
+    // if (_isInit) {
+    //   setState(() {
+    //     _isLoading = true;
+    //   });
+    //   Provider.of<TransferoutData>(context, listen: false)
+    //       .fetTransferout()
+    //       .then((_) {
+    //     setState(() {
+    //       _isLoading = false;
+    //     });
+    //   });
+    // }
+    // _isInit = false;
     super.didChangeDependencies();
   }
 
-  Widget _buildProductList() {
-    return Consumer(
-        builder: (context, TransferoutData issueitems, Widget child) {
-      //issueitems.fetIssueitems();
-      Widget content = Center(
-          child: Text(
-        'ไม่พบข้อมูล!',
-        style: TextStyle(
-            fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.grey),
-      ));
-      // print("data length = " + products.listproduct.toString());
-      if (issueitems.is_apicon) {
-        if (issueitems.listtransferout.length > 0 && !issueitems.is_loading) {
-          content = Container(child: Transferoutitem());
-        } else if (issueitems.is_loading) {
-          content = Center(child: CircularProgressIndicator());
-        }
-      } else {
-        content = ErrorApi();
-      }
+  // Widget _buildProductList() {
+  //   TransferoutData transferout =
+  //       Provider.of<TransferoutData>(context, listen: false);
+  //   Widget content;
+  //   content = FutureBuilder(
+  //     future: _transferoutFuture,
+  //     builder: (context, dataSnapshort) {
+  //       if (dataSnapshort.connectionState == ConnectionState.waiting) {
+  //         return Center(child: CircularProgressIndicator());
+  //       } else {
+  //         if (dataSnapshort.error != null) {
+  //           return Center(child: CircularProgressIndicator());
+  //         } else {
+  //           return Container(child: Transferoutitem());
+  //         }
+  //       }
+  //     },
+  //   );
 
-      return RefreshIndicator(
-        onRefresh: issueitems.fetTransferout,
-        child: content,
-      );
-    });
-  }
+  //   return RefreshIndicator(
+  //     child: content,
+  //     onRefresh: transferout.fetTransferout,
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: _buildProductList(),
-      ),
-    );
+    // return SafeArea(
+    //   child: Scaffold(
+    //     resizeToAvoidBottomInset: false,
+    //     body: Text('out'), //_buildProductList(),
+    //   ),
+    // );
+    return Text('test');
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:double_back_to_close/double_back_to_close.dart';
+import 'package:ice_app_new/pages/home.dart';
 import 'package:ice_app_new/providers/transferin.dart';
 import 'package:ice_app_new/providers/transferout.dart';
 import 'package:provider/provider.dart';
@@ -91,12 +93,16 @@ class _MyAppState extends State<MyApp> {
               accentColor: Colors.lightBlue,
               buttonColor: Colors.blue,
               fontFamily: 'Kanit-Regular'),
-          home: users.is_authenuser ? MainTest() : AuthPage(),
+          home: DoubleBack(
+              message: "กดอีกครั้งเพื่อออก",
+              child: users.is_authenuser ? MainTest() : AuthPage()),
+
           routes: {
             OrderPage.routeName: (ctx) => OrderPage(),
             OrderDetailPage.routeName: (ctx) => OrderDetailPage(),
             CreateorderPage.routeName: (ctx) => CreateorderPage(),
             PaymentPage.routeName: (ctx) => PaymentPage(),
+            HomePage.routeName: (ctx) => HomePage(),
           },
         );
       }),

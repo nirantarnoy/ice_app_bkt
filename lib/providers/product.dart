@@ -6,16 +6,17 @@ import 'package:ice_app_new/models/products.dart';
 
 class ProductData with ChangeNotifier {
   final String url_to_product_list =
-      "http://192.168.1.120/icesystem/frontend/web/api/product/list";
-  // "http://192.168.60.118/icesystem/frontend/web/api/product/list";
+      //  "http://192.168.1.120/icesystem/frontend/web/api/product/list";
+      "http://119.59.100.74/icesystem/frontend/web/api/product/list";
   // "http://119.59.100.74/icesystem/frontend/web/api/product/list";
   final String url_to_product_detail =
-      "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
-  //"http://119.59.100.74/icesystem/frontend/web/api/product/detail";
+      //   "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
+      "http://119.59.100.74/icesystem/frontend/web/api/product/detail";
 
   List<Products> _product;
   List<Products> get listproduct => _product;
   bool _isLoading = false;
+
   int _id = 0;
   int get idProduct => _id;
 
@@ -33,20 +34,26 @@ class ProductData with ChangeNotifier {
     return _isLoading;
   }
 
-  Future<dynamic> fetProducts() async {
+  Future<dynamic> fetProducts(String customer_id) async {
     _isLoading = true;
     notifyListeners();
+
+    final Map<String, dynamic> filterData = {'customer_id': customer_id};
+    print(filterData);
     try {
       http.Response response;
-      response = await http.get(Uri.encodeFull(url_to_product_list),
-          headers: {'Content-Type': 'application/json'});
+      response = await http.post(
+        Uri.encodeFull(url_to_product_list),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(filterData),
+      );
 
       if (response.statusCode == 200) {
         print('api ok');
         Map<String, dynamic> res = json.decode(response.body);
         List<Products> data = [];
         // print('data length is ${res["data"].length}');
-        // print('data server is ${res["data"]}');
+        print('data server is ${res["data"]}');
 
         if (res == null) {
           _isLoading = false;

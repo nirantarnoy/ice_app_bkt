@@ -7,14 +7,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class IssueData with ChangeNotifier {
   final String url_to_issue_list =
-      "http://192.168.1.120/icesystem/frontend/web/api/journalissue/list";
-  // "http://192.168.60.118/icesystem/frontend/web/api/journalissue/list";
+      //  "http://192.168.1.120/icesystem/frontend/web/api/journalissue/list";
+      //  "http://119.59.100.74/icesystem/frontend/web/api/journalissue/list";
+      "http://119.59.100.74/icesystem/frontend/web/api/journalissue/list";
   //"http://119.59.100.74/icesystem/frontend/web/api/customer/list";
 
   List<Issueitems> _issue;
   List<Issueitems> get listissue => _issue;
   bool _isLoading = false;
   bool _isApicon = false;
+
+  int _avl_qty = 0;
   int _id = 0;
   int get idIssue => _id;
 
@@ -36,13 +39,27 @@ class IssueData with ChangeNotifier {
     return _isApicon;
   }
 
+  double get totalAmount {
+    double total = 0.0;
+    listissue.forEach((paymentitem) {
+      total += double.parse(paymentitem.avl_qty);
+    });
+    return total;
+  }
+
   Future<dynamic> fetIssueitems() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String _issue_date = new DateTime.now().toString();
     String _routeid = '';
     if (prefs.getString('user_id') != null) {
       _routeid = prefs.getString('emp_route_id');
     }
-    final Map<String, dynamic> filterData = {'route_id': _routeid};
+    final Map<String, dynamic> filterData = {
+      'route_id': _routeid,
+      'issue_date': _issue_date
+    };
+    print(filterData);
     _isLoading = true;
     notifyListeners();
     try {
@@ -58,7 +75,7 @@ class IssueData with ChangeNotifier {
         Map<String, dynamic> res = json.decode(response.body);
         List<Issueitems> data = [];
         print('data customer length is ${res["data"].length}');
-        //    print('data server is ${res["data"]}');
+        print('data server is ${res["data"]}');
 
         if (res == null) {
           _isLoading = false;
@@ -82,9 +99,10 @@ class IssueData with ChangeNotifier {
             issue_no: res['data'][i]['issue_no'].toString(),
             product_id: res['data'][i]['product_id'].toString(),
             product_name: res['data'][i]['product_name'].toString(),
-            product_image: res['data'][i]['product_image'].toString(),
+            product_image: res['data'][i]['image'].toString(),
             qty: res['data'][i]['issue_qty'].toString(),
             price: res['data'][i]['price'].toString(),
+            avl_qty: res['data'][i]['avl_qty'].toString(),
           );
 
           //  print('data from server is ${issueresult}');

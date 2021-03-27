@@ -10,29 +10,34 @@ import 'package:shared_preferences/shared_preferences.dart';
 class OrderData with ChangeNotifier {
   final String server_api = "";
   final String url_to_order =
-      "http://192.168.1.120/icesystem/frontend/web/api/order/list";
-  //"http://192.168.60.118/icesystem/frontend/web/api/order/list";
+      //   "http://192.168.1.120/icesystem/frontend/web/api/order/list";
+      "http://119.59.100.74/icesystem/frontend/web/api/order/list";
   final String url_to_order_detail =
-      "http://192.168.1.120/icesystem/frontend/web/api/order/listbycustomer";
-  //"http://192.168.60.118/icesystem/frontend/web/api/order/listbycustomer";
+      //   "http://192.168.1.120/icesystem/frontend/web/api/order/listbycustomer";
+      "http://119.59.100.74/icesystem/frontend/web/api/order/listbycustomer";
   final String url_to_add_order =
-      "http://192.168.1.120/icesystem/frontend/web/api/order/addorder";
-  //  "http://192.168.1.120/icesystem/frontend/web/api/order/addorder";
+      "http://119.59.100.74/icesystem/frontend/web/api/order/addorder";
+  // "http://192.168.1.120/icesystem/frontend/web/api/order/addorder";
   final String url_to_update_order =
-      "http://192.168.1.120/icesystem/frontend/web/api/order/updateorder";
+      "http://119.59.100.74/icesystem/frontend/web/api/order/updateorder";
+  //   "http://192.168.1.120/icesystem/frontend/web/api/order/updateorder";
   final String url_to_delete_order =
-      "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorder";
+      //    "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorder";
+      "http://119.59.100.74/icesystem/frontend/web/api/order/deleteorder";
   final String url_to_update_order_detail =
-      "http://192.168.1.120/icesystem/frontend/web/api/order/updateorderdetail";
+      //   "http://192.168.1.120/icesystem/frontend/web/api/order/updateorderdetail";
+      "http://119.59.100.74/icesystem/frontend/web/api/order/updateorderdetail";
   final String url_to_delete_order_detail =
-      "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorderline";
-  // "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorderline";
+      "http://119.59.100.74/icesystem/frontend/web/api/order/deleteorderline";
+  //  "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorderline";
 
   ///// for common
   bool _isLoading = false;
   bool _isApicon = true;
   int _id = 0;
   int _line_id = 0;
+
+  String _orderCustomerId = "0";
 
   ///// for order
   List<Orders> _order;
@@ -42,6 +47,13 @@ class OrderData with ChangeNotifier {
 
   set idOrder(int val) {
     _id = val;
+    notifyListeners();
+  }
+
+  String get orderCustomerId => _orderCustomerId;
+
+  set orderCustomerId(String val) {
+    _orderCustomerId = val;
     notifyListeners();
   }
 
@@ -85,17 +97,37 @@ class OrderData with ChangeNotifier {
     return total;
   }
 
+  double get sumqtydetail {
+    double total = 0.0;
+    listorder_detail.forEach((detailitem) {
+      total += double.parse(detailitem.qty);
+    });
+    return total;
+  }
+
+  double get sumamoutdetail {
+    double total = 0.0;
+    listorder_detail.forEach((detailitem) {
+      total += double.parse(detailitem.price) * double.parse(detailitem.qty);
+    });
+    return total;
+  }
+
   Orders findById(String id) {
     return listorder.firstWhere((order) => order.customer_id == id);
   }
 
   Future<dynamic> fetOrders() async {
     String _car_id;
+    String _order_date = new DateTime.now().toString();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('user_id') != null) {
       _car_id = prefs.getString('emp_car_id');
     }
-    final Map<String, dynamic> filterData = {'car_id': _car_id};
+    final Map<String, dynamic> filterData = {
+      'car_id': _car_id,
+      'order_date': _order_date
+    };
     _isLoading = true;
     notifyListeners();
     try {
@@ -146,7 +178,12 @@ class OrderData with ChangeNotifier {
   }
 
   Future<void> addOrder(
-      String product_id, int qty, int price, int customer_id) async {
+    String product_id,
+    String qty,
+    String price,
+    String customer_id,
+    String issue_id,
+  ) async {
     String _user_id = "";
     String _route_id = "";
     String _car_id = "";
@@ -164,8 +201,9 @@ class OrderData with ChangeNotifier {
       'product_id': product_id,
       'customer_id': customer_id,
       'qty': qty,
+      'price': price,
       'user_id': _user_id,
-      'issue_id': "0",
+      'issue_id': issue_id,
       'route_id': _route_id,
       'car_id': _car_id,
     };
@@ -175,20 +213,23 @@ class OrderData with ChangeNotifier {
       response = await http.post(Uri.encodeFull(url_to_add_order),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(orderData));
+
       if (response.statusCode == 200) {
         Map<String, dynamic> res = json.decode(response.body);
         print('data add order is  ${res["data"]}');
       }
-    } catch (_) {}
+    } catch (_) {
+      print('cannot create order');
+    }
   }
 
-  Future<dynamic> getCustomerDetails(String customer_id) async {
+  Future<dynamic> getCustomerDetails() async {
     _isLoading = true;
     notifyListeners();
-    String _order_date = new DateTime.now().toString();
+    // String _order_date = new DateTime.now().toString();
     final Map<String, dynamic> filterData = {
-      'order_date': _order_date,
-      'customer_id': customer_id
+      'order_id': idOrder.toString(),
+      'customer_id': orderCustomerId
     };
     try {
       http.Response response;
@@ -205,7 +246,7 @@ class OrderData with ChangeNotifier {
           notifyListeners();
           return null;
         }
-        for (var i = 0; i < res['data'].length - 1; i++) {
+        for (var i = 0; i < res['data'].length; i++) {
           final OrderDetail orderlineresult = new OrderDetail(
             order_id: res['data'][i]['order_id'].toString(),
             order_no: res['data'][i]['order_no'].toString(),

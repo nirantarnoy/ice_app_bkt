@@ -14,6 +14,7 @@ class _TransferPageState extends State<TransferPage> {
         length: 2,
         child: Scaffold(
           appBar: AppBar(
+            iconTheme: IconThemeData(color: Colors.white),
             // title: Text('รับโอนสินค้า'),
             bottom: TabBar(
               labelColor: Colors.white,
@@ -29,8 +30,10 @@ class _TransferPageState extends State<TransferPage> {
               ],
             ),
           ),
-          body: TabBarView(
-              children: <Widget>[TransferoutPage(), TransferinPage()]),
+          body: TabBarView(children: <Widget>[
+            TransferoutPage(),
+            TransferinPage(),
+          ]),
         ));
   }
 }

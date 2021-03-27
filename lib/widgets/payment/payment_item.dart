@@ -263,7 +263,7 @@ class _ItemsState extends State<Items> {
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         )),
-                        SizedBox(height: 10),
+                        SizedBox(height: 20),
                         ListTile(
                           title: Text("เงินสด"),
                           leading: Radio<Paytype>(
@@ -288,8 +288,7 @@ class _ItemsState extends State<Items> {
                             },
                           ),
                         ),
-                        SizedBox(height: 10),
-                        SizedBox(height: 10),
+                        SizedBox(height: 20),
                         Form(
                           key: _formkey,
                           child: Column(
@@ -317,37 +316,36 @@ class _ItemsState extends State<Items> {
                             ],
                           ),
                         ),
-                        Divider(),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                        //  Divider(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                RaisedButton(
-                                  padding: EdgeInsets.only(right: 8),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15)),
-                                  color: Colors.blue[500],
-                                  textColor: Colors.white,
-                                  onPressed: () {},
-                                  child: Text("บันทีก"),
-                                ),
-                                RaisedButton(
-                                  padding: EdgeInsets.only(left: 8),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15)),
-                                  color: Colors.orange,
-                                  textColor: Colors.white,
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text("ยกเลิก"),
-                                ),
-                              ],
+                            RaisedButton(
+                              padding: EdgeInsets.only(right: 8),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)),
+                              color: Colors.blue[500],
+                              textColor: Colors.white,
+                              onPressed: () {},
+                              child: Text("บันทีก"),
                             ),
                           ],
-                        )
+                        ),
+                        // Row(
+                        //   children: <Widget>[
+                        //     RaisedButton(
+                        //       padding: EdgeInsets.only(left: 8),
+                        //       shape: RoundedRectangleBorder(
+                        //           borderRadius: BorderRadius.circular(15)),
+                        //       color: Colors.orange,
+                        //       textColor: Colors.white,
+                        //       onPressed: () {
+                        //         Navigator.pop(context);
+                        //       },
+                        //       child: Text("ยกเลิก"),
+                        //     ),
+                        //   ],
+                        // ),
                       ],
                     ),
                   ),
@@ -372,15 +370,19 @@ class _ItemsState extends State<Items> {
             // ),
             title: Text(
               "${widget._order_no}",
-              style: TextStyle(fontSize: 16, color: Colors.cyan),
+              style: TextStyle(fontSize: 16, color: Colors.purple),
             ),
             subtitle: Text("${widget._order_date}"),
             trailing: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("${widget._remain_amount}",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.red)),
+                Text(
+                  "${widget._remain_amount}",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                      fontSize: 20),
+                ),
               ],
             ),
           ),

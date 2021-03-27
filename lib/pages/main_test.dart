@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ice_app_new/models/delivery_route.dart';
+import 'package:ice_app_new/pages/home.dart';
 import 'package:ice_app_new/pages/journalissue.dart';
 import 'package:ice_app_new/widgets/journalissue/journalissue_item.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -27,7 +28,7 @@ class MainTest extends StatefulWidget {
 class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
   TabController _tabController;
   int _currentIndex = 0;
-  String appTitle = 'เบิกสินค้า';
+  String appTitle = '';
   String user_name = '';
   String user_email = '';
   String user_photo = '';
@@ -57,16 +58,20 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
     setState(() {
       _currentIndex = index;
       if (index == 0) {
-        appTitle = 'เบิกสินค้า';
+        appTitle = '';
       }
       if (index == 1) {
         appTitle = 'ขายสินค้า';
       }
       if (index == 2) {
-        appTitle = 'รับ-โอน';
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => JournalissuePage()));
+        appTitle = 'หน้าหลัก';
+        _currentIndex = 0;
       }
       if (index == 3) {
         appTitle = 'รับชำระเงิน';
+
         // Navigator.of(context).pushNamed(PaymentPage
         //     .routeName); //กระโดดไปหน้าใหม่ ไม่แสดง bottontab ข้างล่าง
       }
@@ -151,9 +156,10 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     List<Widget> tabs = [
-      JournalissuePage(),
+      //JournalissuePage(),
+      HomePage(),
       OrderPage(),
-      TransferPage(),
+      null,
       PaymentPage(),
     ];
     // List<Widget> tabs = [null, null, null];
@@ -167,37 +173,38 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
             appTitle,
             style: TextStyle(fontFamily: 'Cloud-Bold', color: Colors.white),
           ),
-          // actions: <Widget>[
-          //   IconButton(
-          //     //color: Colors.white,
-          //     icon: Icon(
-          //       Icons.search,
-          //       color: Colors.white,
-          //     ),
-          //     onPressed: () {
-          //       //showInfoFlushbar(context);
-          //       show_Title_n_message_Flushbar(context);
-          //       // showSearch(context: context, delegate: DataSearch());
-          //     },
-          //   ),
-          //   (_currentIndex == 3)
-          //       ? IconButton(
-          //           //color: Colors.white,
-          //           onPressed: () => {},
-          //           icon: Icon(
-          //             Icons.add_circle_outline,
-          //             color: Colors.white,
-          //           ),
-          //         )
-          //       : Container(),
-          //   // IconButton(
-          //   //     //color: Colors.white,
-          //   //     icon: Icon(Icons.shopping_cart, color: Colors.white),
-          //   //     onPressed: () {
-          //   //       // Navigator.push(context,
-          //   //       //     MaterialPageRoute(builder: (context) => CardPage()));
-          //   //     }),
-          // ],
+          actions: <Widget>[
+            IconButton(
+              //color: Colors.white,
+              icon: Icon(
+                // Icons.keyboard_control_outlined,
+                Icons.more_vert,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                //showInfoFlushbar(context);
+                show_Title_n_message_Flushbar(context);
+                // showSearch(context: context, delegate: DataSearch());
+              },
+            ),
+            // (_currentIndex == 3)
+            //     ? IconButton(
+            //         //color: Colors.white,
+            //         onPressed: () => {},
+            //         icon: Icon(
+            //           Icons.add_circle_outline,
+            //           color: Colors.white,
+            //         ),
+            //       )
+            //     : Container(),
+            // IconButton(
+            //     //color: Colors.white,
+            //     icon: Icon(Icons.shopping_cart, color: Colors.white),
+            //     onPressed: () {
+            //       // Navigator.push(context,
+            //       //     MaterialPageRoute(builder: (context) => CardPage()));
+            //     }),
+          ],
         ),
         drawer: Drawer(
           child: ListView(
@@ -208,9 +215,15 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
                   "${user_name}",
                   style: TextStyle(color: Colors.white),
                 ),
-                accountEmail: Text(
-                  "${user_car_name}",
-                  style: TextStyle(color: Colors.white),
+                accountEmail: Row(
+                  children: <Widget>[
+                    Icon(Icons.drive_eta_rounded),
+                    SizedBox(width: 10),
+                    Text(
+                      "${user_car_name}",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
                 ),
                 currentAccountPicture: CircleAvatar(
                   backgroundColor: Colors.transparent,
@@ -229,32 +242,32 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
                 title: Text("Sycn ข้อมูล"),
                 trailing: Icon(Icons.sync_alt_outlined),
               ),
-              ListTile(
-                title: Text("โหลดสินค้าขึ้นรถ"),
-                trailing: Icon(Icons.insert_link),
-              ),
+              // ListTile(
+              //   title: Text("โหลดสินค้าขึ้นรถ"),
+              //   trailing: Icon(Icons.insert_link),
+              // ),
               ListTile(
                 title: Text("บันทึกขายออฟไลน์"),
                 trailing: Icon(Icons.delivery_dining),
               ),
               Divider(),
-              ListTile(
-                title: Text("บันทึกขาย"),
-                trailing: Icon(Icons.shopping_cart_outlined),
-                onTap: () => {},
-              ),
-              Divider(),
+              // ListTile(
+              //   title: Text("บันทึกขาย"),
+              //   trailing: Icon(Icons.shopping_cart_outlined),
+              //   onTap: () => {},
+              // ),
+              // Divider(),
               ListTile(
                 title: Text("ตรวจสอบ ถัง/กระสอบ"),
-                trailing: Icon(Icons.check),
+                trailing: Icon(Icons.qr_code_scanner_sharp),
                 onTap: () => {},
               ),
-              Divider(),
-              ListTile(
-                title: Text("ยืมสินค้า"),
-                trailing: Icon(Icons.cached_outlined),
-                onTap: () => {},
-              ),
+              // Divider(),
+              // ListTile(
+              //   title: Text("ยืมสินค้า"),
+              //   trailing: Icon(Icons.cached_outlined),
+              //   onTap: () => {},
+              // ),
               Divider(),
               Consumer<UserData>(
                 builder: (context, users, _) => ListTile(
@@ -282,11 +295,11 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
               onTap: _onTaped,
               items: [
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.pages_rounded), title: Text('เบิกสินค้า')),
+                    icon: Icon(Icons.home), title: Text('หน้าหลัก')),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.shopping_cart), title: Text('ขายสินค้า')),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.transform_sharp), title: Text('รับ-โอน')),
+                    icon: Icon(Icons.transform_sharp), title: Text('สินค้า')),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.beenhere),
                   title: Text('รับชำระเงิน'),

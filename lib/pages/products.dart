@@ -82,29 +82,29 @@ class _ProductPageState extends State<ProductPage> {
   //   );
   // }
 
-  Widget _buildlistFromconsumer() {
-    return Consumer(builder: (context, ProductData products, Widget child) {
-      Widget content = Center(
-          child: Text(
-        'ไม่พบข้อมูล!',
-        style: TextStyle(
-            fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.grey),
-      ));
-      print("data length = " + products.listproduct.toString());
-      if (products != null) {
-        if (products.listproduct.length > 0 && !products.is_loading) {
-          content = Container(child: ProductItem());
-        } else if (products.is_loading) {
-          content = Center(child: CircularProgressIndicator());
-        }
-      }
+  // Widget _buildlistFromconsumer() {
+  //   return Consumer(builder: (context, ProductData products, Widget child) {
+  //     Widget content = Center(
+  //         child: Text(
+  //       'ไม่พบข้อมูล!',
+  //       style: TextStyle(
+  //           fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.grey),
+  //     ));
+  //     print("data length = " + products.listproduct.toString());
+  //     if (products != null) {
+  //       if (products.listproduct.length > 0 && !products.is_loading) {
+  //         content = Container(child: ProductItem());
+  //       } else if (products.is_loading) {
+  //         content = Center(child: CircularProgressIndicator());
+  //       }
+  //     }
 
-      return RefreshIndicator(
-        onRefresh: products.fetProducts,
-        child: content,
-      );
-    });
-  }
+  //     return RefreshIndicator(
+  //       onRefresh: products.fetProducts,
+  //       child: content,
+  //     );
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +125,7 @@ class _ProductPageState extends State<ProductPage> {
         //     style: TextStyle(fontSize: 20),
         //   ),
         // ],
-        body: _buildlistFromconsumer(),
+        //  body: _buildlistFromconsumer(),
         // body: Text('Product Data'),
       ),
     );

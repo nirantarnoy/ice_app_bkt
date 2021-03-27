@@ -8,13 +8,15 @@ import 'package:ice_app_new/models/user.dart';
 
 class UserData with ChangeNotifier {
   final String url_to_user_list =
-      "http://192.168.1.120/icesystem/frontend/web/api/customer/list";
-  //  "http://192.168.60.118/icesystem/frontend/web/api/customer/list";
-  //"http://119.59.100.74/icesystem/frontend/web/api/customer/list";
+      //    "http://192.168.1.120/icesystem/frontend/web/api/customer/list";
+      // "http://119.59.100.74/icesystem/frontend/web/api/customer/list";
+      //  "http://119.59.100.74/icesystem/frontend/web/api/customer/list";
+
+      "http://119.59.100.74/icesystem/frontend/web/api/customer/list";
   final String url_to_user_login =
-      "http://192.168.1.120/icesystem/frontend/web/api/authen/login";
-  // "http://192.168.60.118/icesystem/frontend/web/api/authen/login";
-  // "http://119.59.100.74/icesystem/frontend/web/api/customer/detail";
+      //  "http://192.168.1.120/icesystem/frontend/web/api/authen/login";
+      // "http://119.59.100.74/icesystem/frontend/web/api/authen/login";
+      "http://119.59.100.74/icesystem/frontend/web/api/authen/login";
 
   User _authenticatedUser;
   Timer _authTimer;
@@ -67,7 +69,7 @@ class UserData with ChangeNotifier {
         Map<String, dynamic> res = json.decode(response.body);
         List<User> data = [];
         print('user login is ${res["data"].length}');
-        print('data server is ${res["data"]}');
+        print('data user is ${res["data"]}');
 
         if (res == null) {
           _isLoading = false;

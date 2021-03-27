@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:ice_app_new/widgets/payment/payment_item.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:connectivity/connectivity.dart';
@@ -22,13 +24,29 @@ class PaymentPage extends StatefulWidget {
 }
 
 class _PaymentPageState extends State<PaymentPage> {
-  var _isInit = true;
-  var _isLoading = false;
+  final TextEditingController _typeAheadController = TextEditingController();
+  // var _isInit = true;
+  // var _isLoading = false;
   String selectedValue;
+
+  Future _customerFuture;
+  Future _paymentlistFuture;
+
+  Future _obtaincustomerFuture() {
+    return Provider.of<CustomerData>(context, listen: false).fetCustomers();
+  }
+
+  Future _obtainpaymentlistFuture() {
+    return Provider.of<PaymentreceiveData>(context, listen: false)
+        .fetPaymentreceive("");
+  }
 
   @override
   initState() {
     _checkinternet();
+
+    _customerFuture = _obtaincustomerFuture();
+    _paymentlistFuture = _obtainpaymentlistFuture();
     // try {
     //   widget.model.fetchpayments();
     // } on TimeoutException catch (_) {
@@ -40,27 +58,40 @@ class _PaymentPageState extends State<PaymentPage> {
 
   @override
   void didChangeDependencies() {
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<PaymentreceiveData>(context, listen: false)
-          .fetPaymentreceive("")
-          .then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-      Provider.of<CustomerData>(context, listen: false)
-          .fetCustomers()
-          .then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    }
-    _isInit = false;
+    // print('didChange()');
+    // if (_isInit) {
+    //   setState(() {
+    //     _isLoading = true;
+    //   });
+    //   Provider.of<PaymentreceiveData>(context, listen: false)
+    //       .fetPaymentreceive("")
+    //       .then((_) {
+    //     setState(() {
+    //       _isLoading = false;
+    //     });
+    //   });
+    // Provider.of<CustomerData>(context, listen: false)
+    //     .fetCustomers()
+    //     .then((_) {
+    //   setState(() {
+    //     _isLoading = false;
+    //   });
+    // });
+    // }
+    //_isInit = false;
     super.didChangeDependencies();
+  }
+
+  @override
+  void didUpdateWidget(PaymentPage oldWidget) {
+    print('didUpdate()');
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    print('dispose()');
+    super.dispose();
   }
 
   Future<void> _checkinternet() async {
@@ -144,21 +175,31 @@ class _PaymentPageState extends State<PaymentPage> {
         );
         return orderCards;
       } else {
-        return Text(
-          "ไม่พบข้อมูล",
-          style: TextStyle(fontSize: 20, color: Colors.grey),
+        return Center(
+          child: Text(
+            "ไม่พบข้อมูล",
+            style: TextStyle(fontSize: 20, color: Colors.grey),
+          ),
         );
       }
     } else {
-      return Text(
-        "ไม่พบข้อมูล",
-        style: TextStyle(fontSize: 20, color: Colors.grey),
+      return Center(
+        child: Text(
+          "ไม่พบข้อมูล",
+          style: TextStyle(fontSize: 20, color: Colors.grey),
+        ),
       );
     }
   }
 
+  Future<dynamic> _pagerefresh() {
+    Provider.of<PaymentreceiveData>(context, listen: false)
+        .fetPaymentreceive("2850");
+  }
+
   @override
   Widget build(BuildContext context) {
+    //CustomerData _customer = Provider.of<CustomerData>(context, listen: false);
     var formatter = NumberFormat('#,##,##0');
     return SafeArea(
       child: Scaffold(
@@ -175,108 +216,249 @@ class _PaymentPageState extends State<PaymentPage> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        color: Colors.purple,
-                        child: Consumer<CustomerData>(
-                          builder: (context, customers, _) =>
-                              DropdownButtonHideUnderline(
-                            child: Container(
-                              padding: EdgeInsets.only(left: 1, right: 1),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.purple, width: 0.1),
-                                  borderRadius: BorderRadius.circular(1)),
-                              child: ButtonTheme(
-                                alignedDropdown: true,
-                                child: DropdownButton(
-                                  value: selectedValue,
-                                  iconSize: 30,
-                                  icon: Icon(Icons.find_in_page,
-                                      color: Colors.white),
-                                  style: TextStyle(
-                                      color: Colors.black54, fontSize: 16),
-                                  hint: Text(
-                                    'เลือกลูกค้า',
-                                    style: TextStyle(
-                                        fontFamily: 'Kanit-Regular',
-                                        color: Colors.white),
-                                  ),
-                                  dropdownColor: Colors.purple,
-                                  items: customers.listcustomer
-                                      .map((e) => DropdownMenuItem(
-                                          value: e.id,
-                                          child: Text(
-                                            e.name,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontFamily: 'Kanit-Regular'),
-                                          )))
-                                      .toList(),
-                                  onChanged: (String value) {
-                                    setState(() {
-                                      selectedValue = value;
-                                      Provider.of<PaymentreceiveData>(context,
-                                              listen: false)
-                                          .fetPaymentreceive(selectedValue);
-                                    });
-                                  },
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: <Widget>[
+                //     FutureBuilder(
+                //       future: _customerFuture,
+                //       builder: (context, dataSnapshort) {
+                //         if (dataSnapshort.connectionState ==
+                //             ConnectionState.waiting) {
+                //           return Center(child: CircularProgressIndicator());
+                //         } else {
+                //           if (dataSnapshort.error != null) {
+                //             return Center(child: Text('Data Error'));
+                //           } else {
+                //             return Expanded(
+                //               child: Container(
+                //                 color: Colors.purple,
+                //                 child: Consumer<CustomerData>(
+                //                   builder: (context, customers, _) =>
+                //                       DropdownButtonHideUnderline(
+                //                     child: Container(
+                //                       padding:
+                //                           EdgeInsets.only(left: 1, right: 1),
+                //                       decoration: BoxDecoration(
+                //                           border: Border.all(
+                //                               color: Colors.purple, width: 0.1),
+                //                           borderRadius:
+                //                               BorderRadius.circular(1)),
+                //                       child: ButtonTheme(
+                //                         alignedDropdown: true,
+                //                         child: DropdownButton(
+                //                           value: selectedValue,
+                //                           iconSize: 30,
+                //                           icon: Icon(Icons.find_in_page,
+                //                               color: Colors.white),
+                //                           style: TextStyle(
+                //                               color: Colors.black54,
+                //                               fontSize: 16),
+                //                           hint: Text(
+                //                             'เลือกลูกค้า',
+                //                             style: TextStyle(
+                //                                 fontFamily: 'Kanit-Regular',
+                //                                 color: Colors.white),
+                //                           ),
+                //                           dropdownColor: Colors.purple,
+                //                           items: customers.listcustomer
+                //                               .map((e) => DropdownMenuItem(
+                //                                   value: e.id,
+                //                                   child: Text(
+                //                                     e.name,
+                //                                     style: TextStyle(
+                //                                         color: Colors.white,
+                //                                         fontFamily:
+                //                                             'Kanit-Regular'),
+                //                                   )))
+                //                               .toList(),
+                //                           onChanged: (String value) {
+                //                             setState(() {
+                //                               selectedValue = value;
+                //                               Provider.of<PaymentreceiveData>(
+                //                                       context,
+                //                                       listen: false)
+                //                                   .fetPaymentreceive(
+                //                                       selectedValue);
+                //                             });
+                //                           },
+                //                         ),
+                //                       ),
+                //                     ),
+                //                   ),
+                //                 ),
+                //               ),
+                //             );
+                //           }
+                //         }
+                //       },
+                //     ),
+                //   ],
+                // ),
+                FutureBuilder(
+                  future: _paymentlistFuture,
+                  builder: (context, dataSnapshort) {
+                    if (dataSnapshort.connectionState ==
+                        ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else {
+                      if (dataSnapshort.error != null) {
+                        return Center(child: Text('Data Error'));
+                      } else {
+                        return Card(
+                          margin: EdgeInsets.all(3),
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Column(
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 10,
                                 ),
-                              ),
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        "ยอดค้างชำระ",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.black87),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Chip(
+                                        label: Consumer<PaymentreceiveData>(
+                                            builder: (context, payments, _) =>
+                                                Text(
+                                                  payments.totalAmount == null
+                                                      ? 0
+                                                      : "${formatter.format(payments.totalAmount)}",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20),
+                                                )),
+                                        backgroundColor:
+                                            Theme.of(context).primaryColor,
+                                      ),
+                                      Text("บาท",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black87))
+                                    ]),
+                              ],
                             ),
                           ),
-                        ),
-                      ),
-                    ),
+                        );
+                      }
+                    }
+                  },
+                ),
+                Row(
+                  children: <Widget>[
+                    FutureBuilder(builder: (context, dataSapshort) {
+                      if (dataSapshort.connectionState ==
+                          ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        if (dataSapshort.error != null) {
+                          return Center(child: Text('Data Error'));
+                        } else {
+                          return Expanded(
+                            child: Consumer<CustomerData>(
+                              builder: (context, _customer, _) =>
+                                  TypeAheadField(
+                                textFieldConfiguration: TextFieldConfiguration(
+                                    controller: _typeAheadController,
+                                    autofocus: false,
+                                    style: DefaultTextStyle.of(context)
+                                        .style
+                                        .copyWith(fontStyle: FontStyle.normal),
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        hintText: 'เลือกลูกค้า')),
+                                // suggestionsCallback: (pattern) async {
+                                //   return await BackendService.getSuggestions(pattern);
+                                // },
+                                suggestionsCallback: (pattern) async {
+                                  return await _customer.findCustomer(pattern);
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    // leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name),
+                                    // subtitle: Text('\$${suggestion['price']}'),
+                                  );
+                                },
+                                onSuggestionSelected: (items) {
+                                  //print(items.id);
+                                  setState(() {
+                                    selectedValue = items.id;
+                                    Provider.of<PaymentreceiveData>(context,
+                                            listen: false)
+                                        .fetPaymentreceive(selectedValue);
+                                    this._typeAheadController.text = items.name;
+                                  });
+                                },
+                                noItemsFoundBuilder: (context) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Text(
+                                          'ไม่พบข้อมูล',
+                                          style: TextStyle(
+                                              fontSize: 16, color: Colors.red),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        }
+                      }
+                    }),
                   ],
                 ),
-                Card(
-                  margin: EdgeInsets.all(15),
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                "ยอดค้างชำระ",
-                                style:
-                                    TextStyle(fontSize: 20, color: Colors.red),
-                              ),
-                              SizedBox(width: 10),
-                              Chip(
-                                label: Consumer<PaymentreceiveData>(
-                                    builder: (context, payments, _) => Text(
-                                          payments.totalAmount == null
-                                              ? 0
-                                              : "${formatter.format(payments.totalAmount)}",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20),
-                                        )),
-                                backgroundColor: Theme.of(context).primaryColor,
-                              ),
-                              Text("บาท",
-                                  style: TextStyle(
-                                      fontSize: 20, color: Colors.black87))
-                            ]),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
+                SizedBox(height: 5),
+                Expanded(
                   child: Consumer<PaymentreceiveData>(
                     builder: (context, payments, _) =>
                         _buildpaymentsList(payments.listpaymentreceive),
                   ),
-                ),
+                )
+
+                // RefreshIndicator(
+                //   onRefresh: _pagerefresh,
+                //   child: Consumer<PaymentreceiveData>(
+                //     builder: (context, payments, _) =>
+                //         _buildpaymentsList(payments.listpaymentreceive),
+                //   ),
+                // ),
+
+                // FutureBuilder(
+                //   future: _paymentlistFuture,
+                //   builder: (context, dataSnapshort) {
+                //     if (dataSnapshort.connectionState ==
+                //         ConnectionState.waiting) {
+                //       return Center(child: CircularProgressIndicator());
+                //     } else {
+                //       if (dataSnapshort.error != null) {
+                //         return Center(child: Text('Data Error'));
+                //       } else {
+                //         return Expanded(
+                //           child: Consumer<PaymentreceiveData>(
+                //             builder: (context, payments, _) =>
+                //                 _buildpaymentsList(payments.listpaymentreceive),
+                //           ),
+                //         );
+                //       }
+                //     }
+                //   },
+                // ),
               ],
             ),
           )),
@@ -308,12 +490,123 @@ class Items extends StatefulWidget {
 }
 
 class _ItemsState extends State<Items> {
-  GlobalKey<FormState> _formkey;
-
+  final Map<String, dynamic> _formData = {
+    'pay_amount': null,
+    'pay_date': null,
+    'pay_type': "1"
+  };
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _paydateTextController = TextEditingController();
+  final DateFormat dateformatter = DateFormat('dd-MM-yyyy');
   Paytype _paytype = Paytype.Cash;
+  DateTime _date = DateTime.now();
+
+  String selectedPaytype = "1";
+
+  Future<Null> _selectDate(BuildContext context) async {
+    DateTime _datePicker = await showDatePicker(
+        context: context,
+        initialDate: _date,
+        firstDate: DateTime(1947),
+        lastDate: DateTime(2030));
+
+    if (_datePicker != null && _datePicker != _date) {
+      setState(() {
+        _date = _datePicker;
+        _paydateTextController.text = dateformatter.format(_date).toString();
+      });
+    }
+  }
+
+  Widget _builpayamount() {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      style: TextStyle(fontSize: 16),
+      textAlign: TextAlign.center,
+      decoration: InputDecoration(
+          labelText: 'จำนวนเงิน', filled: true, fillColor: Colors.white),
+      validator: (String value) {
+        if (value.isEmpty || value.length < 1) {
+          return 'กรุณากรอกจำนวนเงิน';
+        }
+      },
+      onSaved: (String value) {
+        _formData['pay_amount'] = value;
+      },
+    );
+  }
+
+  Widget _builddatepicker() {
+    _paydateTextController.text = dateformatter.format(_date).toString();
+
+    return TextFormField(
+      cursorColor: Colors.blue,
+      textAlign: TextAlign.center,
+      controller: _paydateTextController,
+      readOnly: true,
+      //  initialValue: dateformatter.format(_date).toString(),
+      onTap: () {
+        _selectDate(context);
+      },
+      decoration: InputDecoration(
+        labelText: 'เลือกวันที่',
+        hintText: dateformatter.format(_date).toString(),
+      ),
+      validator: (String value) {
+        if (value.isEmpty || value.length < 1) {
+          return 'กรุณาเลือกวันที่';
+        }
+      },
+      onSaved: (String value) {
+        _formData['pay_date'] = value;
+      },
+    );
+  }
+
+  void _submitForm() async {
+    if (!_formKey.currentState.validate()) {
+      return;
+    }
+
+    _formKey.currentState.save();
+
+    Provider.of<PaymentreceiveData>(context, listen: false)
+        .addPayment(widget._id, widget._customer_id, _formData['pay_type'],
+            _formData['pay_amount'], _formData['pay_date'])
+        .then(
+      (_) {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Row(
+            children: <Widget>[
+              Icon(
+                Icons.check_circle,
+                color: Colors.white,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                "ทำรายการสำเร็จ",
+                style: TextStyle(color: Colors.white),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.green,
+        ));
+
+        Navigator.of(context).pop();
+      },
+    );
+    setState(() {
+      Provider.of<PaymentreceiveData>(context, listen: false)
+          .fetPaymentreceive(widget._customer_id);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    var formatter = NumberFormat('#,##,##0');
+
     return GestureDetector(
       onTap: () {
         return showDialog(
@@ -338,16 +631,17 @@ class _ItemsState extends State<Items> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
                 child: Container(
-                  // width: MediaQuery.of(context).size.width - 10,
+                  width: MediaQuery.of(context).size.width - 10,
+                  height: MediaQuery.of(context).size.height - 300,
                   // height: MediaQuery.of(context).size.height - 100,
-                  width: double.infinity,
-                  height: double.infinity,
+                  // width: double.infinity,
+                  // height: double.infinity,
                   child: Form(
-                    key: _formkey,
+                    key: _formKey,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        SizedBox(height: 10),
+                        SizedBox(height: 20),
                         Center(
                             child: Text(
                           "บันทึกชำระเงิน",
@@ -355,14 +649,21 @@ class _ItemsState extends State<Items> {
                               fontSize: 20, fontWeight: FontWeight.bold),
                         )),
                         SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: _builddatepicker(),
+                        ),
+                        SizedBox(height: 10),
                         ListTile(
                           title: Text("เงินสด"),
                           leading: Radio<Paytype>(
                             value: Paytype.Cash,
                             groupValue: _paytype,
-                            onChanged: (Paytype value) {
+                            onChanged: (value) {
+                              // print('ss = $value');
                               setState(() {
                                 _paytype = value;
+                                _formData['pay_type'] = '1';
                               });
                             },
                           ),
@@ -372,43 +673,42 @@ class _ItemsState extends State<Items> {
                           leading: Radio<Paytype>(
                             value: Paytype.Transfer,
                             groupValue: _paytype,
-                            onChanged: (Paytype value) {
+                            onChanged: (value) {
                               setState(() {
                                 _paytype = value;
+                                _formData['pay_type'] = '2';
                               });
                             },
                           ),
                         ),
-                        SizedBox(height: 10),
-                        SizedBox(height: 10),
-                        Form(
-                          key: _formkey,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
+                        SizedBox(height: 20),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 20, right: 20),
-                                child: TextFormField(
-                                  controller: _textEditingController,
-                                  textAlign: TextAlign.center,
-                                  keyboardType: TextInputType.number,
-                                  validator: (value) {
-                                    return value.isNotEmpty
-                                        ? null
-                                        : "Invalid Fields";
-                                  },
-                                  decoration:
-                                      InputDecoration(hintText: "จำนวนเงิน"),
+                              Text(
+                                "ยอดค้างชำระ",
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                '${formatter.format(double.parse(widget._remain_amount))}',
+                                style:
+                                    TextStyle(fontSize: 25, color: Colors.red),
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                'บาท',
+                                style: TextStyle(
+                                  fontSize: 16,
                                 ),
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                            ],
-                          ),
+                            ]),
+                        SizedBox(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: _builpayamount(),
                         ),
-                        Divider(),
+                        SizedBox(height: 10),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
@@ -421,9 +721,10 @@ class _ItemsState extends State<Items> {
                                       borderRadius: BorderRadius.circular(15)),
                                   color: Colors.blue[500],
                                   textColor: Colors.white,
-                                  onPressed: () {},
+                                  onPressed: () => _submitForm(),
                                   child: Text("บันทีก"),
                                 ),
+                                SizedBox(width: 20),
                                 RaisedButton(
                                   padding: EdgeInsets.only(left: 8),
                                   shape: RoundedRectangleBorder(
@@ -463,15 +764,17 @@ class _ItemsState extends State<Items> {
             // ),
             title: Text(
               "${widget._order_no}",
-              style: TextStyle(fontSize: 16, color: Colors.cyan),
+              style: TextStyle(fontSize: 16, color: Colors.purple),
             ),
             subtitle: Text("${widget._order_date}"),
             trailing: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("${widget._remain_amount}",
+                Text("${formatter.format(double.parse(widget._remain_amount))}",
                     style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.red)),
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                        fontSize: 20)),
               ],
             ),
           ),

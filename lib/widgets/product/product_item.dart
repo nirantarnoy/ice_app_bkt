@@ -32,7 +32,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ProductData products = Provider.of<ProductData>(context);
-    products.fetProducts();
+    products.fetProducts("");
     return _buildproductList(products.listproduct);
   }
 }

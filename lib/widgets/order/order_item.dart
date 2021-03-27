@@ -9,15 +9,15 @@ import '../../pages/createorder.dart';
 
 class OrderItem extends StatelessWidget {
   List<Orders> _orders = [];
+
   Widget _buildordersList(List<Orders> orders) {
     Widget orderCards;
-    if (orders != null) {
+    if (orders.isNotEmpty) {
       if (orders.length > 0) {
         // print("has list");
         orderCards = new ListView.builder(
-          itemCount: orders.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Items(
+            itemCount: orders.length,
+            itemBuilder: (BuildContext context, int index) => Items(
                 orders[index].id,
                 orders[index].order_no,
                 orders[index].customer_name,
@@ -27,31 +27,33 @@ class OrderItem extends StatelessWidget {
                 orders[index].payment_method_id,
                 orders[index].payment_method,
                 orders[index].customer_id,
-                orders[index].customer_code);
-          },
-        );
+                orders[index].customer_code));
         return orderCards;
       } else {
-        return Text(
-          "ไม่พบข้อมูล",
-          style: TextStyle(fontSize: 20, color: Colors.grey),
+        return Center(
+          child: Text(
+            "ไม่พบข้อมูล",
+            style: TextStyle(fontSize: 20, color: Colors.grey),
+          ),
         );
       }
     } else {
-      return Text(
-        "ไม่พบข้อมูล",
-        style: TextStyle(fontSize: 20, color: Colors.grey),
+      return Center(
+        child: Text(
+          "ไม่พบข้อมูล",
+          style: TextStyle(fontSize: 20, color: Colors.grey),
+        ),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final OrderData orders = Provider.of<OrderData>(context, listen: false);
+    final OrderData orders = Provider.of<OrderData>(context);
     // orders.fetOrders();
     var formatter = NumberFormat('#,##,##0');
     return Column(
-      children: [
+      children: <Widget>[
         Column(children: <Widget>[
           Card(
             margin: EdgeInsets.all(15),
@@ -87,9 +89,15 @@ class OrderItem extends StatelessWidget {
         ]),
         SizedBox(height: 5),
         Expanded(
-            child: orders.listorder.isNotEmpty
-                ? _buildordersList(orders.listorder)
-                : Text('Not Data')),
+          child: orders.listorder.isNotEmpty
+              ? _buildordersList(orders.listorder)
+              : Center(
+                  child: Text(
+                    "ไม่พบข้อมูล",
+                    style: TextStyle(fontSize: 20, color: Colors.grey),
+                  ),
+                ),
+        ),
         SizedBox(
           height: 10,
         )
@@ -99,6 +107,8 @@ class OrderItem extends StatelessWidget {
 }
 
 class Items extends StatelessWidget {
+  var formatter = NumberFormat('#,##,##0');
+  DateFormat dateformatter = DateFormat('dd-MM-yyyy');
   //orders _orders;
   final String _id;
   final String _order_no;
@@ -143,8 +153,11 @@ class Items extends StatelessWidget {
       },
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context)
-              .pushNamed(OrderDetailPage.routeName, arguments: _customer_id);
+          var setData = Provider.of<OrderData>(context, listen: false);
+          setData.idOrder = int.parse(_id);
+          setData.orderCustomerId = _customer_id;
+          Navigator.of(context).pushNamed(OrderDetailPage.routeName,
+              arguments: {'customer_id': _customer_id, 'order_id': _id});
         }, // Navigator.of(context).pushNamed(OrderDetailPage.routeName),
         child: Column(
           children: <Widget>[
@@ -157,22 +170,29 @@ class Items extends StatelessWidget {
               //       "$_payment_method",
               //       style: TextStyle(color: Colors.white),
               //     )),
-              leading: Chip(
-                label:
-                    Text("${_order_no}", style: TextStyle(color: Colors.white)),
-                backgroundColor: Colors.green[500],
-              ),
+              // leading: Chip(
+              //   label:
+              //       Text("${_order_no}", style: TextStyle(color: Colors.white)),
+              //   backgroundColor: Colors.green[500],
+              // ),
               title: Text(
                 "$_customer_name $_note",
-                style: TextStyle(fontSize: 16, color: Colors.cyan),
+                style: TextStyle(fontSize: 18, color: Colors.black),
               ),
-              subtitle: Text("$_order_date ($_order_no)"),
+              subtitle: Text(
+                "${_order_date}",
+                style: TextStyle(color: Colors.cyan[700]),
+              ),
               trailing: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("$_total_amount",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.red)),
+                children: <Widget>[
+                  Text(
+                    "${formatter.format(double.parse(_total_amount))}",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                        fontSize: 20),
+                  ),
                 ],
               ),
             ),
