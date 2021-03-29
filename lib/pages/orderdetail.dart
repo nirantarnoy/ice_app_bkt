@@ -128,7 +128,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     leading: Chip(
                       label: Text("${orders[index].product_code}",
                           style: TextStyle(color: Colors.white)),
-                      backgroundColor: Colors.purple[700],
+                      backgroundColor: Colors.orange[700],
                     ),
                     title: Text(
                       "${orders[index].product_name}",
@@ -157,12 +157,17 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     trailing: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        Text("x${orders[index].qty}"),
+                        Text(
+                          "x${orders[index].qty}",
+                          style: TextStyle(
+                              color: Colors.green[500],
+                              fontWeight: FontWeight.bold),
+                        ),
                         Text(
                             "${formatter2.format(double.parse(orders[index].qty) * double.parse(orders[index].price))}",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.red,
+                                color: Colors.purple[700],
                                 fontSize: 16)),
                       ],
                     ),

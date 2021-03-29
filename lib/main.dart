@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:ice_app_new/pages/home.dart';
+import 'package:ice_app_new/pages/take_photo.dart';
 import 'package:ice_app_new/providers/transferin.dart';
 import 'package:ice_app_new/providers/transferout.dart';
 import 'package:provider/provider.dart';
@@ -103,6 +104,7 @@ class _MyAppState extends State<MyApp> {
             CreateorderPage.routeName: (ctx) => CreateorderPage(),
             PaymentPage.routeName: (ctx) => PaymentPage(),
             HomePage.routeName: (ctx) => HomePage(),
+            //TakePictureScreen.routeName: (ctx) => TakePictureScreen(),
           },
         );
       }),

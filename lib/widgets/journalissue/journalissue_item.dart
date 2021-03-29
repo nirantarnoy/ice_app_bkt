@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import '../../models/issueitems.dart';
 
 class Journalissueitem extends StatelessWidget {
-  List<Issueitems> _orders = [];
   Widget _buildissueitemList(List<Issueitems> issue_items) {
     Widget productCards;
     if (issue_items.isNotEmpty) {
@@ -48,8 +47,8 @@ class Journalissueitem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final IssueData item_issues =
-        Provider.of<IssueData>(context, listen: false);
+    // final IssueData item_issues =
+    //     Provider.of<IssueData>(context, listen: false);
     var formatter = NumberFormat('#,##,##0');
     return Column(
       children: <Widget>[
@@ -110,10 +109,10 @@ class Journalissueitem extends StatelessWidget {
                       SizedBox(width: 10),
                       Chip(
                         label: Consumer<IssueData>(
-                            builder: (context, payments, _) => Text(
-                                  payments.totalAmount == null
+                            builder: (context, issues, _) => Text(
+                                  issues.totalAmount == null
                                       ? 0
-                                      : "${formatter.format(item_issues.totalAmount)}",
+                                      : "${formatter.format(issues.totalAmount)}",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 20),
                                 )),

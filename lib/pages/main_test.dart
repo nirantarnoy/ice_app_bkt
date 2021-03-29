@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ice_app_new/models/delivery_route.dart';
 import 'package:ice_app_new/pages/home.dart';
 import 'package:ice_app_new/pages/journalissue.dart';
+import 'package:ice_app_new/pages/take_photo.dart';
 import 'package:ice_app_new/widgets/journalissue/journalissue_item.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:connectivity/connectivity.dart';
@@ -260,7 +261,12 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
               ListTile(
                 title: Text("ตรวจสอบ ถัง/กระสอบ"),
                 trailing: Icon(Icons.qr_code_scanner_sharp),
-                onTap: () => {},
+                onTap: () => {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => TakePictureScreen()))
+                },
               ),
               // Divider(),
               // ListTile(

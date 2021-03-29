@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice_app_new/pages/createtransfer.dart';
 import 'package:ice_app_new/providers/issuedata.dart';
 import 'package:ice_app_new/providers/transferout.dart';
 import 'package:provider/provider.dart';
@@ -6,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../../models/transferout.dart';
 
 class Transferoutitem extends StatelessWidget {
-  List<Transferout> _orders = [];
+  // List<Transferout> _orders = [];
   Widget _buildissueitemList(List<Transferout> transferout_items) {
     Widget productCards;
     if (transferout_items.isNotEmpty) {
@@ -75,36 +76,72 @@ class Transferoutitem extends StatelessWidget {
           height: 10,
         ),
         Expanded(child: _buildissueitemList(item_transferout.listtransferout)),
-        Card(
-          margin: EdgeInsets.all(15),
-          child: Padding(
-            padding: EdgeInsets.all(8),
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: Card(
+                margin: EdgeInsets.only(left: 15, right: 20),
+                child: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Column(
                     children: <Widget>[
-                      Text(
-                        "จำนวน",
-                        style: TextStyle(fontSize: 20, color: Colors.purple),
+                      SizedBox(
+                        height: 10,
                       ),
-                      SizedBox(width: 10),
-                      Chip(
-                        label: Consumer<IssueData>(
-                            builder: (context, payments, _) => Text(
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              "จำนวน",
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.purple),
+                            ),
+                            SizedBox(width: 10),
+                            Chip(
+                              label: Consumer<IssueData>(
+                                builder: (context, payments, _) => Text(
                                   payments.totalAmount == null ? 0 : "0",
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 20),
-                                )),
-                        backgroundColor: Theme.of(context).primaryColor,
-                      ),
-                    ]),
-              ],
+                                ),
+                              ),
+                              backgroundColor: Theme.of(context).primaryColor,
+                            ),
+                          ]),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FloatingActionButton(
+                  backgroundColor: Colors.green[400],
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CreatetransferPage()));
+                  }),
+            ),
+            // Expanded(
+            //   child: Card(
+            //     margin: EdgeInsets.only(left: 15),
+            //     child: Padding(
+            //       padding: EdgeInsets.all(8),
+            //       child: Column(
+            //         children: <Widget>[
+
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
+          ],
         ),
       ],
     );

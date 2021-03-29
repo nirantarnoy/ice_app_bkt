@@ -7,10 +7,10 @@ class Orders {
   final String customer_code;
   final String customer_name;
   final String order_date;
-  final String note;
   final String total_amount;
   final String payment_method_id;
   final String payment_method;
+  final String total_qty;
 
   Orders(
       {@required this.id,
@@ -19,8 +19,8 @@ class Orders {
       @required this.customer_code,
       @required this.customer_name,
       @required this.order_date,
-      @required this.note,
       @required this.total_amount,
       @required this.payment_method,
-      @required this.payment_method_id});
+      @required this.payment_method_id,
+      this.total_qty});
 }

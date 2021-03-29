@@ -97,6 +97,54 @@ class OrderData with ChangeNotifier {
     return total;
   }
 
+  double get cashTotalAmount {
+    double total = 0.0;
+    if (listorder.isNotEmpty) {
+      listorder
+          .where((items) => items.payment_method_id == "1")
+          .forEach((orderItem) {
+        total += double.parse(orderItem.total_amount);
+      });
+    }
+    return total;
+  }
+
+  double get creditTotalAmount {
+    double total = 0.0;
+    if (listorder.isNotEmpty) {
+      listorder
+          .where((items) => items.payment_method_id == "2")
+          .forEach((orderItem) {
+        total += double.parse(orderItem.total_amount);
+      });
+    }
+    return total;
+  }
+
+  double get cashTotalQty {
+    double total = 0.0;
+    if (listorder.isNotEmpty) {
+      listorder
+          .where((items) => items.payment_method_id == "1")
+          .forEach((orderItem) {
+        total += double.parse(orderItem.total_qty);
+      });
+    }
+    return total;
+  }
+
+  double get creditTotalQty {
+    double total = 0.0;
+    if (listorder.isNotEmpty) {
+      listorder
+          .where((items) => items.payment_method_id == "2")
+          .forEach((orderItem) {
+        total += double.parse(orderItem.total_qty);
+      });
+    }
+    return total;
+  }
+
   double get sumqtydetail {
     double total = 0.0;
     listorder_detail.forEach((detailitem) {
@@ -156,10 +204,10 @@ class OrderData with ChangeNotifier {
             customer_id: res['data'][i]['customer_id'].toString(),
             customer_code: res['data'][i]['customer_code'].toString(),
             customer_name: res['data'][i]['customer_name'].toString(),
-            note: res['data'][i]['note'].toString(),
             total_amount: res['data'][i]['total_amount'].toString(),
             payment_method: res['data'][i]['payment_method'].toString(),
             payment_method_id: res['data'][i]['payment_method_id'].toString(),
+            total_qty: res['data'][i]['total_qty'].toString(),
           );
 
           data.add(orderresult);

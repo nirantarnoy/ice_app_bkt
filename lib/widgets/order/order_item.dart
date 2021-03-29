@@ -22,12 +22,13 @@ class OrderItem extends StatelessWidget {
                 orders[index].order_no,
                 orders[index].customer_name,
                 orders[index].order_date,
-                orders[index].note,
                 orders[index].total_amount,
                 orders[index].payment_method_id,
                 orders[index].payment_method,
                 orders[index].customer_id,
-                orders[index].customer_code));
+                orders[index].customer_code,
+                orders,
+                index));
         return orderCards;
       } else {
         return Center(
@@ -66,7 +67,7 @@ class OrderItem extends StatelessWidget {
                       "ยอดขาย",
                       style: TextStyle(fontSize: 20, color: Colors.black87),
                     ),
-                    SizedBox(width: 10),
+                    SizedBox(width: 5),
                     Chip(
                       label: Text(
                         "${formatter.format(orders.totalAmount)}",
@@ -82,7 +83,7 @@ class OrderItem extends StatelessWidget {
                             .pushNamed(CreateorderPage.routeName),
                         child: Icon(Icons.add, color: Colors.white)
                         //   FlatButton(onPressed: () {}, child: Text("เพิ่มรายการขาย")),
-                        )
+                        ),
                   ]),
             ),
           )
@@ -106,36 +107,45 @@ class OrderItem extends StatelessWidget {
   }
 }
 
-class Items extends StatelessWidget {
-  var formatter = NumberFormat('#,##,##0');
-  DateFormat dateformatter = DateFormat('dd-MM-yyyy');
-  //orders _orders;
+class Items extends StatefulWidget {
   final String _id;
   final String _order_no;
   final String _customer_name;
   final String _customer_id;
   final String _customer_code;
   final String _order_date;
-  final String _note;
   final String _total_amount;
   final String _payment_method;
   final String _payment_method_id;
+  final List<Orders> _orders;
+  final int _index;
 
   Items(
       this._id,
       this._order_no,
       this._customer_name,
       this._order_date,
-      this._note,
       this._total_amount,
       this._payment_method_id,
       this._payment_method,
       this._customer_id,
-      this._customer_code);
+      this._customer_code,
+      this._orders,
+      this._index);
+
+  @override
+  _ItemsState createState() => _ItemsState();
+}
+
+class _ItemsState extends State<Items> {
+  var formatter = NumberFormat('#,##,##0');
+
+  DateFormat dateformatter = DateFormat('dd-MM-yyyy');
+
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      key: ValueKey(_id),
+      key: ValueKey(widget._orders[widget._index]),
       background: Container(
         color: Theme.of(context).errorColor,
         child: Icon(
@@ -148,16 +158,65 @@ class Items extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
       ),
       direction: DismissDirection.endToStart,
+      confirmDismiss: (direction) {
+        return showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('แจ้งเตือน'),
+            content: Text('ต้องการลบข้อมูลใช่หรือไม่'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: Text('ยืนยัน'),
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: Text('ไม่'),
+              ),
+            ],
+          ),
+        );
+      },
       onDismissed: (direction) {
-        Provider.of<OrderData>(context, listen: false).removeOrder(_id);
+        print(widget._orders[widget._index].id);
+        setState(() {
+          // Provider.of<OrderData>(context, listen: false)
+          //     .removeOrderDetail(widget._orders[widget._index].id);
+          widget._orders.removeAt(widget._index);
+        });
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Row(
+            children: <Widget>[
+              Icon(
+                Icons.check_circle,
+                color: Colors.white,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                "ทำรายการสำเร็จ",
+                style: TextStyle(color: Colors.white),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.green,
+        ));
       },
       child: GestureDetector(
         onTap: () {
           var setData = Provider.of<OrderData>(context, listen: false);
-          setData.idOrder = int.parse(_id);
-          setData.orderCustomerId = _customer_id;
+          setData.idOrder = int.parse(widget._id);
+          setData.orderCustomerId = widget._customer_id;
           Navigator.of(context).pushNamed(OrderDetailPage.routeName,
-              arguments: {'customer_id': _customer_id, 'order_id': _id});
+              arguments: {
+                'customer_id': widget._customer_id,
+                'order_id': widget._id
+              });
         }, // Navigator.of(context).pushNamed(OrderDetailPage.routeName),
         child: Column(
           children: <Widget>[
@@ -176,18 +235,18 @@ class Items extends StatelessWidget {
               //   backgroundColor: Colors.green[500],
               // ),
               title: Text(
-                "$_customer_name $_note",
+                "${widget._customer_name}",
                 style: TextStyle(fontSize: 18, color: Colors.black),
               ),
               subtitle: Text(
-                "${_order_date}",
+                "${widget._order_date}",
                 style: TextStyle(color: Colors.cyan[700]),
               ),
               trailing: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "${formatter.format(double.parse(_total_amount))}",
+                    "${formatter.format(double.parse(widget._total_amount))}",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.red,

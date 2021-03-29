@@ -26,7 +26,8 @@ class _JournalissuePageState extends State<TransferoutPage> {
 
   Future _transferoutFuture;
   Future _obtainTransferoutFuture() {
-    return Provider.of<TransferoutData>(context).fetTransferout();
+    return Provider.of<TransferoutData>(context, listen: false)
+        .fetTransferout();
   }
 
   @override
@@ -61,39 +62,39 @@ class _JournalissuePageState extends State<TransferoutPage> {
     super.didChangeDependencies();
   }
 
-  // Widget _buildProductList() {
-  //   TransferoutData transferout =
-  //       Provider.of<TransferoutData>(context, listen: false);
-  //   Widget content;
-  //   content = FutureBuilder(
-  //     future: _transferoutFuture,
-  //     builder: (context, dataSnapshort) {
-  //       if (dataSnapshort.connectionState == ConnectionState.waiting) {
-  //         return Center(child: CircularProgressIndicator());
-  //       } else {
-  //         if (dataSnapshort.error != null) {
-  //           return Center(child: CircularProgressIndicator());
-  //         } else {
-  //           return Container(child: Transferoutitem());
-  //         }
-  //       }
-  //     },
-  //   );
+  Widget _buildProductList() {
+    TransferoutData transferout =
+        Provider.of<TransferoutData>(context, listen: false);
+    Widget content;
+    content = FutureBuilder(
+      future: _transferoutFuture,
+      builder: (context, dataSnapshort) {
+        if (dataSnapshort.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          if (dataSnapshort.error != null) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            return Container(child: Transferoutitem());
+          }
+        }
+      },
+    );
 
-  //   return RefreshIndicator(
-  //     child: content,
-  //     onRefresh: transferout.fetTransferout,
-  //   );
-  // }
+    return RefreshIndicator(
+      child: content,
+      onRefresh: transferout.fetTransferout,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    // return SafeArea(
-    //   child: Scaffold(
-    //     resizeToAvoidBottomInset: false,
-    //     body: Text('out'), //_buildProductList(),
-    //   ),
-    // );
-    return Text('test');
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: _buildProductList(),
+      ),
+    );
+    //return Text('test');
   }
 }
