@@ -76,7 +76,7 @@ class _JournalissuePageState extends State<JournalissuePage> {
 
   @override
   void didUpdateWidget(JournalissuePage oldWidget) {
-    print('didUpdate()');
+    // print('didUpdate()');
     super.didUpdateWidget(oldWidget);
   }
 

@@ -6,11 +6,14 @@ class Transferin {
   final String from_route;
   final String from_order_no;
   final String from_car_no;
+  final String qty;
 
-  Transferin(
-      {this.transfer_id,
-      this.journal_no,
-      this.from_route,
-      this.from_order_no,
-      this.from_car_no});
+  Transferin({
+    this.transfer_id,
+    this.journal_no,
+    this.from_route,
+    this.from_order_no,
+    this.from_car_no,
+    this.qty,
+  });
 }

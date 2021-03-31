@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:ice_app_new/providers/issuedata.dart';
-import 'package:ice_app_new/providers/transferout.dart';
+import 'package:ice_app_new/providers/Transferin.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/transferout.dart';
+import '../../models/Transferin.dart';
 
 class Transferinitem extends StatelessWidget {
-  List<Transferout> _orders = [];
-  Widget _buildissueitemList(List<Transferout> transferout_items) {
+  List<Transferin> _orders = [];
+  Widget _buildissueitemList(List<Transferin> _items) {
     Widget productCards;
-    if (transferout_items != null) {
-      if (transferout_items.length > 0) {
+    if (_items != null) {
+      if (_items.length > 0) {
         //print("has list");
         productCards = new ListView.builder(
-          itemCount: transferout_items.length,
+          itemCount: _items.length,
           itemBuilder: (BuildContext context, int index) {
             return Items(
-              transferout_items[index].transfer_id.toString(),
-              transferout_items[index].journal_no.toString(),
-              transferout_items[index].to_route.toString(),
-              transferout_items[index].to_order_no.toString(),
-              transferout_items[index].to_car_no.toString(),
+              _items[index].transfer_id.toString(),
+              _items[index].journal_no.toString(),
+              _items[index].from_route.toString(),
+              _items[index].from_order_no.toString(),
+              _items[index].from_car_no.toString(),
+              _items[index].qty.toString(),
             );
           },
         );
@@ -34,8 +35,8 @@ class Transferinitem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TransferoutData item_transferout =
-        Provider.of<TransferoutData>(context, listen: false);
+    final TransferinData _transferin =
+        Provider.of<TransferinData>(context, listen: false);
     // item_issues.fetIssueitems();
     return Column(
       children: <Widget>[
@@ -49,7 +50,7 @@ class Transferinitem extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  "รายการโอนสินค้าหน่วยรถ",
+                  "รายการรับโอนสินค้า",
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -62,7 +63,7 @@ class Transferinitem extends StatelessWidget {
         SizedBox(
           height: 10,
         ),
-        Expanded(child: _buildissueitemList(item_transferout.listtransferout)),
+        Expanded(child: _buildissueitemList(_transferin.listtransferin),
       ],
     );
   }
@@ -72,12 +73,19 @@ class Items extends StatelessWidget {
   //orders _orders;
   final String _transfer_id;
   final String _journal_no;
-  final String _to_route;
-  final String _to_order_no;
-  final String _to_car_no;
+  final String _from_route;
+  final String _from_order_no;
+  final String _from_car_no;
+  final String _qty;
 
-  Items(this._transfer_id, this._journal_no, this._to_route, this._to_order_no,
-      this._to_car_no);
+  Items(
+    this._transfer_id,
+    this._journal_no,
+    this._from_route,
+    this._from_order_no,
+    this._from_car_no,
+    this._qty,
+  );
   @override
   Widget build(BuildContext context) {
     return new GestureDetector(
@@ -98,37 +106,17 @@ class Items extends StatelessWidget {
             ),
             subtitle: Row(
               children: <Widget>[
-                Icon(Icons.directions_car),
+                Text("${_from_car_no}"),
                 SizedBox(
                   width: 10,
-                ),
-                Icon(
-                  Icons.double_arrow,
-                  color: Colors.orange,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text("${_to_car_no}"),
-                SizedBox(
-                  width: 10,
-                ),
-                Text("รถ"),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  "${_to_car_no}",
-                  style: TextStyle(color: Colors.green),
                 ),
               ],
             ),
-            // trailing: Text('$_qty',
-            //     style: TextStyle(
-            //         fontSize: 20.0,
-            //         fontWeight: FontWeight.bold,
-            //         color: Colors.orange[800])
-            //         ),
+            trailing: Text('$_qty',
+                style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orange[800])),
           ),
           Divider(),
         ],

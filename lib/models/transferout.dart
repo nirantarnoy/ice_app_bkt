@@ -6,11 +6,14 @@ class Transferout {
   final String to_route;
   final String to_order_no;
   final String to_car_no;
+  final String qty;
 
-  Transferout(
-      {this.transfer_id,
-      this.journal_no,
-      this.to_route,
-      this.to_order_no,
-      this.to_car_no});
+  Transferout({
+    this.transfer_id,
+    this.journal_no,
+    this.to_route,
+    this.to_order_no,
+    this.to_car_no,
+    this.qty,
+  });
 }

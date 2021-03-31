@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:ice_app_new/pages/createtransfer.dart';
 import 'package:ice_app_new/providers/issuedata.dart';
 import 'package:ice_app_new/providers/transferout.dart';
@@ -17,12 +18,12 @@ class Transferoutitem extends StatelessWidget {
           itemCount: transferout_items.length,
           itemBuilder: (BuildContext context, int index) {
             return Items(
-              transferout_items[index].transfer_id.toString(),
-              transferout_items[index].journal_no.toString(),
-              transferout_items[index].to_route.toString(),
-              transferout_items[index].to_order_no.toString(),
-              transferout_items[index].to_car_no.toString(),
-            );
+                transferout_items[index].transfer_id.toString(),
+                transferout_items[index].journal_no.toString(),
+                transferout_items[index].to_route.toString(),
+                transferout_items[index].to_order_no.toString(),
+                transferout_items[index].to_car_no.toString(),
+                transferout_items[index].qty.toString());
           },
         );
       } else {
@@ -50,6 +51,7 @@ class Transferoutitem extends StatelessWidget {
     final TransferoutData item_transferout =
         Provider.of<TransferoutData>(context, listen: false);
     // item_issues.fetIssueitems();
+
     return Column(
       children: <Widget>[
         Row(
@@ -98,9 +100,11 @@ class Transferoutitem extends StatelessWidget {
                             ),
                             SizedBox(width: 10),
                             Chip(
-                              label: Consumer<IssueData>(
-                                builder: (context, payments, _) => Text(
-                                  payments.totalAmount == null ? 0 : "0",
+                              label: Consumer<TransferoutData>(
+                                builder: (context, transferouts, _) => Text(
+                                  transferouts.totalAmount == null
+                                      ? 0
+                                      : transferouts.totalAmount.toString(),
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 20),
                                 ),
@@ -155,11 +159,19 @@ class Items extends StatelessWidget {
   final String _to_route;
   final String _to_order_no;
   final String _to_car_no;
+  final String _qty;
 
-  Items(this._transfer_id, this._journal_no, this._to_route, this._to_order_no,
-      this._to_car_no);
+  Items(
+    this._transfer_id,
+    this._journal_no,
+    this._to_route,
+    this._to_order_no,
+    this._to_car_no,
+    this._qty,
+  );
   @override
   Widget build(BuildContext context) {
+    var formatter = NumberFormat('#,##,##0');
     return new GestureDetector(
       onTap: () => Navigator.pushNamed(
           context, '/ordersdetail/' + this._transfer_id.toString()),
@@ -178,21 +190,6 @@ class Items extends StatelessWidget {
             ),
             subtitle: Row(
               children: <Widget>[
-                Icon(Icons.directions_car),
-                SizedBox(
-                  width: 10,
-                ),
-                Icon(
-                  Icons.double_arrow,
-                  color: Colors.orange,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text("${_to_car_no}"),
-                SizedBox(
-                  width: 10,
-                ),
                 Text("ทะเบียน"),
                 SizedBox(
                   width: 10,
@@ -203,7 +200,7 @@ class Items extends StatelessWidget {
                 ),
               ],
             ),
-            trailing: Text('0',
+            trailing: Text('${formatter.format(double.parse(_qty))}',
                 style: TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold,

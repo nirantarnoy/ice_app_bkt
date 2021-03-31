@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:double_back_to_close/double_back_to_close.dart';
+import 'package:ice_app_new/models/transfer_total.dart';
 import 'package:ice_app_new/pages/home.dart';
 import 'package:ice_app_new/pages/take_photo.dart';
+import 'package:ice_app_new/providers/car.dart';
 import 'package:ice_app_new/providers/transferin.dart';
 import 'package:ice_app_new/providers/transferout.dart';
 import 'package:provider/provider.dart';
@@ -80,7 +82,8 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<PaymentreceiveData>.value(
             value: PaymentreceiveData()),
         ChangeNotifierProvider<TransferoutData>.value(value: TransferoutData()),
-        ChangeNotifierProvider<TransferinData>.value(value: TransferinData())
+        ChangeNotifierProvider<TransferinData>.value(value: TransferinData()),
+        ChangeNotifierProvider<CarData>.value(value: CarData())
       ],
       child: Consumer(builder: (context, UserData users, _) {
         // checkAuthen(users);

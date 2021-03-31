@@ -37,13 +37,13 @@ class TransferinData with ChangeNotifier {
   }
 
   Future<dynamic> fetTransferin() async {
-    String _current_route_id = "";
+    String _car_id = "";
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('user_id') != null) {
-      _current_route_id = prefs.getString('emp_routne_id');
+      _car_id = prefs.getString('emp_car_id');
     }
 
-    final Map<String, dynamic> filterData = {'rine_id': _current_route_id};
+    final Map<String, dynamic> filterData = {'car_id': _car_id};
     // _isLoading = true;
     notifyListeners();
     try {
@@ -71,11 +71,13 @@ class TransferinData with ChangeNotifier {
           //print(res['data'][i]['code']);
           // data.add(product);
           final Transferin customerresult = Transferin(
-              transfer_id: res['data'][i]['transfer_id'].toString(),
-              journal_no: res['data'][i]['journal_no'].toString(),
-              from_route: res['data'][i]['from_route'].toString(),
-              from_car_no: res['data'][i]['from_car_no'].toString(),
-              from_order_no: res['data'][i]['to_order_no'].toString());
+            transfer_id: res['data'][i]['transfer_id'].toString(),
+            journal_no: res['data'][i]['journal_no'].toString(),
+            from_route: res['data'][i]['from_route'].toString(),
+            from_car_no: res['data'][i]['from_car_name'].toString(),
+            from_order_no: res['data'][i]['to_order_no'].toString(),
+            qty: res['data'][i]['qty'].toString(),
+          );
 
           //  print('data from server is ${customerresult}');
           data.add(customerresult);

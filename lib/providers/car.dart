@@ -8,11 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CarData with ChangeNotifier {
   final String url_to_car_list =
       //  "http://192.168.1.120/icesystem/frontend/web/api/customer/list";
-      "http://119.59.100.74/icesystem/frontend/web/api/customer/list";
+      "http://119.59.100.74/icesystem/frontend/web/api/car/list";
   //"http://119.59.100.74/icesystem/frontend/web/api/customer/list";
-  final String url_to_car_detail =
-      // "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
-      "http://119.59.100.74/icesystem/frontend/web/api/customer/detail";
 
   List<Car> _car;
   List<Car> get listcar => _car;

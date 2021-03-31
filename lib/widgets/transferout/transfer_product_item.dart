@@ -1,10 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:ice_app_new/providers/car.dart';
+import 'package:ice_app_new/providers/transferout.dart';
+import 'package:intl/intl.dart';
 import 'package:ice_app_new/models/issueitems.dart';
 import 'package:ice_app_new/models/transferproduct.dart';
 import 'package:ice_app_new/providers/issuedata.dart';
 import 'package:provider/provider.dart';
 
-class TransferProductItem extends StatelessWidget {
+class TransferProductItem extends StatefulWidget {
+  String transfer_total = "0";
+  TransferProductItem({this.transfer_total});
+  @override
+  _TransferProductItemState createState() => _TransferProductItemState();
+}
+
+class _TransferProductItemState extends State<TransferProductItem> {
+  Future _carFuture;
+  Future _obtaincarFuture() {
+    return Provider.of<CarData>(context, listen: false).fethCar();
+  }
+
+  @override
+  void initState() {
+    _carFuture = _obtaincarFuture();
+    Provider.of<IssueData>(context, listen: false).resetqty();
+    super.initState();
+  }
+
+  void _submitForm(List<TransferProduct> transferdata, String car_id) {
+    print('transferdata is ${transferdata[0].qty}');
+    if (transferdata.isNotEmpty) {
+      Provider.of<TransferoutData>(context, listen: false)
+          .addTransfer(car_id, transferdata);
+    }
+  }
+
   Widget _buildlistitem(List<TransferProduct> issueproduct) {
     if (issueproduct.isNotEmpty) {
       Widget productcards;
@@ -42,6 +73,11 @@ class TransferProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    final TextEditingController _typeAheadController = TextEditingController();
+    String selectedValue;
+
+    var formatter = NumberFormat('#,##,##0');
     return Column(
       children: <Widget>[
         Expanded(
@@ -56,36 +92,261 @@ class TransferProductItem extends StatelessWidget {
                         ),
                       ),
           ),
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: Container(
+                color: Colors.grey[200],
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Consumer<IssueData>(
+                          builder: (context, totals, _) => Row(
+                            children: <Widget>[
+                              Text(
+                                'รวม ',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                '${formatter.format(totals.transferouttotal)}',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: GestureDetector(
+                child: Container(
+                  color: Colors.green[700],
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        SizedBox(width: 5),
+                        Text(
+                          'ตกลง',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  return showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Container(
+                            width: MediaQuery.of(context).size.width - 10,
+                            height: MediaQuery.of(context).size.height - 500,
+                            // height: MediaQuery.of(context).size.height - 100,
+                            // width: double.infinity,
+                            // height: double.infinity,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Form(
+                                key: _formKey,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    SizedBox(height: 20),
+                                    Center(
+                                        child: Text(
+                                      "โอนสินค้าไปยัง",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    )),
+                                    SizedBox(height: 20),
+                                    Row(
+                                      children: <Widget>[
+                                        FutureBuilder(
+                                            future: _carFuture,
+                                            builder: (context, dataSapshort) {
+                                              if (dataSapshort
+                                                      .connectionState ==
+                                                  ConnectionState.waiting) {
+                                                return Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                );
+                                              } else {
+                                                if (dataSapshort.error !=
+                                                    null) {
+                                                  return Center(
+                                                      child:
+                                                          Text('Data Error'));
+                                                } else {
+                                                  return Expanded(
+                                                    child: Consumer<CarData>(
+                                                      builder:
+                                                          (context, _car, _) =>
+                                                              TypeAheadField(
+                                                        textFieldConfiguration: TextFieldConfiguration(
+                                                            controller:
+                                                                _typeAheadController,
+                                                            autofocus: false,
+                                                            style: DefaultTextStyle.of(
+                                                                    context)
+                                                                .style
+                                                                .copyWith(
+                                                                    fontStyle:
+                                                                        FontStyle
+                                                                            .normal),
+                                                            decoration: InputDecoration(
+                                                                border:
+                                                                    OutlineInputBorder(),
+                                                                hintText:
+                                                                    'เลือกรถที่ต้องการโอน')),
+                                                        // suggestionsCallback: (pattern) async {
+                                                        //   return await BackendService.getSuggestions(pattern);
+                                                        // },
+                                                        suggestionsCallback:
+                                                            (pattern) async {
+                                                          return await _car
+                                                              .findCar(pattern);
+                                                        },
+                                                        itemBuilder: (context,
+                                                            suggestion) {
+                                                          return ListTile(
+                                                            // leading: Icon(Icons.shopping_cart),
+                                                            title: Text(
+                                                                suggestion
+                                                                    .name),
+                                                            // subtitle: Text('\$${suggestion['price']}'),
+                                                          );
+                                                        },
+                                                        onSuggestionSelected:
+                                                            (items) {
+                                                          print('customer is ' +
+                                                              items.id);
+                                                          setState(() {
+                                                            selectedValue =
+                                                                items.id;
+
+                                                            _typeAheadController
+                                                                    .text =
+                                                                items.name;
+                                                          });
+                                                        },
+                                                        noItemsFoundBuilder:
+                                                            (context) {
+                                                          return Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: <
+                                                                  Widget>[
+                                                                Text(
+                                                                  'ไม่พบข้อมูล',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          16,
+                                                                      color: Colors
+                                                                          .red),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    ),
+                                                  );
+                                                }
+                                              }
+                                            }),
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Consumer<IssueData>(
+                                              builder:
+                                                  (context, transferdata, _) =>
+                                                      RaisedButton(
+                                                padding:
+                                                    EdgeInsets.only(right: 8),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15)),
+                                                color: Colors.blue[500],
+                                                textColor: Colors.white,
+                                                onPressed: () {
+                                                  _submitForm(
+                                                      transferdata
+                                                          .transferproductitems,
+                                                      selectedValue);
+                                                },
+                                                child: Text("บันทีก"),
+                                              ),
+                                            ),
+                                            SizedBox(width: 20),
+                                            RaisedButton(
+                                              padding: EdgeInsets.only(left: 8),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15)),
+                                              color: Colors.orange,
+                                              textColor: Colors.white,
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("ยกเลิก"),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      });
+                },
+              ),
+            ),
+          ],
         )
-        // FutureBuilder(
-        //   builder: (context, dataSnapshort) {
-        //     if (dataSnapshort.connectionState == ConnectionState.waiting) {
-        //       return Center(
-        //         child: CircularProgressIndicator(),
-        //       );
-        //     } else {
-        //       return Expanded(
-        //         child: Consumer<IssueData>(
-        //           builder: (context, products, _) => products
-        //                   .listissue.isNotEmpty
-        //               ? _buildlistitem(products.listissue)
-        //               : Center(
-        //                   child: Text(
-        //                     "ไม่พบข้อมูล",
-        //                     style: TextStyle(fontSize: 20, color: Colors.grey),
-        //                   ),
-        //                 ),
-        //         ),
-        //       );
-        //     }
-        //   },
-        // ),
       ],
     );
   }
 }
 
-class Items extends StatelessWidget {
+class Items extends StatefulWidget {
   final String _id;
   final String _code;
   final String _name;
@@ -97,6 +358,20 @@ class Items extends StatelessWidget {
   );
 
   @override
+  _ItemsState createState() => _ItemsState();
+}
+
+class _ItemsState extends State<Items> {
+  final TextEditingController _transferqtyController = TextEditingController();
+  double _beforechange = 0;
+
+  @override
+  void initState() {
+    _transferqtyController.text = "0";
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return new GestureDetector(
       child: Card(
@@ -105,26 +380,107 @@ class Items extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Expanded(child: Text('${_code}')),
+                  Text(
+                    '${widget._code}',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Expanded(
-                child: Column(
-                  children: [
-                    IconButton(icon: Icon(Icons.remove), onPressed: () {}),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 20),
-                      child: TextField(),
+              padding: EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    // color: Colors.purple,
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                        color: Colors.purple,
+                        borderRadius: BorderRadius.circular(20.0)),
+                    child: IconButton(
+                        icon: Icon(
+                          Icons.remove,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            if (int.parse(_transferqtyController.text) != 0) {
+                              var new_value = 0;
+                              new_value =
+                                  int.parse(_transferqtyController.text) - 1;
+                              _transferqtyController.text =
+                                  new_value.toString();
+                              Provider.of<IssueData>(context, listen: false)
+                                  .updateTotalDown(
+                                      widget._id, _transferqtyController.text);
+                            }
+                            // _transferqtyController.text = new_value.toString();
+                          });
+                        }),
+                  ),
+                  SizedBox(width: 10),
+                  Container(
+                    height: 50,
+                    width: 100,
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      controller: _transferqtyController,
+                      textAlign: TextAlign.center,
+                      textAlignVertical: TextAlignVertical.center,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                      ),
+                      onEditingComplete: () {
+                        Provider.of<IssueData>(context, listen: false)
+                            .updateTotalUp(
+                                widget._id, _transferqtyController.text);
+                      },
+                      onTap: () {
+                        setState(() {
+                          _beforechange =
+                              double.parse(_transferqtyController.text);
+                        });
+                      },
                     ),
-                    IconButton(icon: Icon(Icons.add), onPressed: () {}),
-                  ],
-                ),
+                  ),
+                  SizedBox(width: 10),
+                  Container(
+                    // color: Colors.purple,
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                        color: Colors.purple,
+                        borderRadius: BorderRadius.circular(20.0)),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          var new_value = 0;
+                          new_value =
+                              int.parse(_transferqtyController.text) + 1;
+                          _transferqtyController.text = new_value.toString();
+                          Provider.of<IssueData>(context, listen: false)
+                              .updateTotalUp(
+                                  widget._id, _transferqtyController.text);
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
+            SizedBox(height: 10),
           ],
         ),
       ),

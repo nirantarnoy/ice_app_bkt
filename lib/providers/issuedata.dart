@@ -23,6 +23,8 @@ class IssueData with ChangeNotifier {
 
   int _avl_qty = 0;
   int _id = 0;
+  int _transferouttotal = 0;
+
   int get idIssue => _id;
 
   set idIssue(int val) {
@@ -52,6 +54,18 @@ class IssueData with ChangeNotifier {
     double total = 0.0;
     listissue.forEach((paymentitem) {
       total += double.parse(paymentitem.avl_qty);
+    });
+    return total;
+  }
+
+  Future<Null> resetqty() {
+    _transferouttotal = 0;
+  }
+
+  double get transferouttotal {
+    double total = 0;
+    _transferProducts.forEach((item) {
+      total += double.parse(item.qty);
     });
     return total;
   }
@@ -178,6 +192,7 @@ class IssueData with ChangeNotifier {
             id: res['data'][i]['product_id'].toString(),
             code: res['data'][i]['product_name'].toString(),
             name: res['data'][i]['product_name'].toString(),
+            qty: '0',
             sale_price: res['data'][i]['price'].toString(),
           );
           data.add(transferitem);
@@ -192,5 +207,23 @@ class IssueData with ChangeNotifier {
       _isApicon = false;
       print('cannot connect api.');
     }
+  }
+
+  Future<dynamic> updateTotalUp(String product_id, String qty) {
+    _transferProducts.forEach((element) {
+      if (product_id == element.id) {
+        element.qty = qty;
+      }
+    });
+    notifyListeners();
+  }
+
+  Future<dynamic> updateTotalDown(String product_id, String qty) {
+    _transferProducts.forEach((element) {
+      if (product_id == element.id) {
+        element.qty = qty;
+      }
+    });
+    notifyListeners();
   }
 }
