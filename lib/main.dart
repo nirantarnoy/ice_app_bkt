@@ -3,10 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:ice_app_new/models/transfer_total.dart';
 import 'package:ice_app_new/pages/home.dart';
+import 'package:ice_app_new/pages/journalissue.dart';
+import 'package:ice_app_new/pages/offlinetest.dart';
+import 'package:ice_app_new/pages/paymentcheckout.dart';
 import 'package:ice_app_new/pages/take_photo.dart';
 import 'package:ice_app_new/providers/car.dart';
 import 'package:ice_app_new/providers/transferin.dart';
 import 'package:ice_app_new/providers/transferout.dart';
+import 'package:ice_app_new/sqlite/providers/Offlineitem.dart';
 import 'package:provider/provider.dart';
 
 import 'pages/auth.dart';
@@ -83,7 +87,8 @@ class _MyAppState extends State<MyApp> {
             value: PaymentreceiveData()),
         ChangeNotifierProvider<TransferoutData>.value(value: TransferoutData()),
         ChangeNotifierProvider<TransferinData>.value(value: TransferinData()),
-        ChangeNotifierProvider<CarData>.value(value: CarData())
+        ChangeNotifierProvider<CarData>.value(value: CarData()),
+        ChangeNotifierProvider<OfflineitemData>.value(value: OfflineitemData())
       ],
       child: Consumer(builder: (context, UserData users, _) {
         // checkAuthen(users);
@@ -107,6 +112,9 @@ class _MyAppState extends State<MyApp> {
             CreateorderPage.routeName: (ctx) => CreateorderPage(),
             PaymentPage.routeName: (ctx) => PaymentPage(),
             HomePage.routeName: (ctx) => HomePage(),
+            PaymentcheckoutPage.routeName: (ctx) => PaymentcheckoutPage(),
+            JournalissuePage.routeName: (ctx) => JournalissuePage(),
+            OfflinePage.routeName: (ctx) => OfflinePage(),
             //TakePictureScreen.routeName: (ctx) => TakePictureScreen(),
           },
         );

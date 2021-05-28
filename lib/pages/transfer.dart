@@ -31,8 +31,8 @@ class _TransferPageState extends State<TransferPage> {
             ),
           ),
           body: TabBarView(children: <Widget>[
-            TransferoutPage(),
             TransferinPage(),
+            TransferoutPage(),
           ]),
         ));
   }

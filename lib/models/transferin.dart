@@ -7,6 +7,9 @@ class Transferin {
   final String from_order_no;
   final String from_car_no;
   final String qty;
+  final String product_id;
+  final String product_name;
+  final String sale_price;
 
   Transferin({
     this.transfer_id,
@@ -15,5 +18,8 @@ class Transferin {
     this.from_order_no,
     this.from_car_no,
     this.qty,
+    this.product_id,
+    this.product_name,
+    this.sale_price,
   });
 }

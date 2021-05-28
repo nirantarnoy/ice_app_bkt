@@ -10,6 +10,8 @@ class User {
   final String emp_route_name;
   final String emp_car_id;
   final String emp_car_name;
+  final String company_id;
+  final String branch_id;
 
   User(
       {@required this.id,
@@ -20,5 +22,7 @@ class User {
       @required this.emp_route_id,
       @required this.emp_route_name,
       @required this.emp_car_id,
-      @required this.emp_car_name});
+      @required this.emp_car_name,
+      @required this.company_id,
+      @required this.branch_id});
 }

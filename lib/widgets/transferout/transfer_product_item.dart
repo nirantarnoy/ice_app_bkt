@@ -31,8 +31,31 @@ class _TransferProductItemState extends State<TransferProductItem> {
   void _submitForm(List<TransferProduct> transferdata, String car_id) {
     print('transferdata is ${transferdata[0].qty}');
     if (transferdata.isNotEmpty) {
-      Provider.of<TransferoutData>(context, listen: false)
+      Future<bool> res = Provider.of<TransferoutData>(context, listen: false)
           .addTransfer(car_id, transferdata);
+      Navigator.of(context).pop();
+      if (res == true) {
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: <Widget>[
+                Icon(
+                  Icons.check_circle,
+                  color: Colors.white,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  "ทำรายการสำเร็จ",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
     }
   }
 
@@ -49,6 +72,7 @@ class _TransferProductItemState extends State<TransferProductItem> {
               issueproduct[index].id,
               issueproduct[index].code,
               issueproduct[index].name,
+              issueproduct[index].avl_qty,
             );
           },
         );
@@ -172,12 +196,13 @@ class _TransferProductItemState extends State<TransferProductItem> {
                                   children: <Widget>[
                                     SizedBox(height: 20),
                                     Center(
-                                        child: Text(
-                                      "โอนสินค้าไปยัง",
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    )),
+                                      child: Text(
+                                        "โอนสินค้าไปยัง",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
                                     SizedBox(height: 20),
                                     Row(
                                       children: <Widget>[
@@ -350,11 +375,13 @@ class Items extends StatefulWidget {
   final String _id;
   final String _code;
   final String _name;
+  final String _avl_qty;
 
   Items(
     this._id,
     this._code,
     this._name,
+    this._avl_qty,
   );
 
   @override
@@ -367,6 +394,7 @@ class _ItemsState extends State<Items> {
 
   @override
   void initState() {
+    // _transferqtyController.text = widget._avl_qty;
     _transferqtyController.text = "0";
     super.initState();
   }
@@ -474,6 +502,31 @@ class _ItemsState extends State<Items> {
                               .updateTotalUp(
                                   widget._id, _transferqtyController.text);
                         });
+
+                        if (double.parse(_transferqtyController.text) >
+                            double.parse(widget._avl_qty)) {
+                          return showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('แจ้งเตือน'),
+                                  content: Text('จำนวนไม่พอสำหรับการทำรายการ'),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                        onPressed: () {
+                                          _transferqtyController.text =
+                                              widget._avl_qty;
+                                          Provider.of<IssueData>(context,
+                                                  listen: false)
+                                              .updateTotalUp(widget._id,
+                                                  _transferqtyController.text);
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('ตกลง'))
+                                  ],
+                                );
+                              });
+                        }
                       },
                     ),
                   ),

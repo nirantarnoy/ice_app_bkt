@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ice_app_new/models/delivery_route.dart';
 import 'package:ice_app_new/pages/home.dart';
 import 'package:ice_app_new/pages/journalissue.dart';
+import 'package:ice_app_new/pages/offlinetest.dart';
 import 'package:ice_app_new/pages/take_photo.dart';
 import 'package:ice_app_new/widgets/journalissue/journalissue_item.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -71,8 +72,10 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
         _currentIndex = 0;
       }
       if (index == 3) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => PaymentPage()));
         appTitle = 'รับชำระเงิน';
-
+        _currentIndex = 0;
         // Navigator.of(context).pushNamed(PaymentPage
         //     .routeName); //กระโดดไปหน้าใหม่ ไม่แสดง bottontab ข้างล่าง
       }
@@ -161,7 +164,8 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
       HomePage(),
       OrderPage(),
       null,
-      PaymentPage(),
+      null
+      //PaymentPage(),
     ];
     // List<Widget> tabs = [null, null, null];
     // print('building main test page');
@@ -175,19 +179,49 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
             style: TextStyle(fontFamily: 'Cloud-Bold', color: Colors.white),
           ),
           actions: <Widget>[
-            IconButton(
-              //color: Colors.white,
-              icon: Icon(
-                // Icons.keyboard_control_outlined,
-                Icons.more_vert,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                //showInfoFlushbar(context);
-                show_Title_n_message_Flushbar(context);
-                // showSearch(context: context, delegate: DataSearch());
+            // IconButton(
+            //   //color: Colors.white,
+            //   icon: Icon(
+            //     // Icons.keyboard_control_outlined,
+            //     Icons.more_vert,
+            //     color: Colors.white,
+            //   ),
+            //   onPressed: () {
+            //     //showInfoFlushbar(context);
+            //     show_Title_n_message_Flushbar(context);
+            //     // showSearch(context: context, delegate: DataSearch());
+            //   },
+            // ),
+            PopupMenuButton<String>(
+              onSelected: (String result) {
+                switch (result) {
+                  case 'option1':
+                    print('option 1 clicked');
+                    break;
+                  case 'option2':
+                    print('option 2 clicked');
+                    break;
+                  case 'delete':
+                    print('I want to delete');
+                    break;
+                  default:
+                }
               },
-            ),
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                const PopupMenuItem<String>(
+                  value: 'option1',
+                  child: Text('สายส่ง 1'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'option2',
+                  child: Text('สายส่ง 2'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'delete',
+                  child: Text('สายส่ง 3'),
+                ),
+              ],
+            )
             // (_currentIndex == 3)
             //     ? IconButton(
             //         //color: Colors.white,
@@ -250,6 +284,14 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
               ListTile(
                 title: Text("บันทึกขายออฟไลน์"),
                 trailing: Icon(Icons.delivery_dining),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => OfflinePage(),
+                    ),
+                  );
+                },
               ),
               Divider(),
               // ListTile(

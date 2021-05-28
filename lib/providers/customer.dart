@@ -37,12 +37,21 @@ class CustomerData with ChangeNotifier {
 
   Future<dynamic> fetCustomers() async {
     String _current_route_id = "";
+    String _company_id = "";
+    String _branch_id = "";
+
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('user_id') != null) {
       _current_route_id = prefs.getString('emp_route_id');
+      _company_id = prefs.getString('company_id');
+      _branch_id = prefs.getString('branch_id');
     }
 
-    final Map<String, dynamic> filterData = {'route_id': _current_route_id};
+    final Map<String, dynamic> filterData = {
+      'route_id': _current_route_id,
+      'company_id': _company_id,
+      'branch_id': _branch_id
+    };
     // _isLoading = true;
     notifyListeners();
     try {

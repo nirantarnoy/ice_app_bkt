@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ice_app_new/pages/createtransfer.dart';
-import 'package:ice_app_new/providers/issuedata.dart';
 import 'package:ice_app_new/providers/transferout.dart';
 import 'package:provider/provider.dart';
 
@@ -48,10 +47,13 @@ class Transferoutitem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var formatter = NumberFormat('#,##,##0');
     final TransferoutData item_transferout =
         Provider.of<TransferoutData>(context, listen: false);
     // item_issues.fetIssueitems();
-
+    // return Column(
+    //   children: [Text('00')],
+    // );
     return Column(
       children: <Widget>[
         Row(
@@ -104,7 +106,7 @@ class Transferoutitem extends StatelessWidget {
                                 builder: (context, transferouts, _) => Text(
                                   transferouts.totalAmount == null
                                       ? 0
-                                      : transferouts.totalAmount.toString(),
+                                      : '${formatter.format(transferouts.totalAmount)}',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 20),
                                 ),
@@ -200,7 +202,7 @@ class Items extends StatelessWidget {
                 ),
               ],
             ),
-            trailing: Text('${formatter.format(double.parse(_qty))}',
+            trailing: Text('${formatter.format(double.parse("0"))}',
                 style: TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold,

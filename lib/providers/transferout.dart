@@ -57,13 +57,13 @@ class TransferoutData with ChangeNotifier {
   }
 
   Future<dynamic> fetTransferout() async {
-    String _current_route_id = "";
+    String _current_car_id = "";
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('user_id') != null) {
-      _current_route_id = prefs.getString('emp_route_id');
+      _current_car_id = prefs.getString('emp_car_id');
     }
 
-    final Map<String, dynamic> filterData = {'route_id': _current_route_id};
+    final Map<String, dynamic> filterData = {'car_id': _current_car_id};
     _isLoading = true;
     notifyListeners();
     try {
@@ -129,13 +129,18 @@ class TransferoutData with ChangeNotifier {
     }
 
     var jsonx = transferdata
-        .map((e) => {'product_id': e.id, 'qty': e.qty, 'price': e.sale_price})
+        .map((e) => {
+              'product_id': e.id,
+              'qty': e.qty,
+              'price': e.sale_price,
+              'issue_id': e.issue_ref_id
+            })
         .toList();
 
-    print(jsonx);
+    // print(jsonx);
 
     Map<String, dynamic> dataAdd = {
-      'form_car_id': _from_car_id,
+      'from_car_id': _from_car_id,
       'to_car_id': car_id,
       'data': jsonx,
     };

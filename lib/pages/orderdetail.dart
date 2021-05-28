@@ -201,159 +201,162 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
     final loadordertotal = Provider.of<OrderData>(context, listen: false);
 
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        title: Text(
-          "รายละเอียด",
-          style: TextStyle(color: Colors.white),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.white),
+          title: Text(
+            "รายละเอียด",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
-      ),
-      body: FutureBuilder(
-        future: _orderFuture,
-        builder: (context, dataSnapshort) {
-          if (dataSnapshort.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else {
-            if (dataSnapshort.error != null) {
+        body: FutureBuilder(
+          future: _orderFuture,
+          builder: (context, dataSnapshort) {
+            if (dataSnapshort.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else {
-              return Container(
-                child: Padding(
-                  padding: EdgeInsets.all(0),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            child: Container(
-                              height: 80,
-                              color: Theme.of(context).accentColor,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Column(
-                                    children: <Widget>[
-                                      Row(
-                                        children: <Widget>[
-                                          Column(
-                                            children: <Widget>[
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Text(
-                                                loadCustomerorder.customer_code,
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color: Colors.white),
-                                              ),
-                                              SizedBox(height: 10),
-                                              Text(
+              if (dataSnapshort.error != null) {
+                return Center(child: CircularProgressIndicator());
+              } else {
+                return Container(
+                  child: Padding(
+                    padding: EdgeInsets.all(0),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Expanded(
+                              child: Container(
+                                height: 80,
+                                color: Theme.of(context).accentColor,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Column(
+                                      children: <Widget>[
+                                        Row(
+                                          children: <Widget>[
+                                            Column(
+                                              children: <Widget>[
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Text(
                                                   loadCustomerorder
-                                                      .customer_name,
+                                                      .customer_code,
                                                   style: TextStyle(
                                                       fontSize: 16,
-                                                      color: Colors.white))
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                                      color: Colors.white),
+                                                ),
+                                                SizedBox(height: 10),
+                                                Text(
+                                                    loadCustomerorder
+                                                        .customer_name,
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        color: Colors.white))
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            child: Container(
-                              padding: EdgeInsets.all(5),
-                              height: 80,
-                              color: Colors.green[500],
-                              child: Column(
-                                children: <Widget>[
-                                  Text(
-                                    'จำนวน',
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.white),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    "${formatter.format(loadordertotal.sumqtydetail)}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              height: 80,
-                              color: Colors.purple[400],
-                              child: Column(
-                                children: <Widget>[
-                                  Text(
-                                    'จำนวนเงิน',
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.white),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Text(
-                                    "${formatter.format(loadordertotal.sumamoutdetail)}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "รายการขาย",
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 18),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Expanded(
-                        child: Consumer<OrderData>(
-                          builder: (context, orderdetails, _) =>
-                              _buildordersList(orderdetails.listorder_detail),
+                          ],
                         ),
-                      ),
-                    ],
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.all(5),
+                                height: 80,
+                                color: Colors.green[500],
+                                child: Column(
+                                  children: <Widget>[
+                                    Text(
+                                      'จำนวน',
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.white),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      "${formatter.format(loadordertotal.sumqtydetail)}",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: 80,
+                                color: Colors.purple[400],
+                                child: Column(
+                                  children: <Widget>[
+                                    Text(
+                                      'จำนวนเงิน',
+                                      style: TextStyle(
+                                          fontSize: 16, color: Colors.white),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      "${formatter.format(loadordertotal.sumamoutdetail)}",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                "รายการขาย",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 18),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(
+                          child: Consumer<OrderData>(
+                            builder: (context, orderdetails, _) =>
+                                _buildordersList(orderdetails.listorder_detail),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
+                );
+              }
             }
-          }
-        },
+          },
+        ),
       ),
     );
   }

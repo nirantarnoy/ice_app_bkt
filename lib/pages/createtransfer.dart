@@ -50,6 +50,15 @@ class _CreatetransferPageState extends State<CreatetransferPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          leading: new IconButton(
+            icon: new Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+          ),
           title: Text(
             "โอนสินค้า",
             style: TextStyle(color: Colors.white),

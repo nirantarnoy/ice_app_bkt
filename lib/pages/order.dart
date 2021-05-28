@@ -66,11 +66,22 @@ class _OrderPageState extends State<OrderPage> {
     super.didChangeDependencies();
   }
 
+  void refreshData() {
+    setState(() {
+      _orderFuture = _obtainOrderFuture();
+    });
+  }
+
+  FutureOr onGoBack(dynamic value) {
+    refreshData();
+    setState(() {});
+  }
+
   Future<void> _checkinternet() async {
     var result = await Connectivity().checkConnectivity();
 
     if (result == ConnectivityResult.none) {
-      _showdialog('No intenet', 'You are no internet connect');
+      _showdialog('พบปัญหา', 'ไม่สามารถเชื่อมต่ออินเตอร์เน็ตได้');
     } else if (result == ConnectivityResult.mobile) {
       //_showdialog('Intenet access', 'You are connect mobile data');
     }
@@ -91,7 +102,7 @@ class _OrderPageState extends State<OrderPage> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('ok'))
+                  child: Text('ตกลง'))
             ],
           );
         });
@@ -157,13 +168,13 @@ class _OrderPageState extends State<OrderPage> {
 
     return RefreshIndicator(
       child: content,
-      onRefresh: orders.getCustomerDetails,
+      onRefresh: orders.fetOrders,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    print('build context created');
+    // print('build context created');
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,

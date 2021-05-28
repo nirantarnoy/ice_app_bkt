@@ -87,6 +87,8 @@ class UserData with ChangeNotifier {
           emp_route_name: res['data'][0]['emp_route_name'].toString(),
           emp_car_id: res['data'][0]['emp_car_id'].toString(),
           emp_car_name: res['data'][0]['emp_car_name'].toString(),
+          company_id: res['data'][0]['company_id'].toString(),
+          branch_id: res['data'][0]['branch_id'].toString(),
         );
 
         data.add(userresult);
@@ -106,6 +108,8 @@ class UserData with ChangeNotifier {
         prefs.setString('emp_car_id', res['data'][0]['emp_car_id'].toString());
         prefs.setString(
             'emp_car_name', res['data'][0]['emp_car_name'].toString());
+        prefs.setString('company_id', res['data'][0]['company_id'].toString());
+        prefs.setString('branch_id', res['data'][0]['branch_id'].toString());
 
         prefs.setString('expiryTime', expiryTime.toIso8601String());
 
@@ -141,6 +145,8 @@ class UserData with ChangeNotifier {
     final String emp_route_name = prefs.getString('emp_route_name');
     final String emp_car_id = prefs.getString('emp_car_id');
     final String emp_car_name = prefs.getString('emp_car_name');
+    final String company_id = prefs.getString('company_id');
+    final String branch_id = prefs.getString('branch_id');
     final int tokenLifespan = parsedExpiryTime.difference(now).inSeconds;
     _authenticatedUser = User(
         id: userId,
@@ -151,7 +157,9 @@ class UserData with ChangeNotifier {
         emp_route_id: emp_route_id,
         emp_car_id: emp_car_id,
         emp_car_name: emp_car_name,
-        emp_route_name: emp_route_name);
+        emp_route_name: emp_route_name,
+        company_id: company_id,
+        branch_id: branch_id);
     _isauthenuser = true;
     setAuthTimeout(tokenLifespan);
     notifyListeners();
@@ -171,7 +179,9 @@ class UserData with ChangeNotifier {
           emp_route_id: prefs.getString('emp_route_id'),
           emp_car_id: prefs.getString('emp_car_id'),
           emp_car_name: prefs.getString('emp_car_name'),
-          emp_route_name: prefs.getString('emp_route_name'));
+          emp_route_name: prefs.getString('emp_route_name'),
+          company_id: prefs.getString('company_id'),
+          branch_id: prefs.getString('branch_id'));
       return _currentinfo;
     } else {
       return null;

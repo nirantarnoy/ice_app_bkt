@@ -24,9 +24,16 @@ class TransferinPage extends StatefulWidget {
 class _JournalissuePageState extends State<TransferinPage> {
   var _isInit = true;
   var _isLoading = false;
+
+  Future _transferinFuture;
+  Future _obtainTransferinFuture() {
+    return Provider.of<TransferinData>(context, listen: false).fetTransferin();
+  }
+
   @override
   initState() {
     ActivityCon();
+    _transferinFuture = _obtainTransferinFuture();
     //_checkinternet();
     // try {
     //   widget.model.fetchOrders();
@@ -57,8 +64,8 @@ class _JournalissuePageState extends State<TransferinPage> {
 
   Widget _buildProductList() {
     return Consumer(
-        builder: (context, TransferinData transferoutitems, Widget child) {
-      //transferoutitems.fetTransferinitems();
+        builder: (context, TransferinData transferinitems, Widget child) {
+      //transferinitems.fetTransferinitems();
       Widget content = Center(
           child: Text(
         'ไม่พบข้อมูล!',
@@ -66,11 +73,11 @@ class _JournalissuePageState extends State<TransferinPage> {
             fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.grey),
       ));
       // print("data length = " + products.listproduct.toString());
-      if (transferoutitems.is_apicon) {
-        if (transferoutitems.listtransferin.length > 0 &&
-            !transferoutitems.is_loading) {
+      if (transferinitems.is_apicon) {
+        if (transferinitems.listtransferin.length > 0 &&
+            !transferinitems.is_loading) {
           content = Container(child: Transferinitem());
-        } else if (transferoutitems.is_loading) {
+        } else if (transferinitems.is_loading) {
           content = Center(child: CircularProgressIndicator());
         }
       } else {
@@ -78,7 +85,7 @@ class _JournalissuePageState extends State<TransferinPage> {
       }
 
       return RefreshIndicator(
-        onRefresh: transferoutitems.fetTransferin,
+        onRefresh: transferinitems.fetTransferin,
         child: content,
       );
     });

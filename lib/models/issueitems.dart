@@ -10,15 +10,18 @@ class Issueitems {
   final String price;
   final String product_image;
   final String avl_qty;
+  final String issue_status;
 
-  Issueitems(
-      {@required this.line_issue_id,
-      @required this.issue_id,
-      @required this.product_id,
-      @required this.product_name,
-      @required this.issue_no,
-      @required this.qty,
-      @required this.price,
-      this.product_image,
-      this.avl_qty});
+  Issueitems({
+    @required this.line_issue_id,
+    @required this.issue_id,
+    @required this.product_id,
+    @required this.product_name,
+    @required this.issue_no,
+    @required this.qty,
+    @required this.price,
+    this.product_image,
+    this.avl_qty,
+    this.issue_status,
+  });
 }

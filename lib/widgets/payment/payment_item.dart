@@ -184,9 +184,71 @@ class _PaymentItemState extends State<PaymentItem> {
           ]),
           SizedBox(height: 5),
           Expanded(child: _buildpaymentsList(payments.listpaymentreceive)),
-          SizedBox(
-            height: 10,
-          )
+          // SizedBox(
+          //   height: 10,
+          // )
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  color: Colors.grey[200],
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Consumer<PaymentreceiveData>(
+                            builder: (context, totals, _) => Row(
+                              children: <Widget>[
+                                Text(
+                                  'รวม ',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '${formatter.format(0)}',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.red),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: GestureDetector(
+                  child: Container(
+                    color: Colors.green[700],
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(width: 5),
+                          Text(
+                            'ตกลง',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  onTap: () {},
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -368,6 +430,11 @@ class _ItemsState extends State<Items> {
             //   label: Text("${_order_no}", style: TextStyle(color: Colors.white)),
             //   backgroundColor: Colors.green[500],
             // ),
+            leading: Checkbox(
+              activeColor: Colors.red,
+              value: true,
+              onChanged: (value) => value,
+            ),
             title: Text(
               "${widget._order_no}",
               style: TextStyle(fontSize: 16, color: Colors.purple),

@@ -46,6 +46,7 @@ class TransferinData with ChangeNotifier {
     final Map<String, dynamic> filterData = {'car_id': _car_id};
     // _isLoading = true;
     notifyListeners();
+    print('car_id is $filterData');
     try {
       http.Response response;
       response = await http.post(
@@ -70,17 +71,20 @@ class TransferinData with ChangeNotifier {
           // var product = Transferin.fromJson(res[i]);
           //print(res['data'][i]['code']);
           // data.add(product);
-          final Transferin customerresult = Transferin(
+          final Transferin _result = Transferin(
             transfer_id: res['data'][i]['transfer_id'].toString(),
             journal_no: res['data'][i]['journal_no'].toString(),
             from_route: res['data'][i]['from_route'].toString(),
             from_car_no: res['data'][i]['from_car_name'].toString(),
             from_order_no: res['data'][i]['to_order_no'].toString(),
             qty: res['data'][i]['qty'].toString(),
+            product_id: res['data'][i]['product_id'].toString(),
+            product_name: res['data'][i]['product_name'].toString(),
+            sale_price: res['data'][i]['sale_price'].toString(),
           );
 
           //  print('data from server is ${customerresult}');
-          data.add(customerresult);
+          data.add(_result);
         }
 
         listtransferin = data;

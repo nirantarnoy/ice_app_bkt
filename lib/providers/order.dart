@@ -18,17 +18,22 @@ class OrderData with ChangeNotifier {
   final String url_to_add_order =
       "http://119.59.100.74/icesystem/frontend/web/api/order/addorder";
   // "http://192.168.1.120/icesystem/frontend/web/api/order/addorder";
+  final String url_to_add_order_transfer =
+      "http://119.59.100.74/icesystem/frontend/web/api/order/addordertransfer";
+  // "http://192.168.1.120/icesystem/frontend/web/api/order/addorder";
   final String url_to_update_order =
       "http://119.59.100.74/icesystem/frontend/web/api/order/updateorder";
   //   "http://192.168.1.120/icesystem/frontend/web/api/order/updateorder";
-  final String url_to_delete_order =
+  final String url_to_delete_order_customer =
       //    "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorder";
-      "http://119.59.100.74/icesystem/frontend/web/api/order/deleteorder";
+      "http://119.59.100.74/icesystem/frontend/web/api/order/deleteordercustomer";
   final String url_to_update_order_detail =
       //   "http://192.168.1.120/icesystem/frontend/web/api/order/updateorderdetail";
       "http://119.59.100.74/icesystem/frontend/web/api/order/updateorderdetail";
   final String url_to_delete_order_detail =
       "http://119.59.100.74/icesystem/frontend/web/api/order/deleteorderline";
+  final String url_to_close_order =
+      "http://119.59.100.74/icesystem/frontend/web/api/order/closeorder";
   //  "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorderline";
 
   ///// for common
@@ -197,6 +202,7 @@ class OrderData with ChangeNotifier {
         }
 
         for (var i = 0; i < res['data'].length; i++) {
+          idOrder = int.parse(res['data'][i]['id'].toString());
           final Orders orderresult = Orders(
             id: res['data'][i]['id'].toString(),
             order_no: res['data'][i]['order_no'].toString(),
@@ -206,7 +212,8 @@ class OrderData with ChangeNotifier {
             customer_name: res['data'][i]['customer_name'].toString(),
             total_amount: res['data'][i]['total_amount'].toString(),
             payment_method: res['data'][i]['payment_method'].toString(),
-            payment_method_id: res['data'][i]['payment_method_id'].toString(),
+            payment_method_id:
+                res['data'][i]['sale_payment_method_id'].toString(),
             total_qty: res['data'][i]['total_qty'].toString(),
           );
 
@@ -225,12 +232,71 @@ class OrderData with ChangeNotifier {
     }
   }
 
-  Future<void> addOrder(
+  Future<bool> addOrder(
     String product_id,
     String qty,
     String price,
     String customer_id,
     String issue_id,
+    String payment_type_id,
+  ) async {
+    String _user_id = "";
+    String _route_id = "";
+    String _car_id = "";
+    String _company_id = "";
+    String _branch_id = "";
+
+    bool _iscomplated = false;
+
+    String _order_date = new DateTime.now().toString();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('user_id') != null) {
+      _user_id = prefs.getString('user_id');
+      _route_id = prefs.getString('emp_route_id');
+      _car_id = prefs.getString('emp_car_id');
+      _company_id = prefs.getString('company_id');
+      _branch_id = prefs.getString('branch_id');
+    }
+
+    final Map<String, dynamic> orderData = {
+      'payment_type_id': payment_type_id,
+      'order_date': _order_date,
+      'product_id': product_id,
+      'customer_id': customer_id,
+      'qty': qty,
+      'price': price,
+      'user_id': _user_id,
+      'issue_id': issue_id,
+      'route_id': _route_id,
+      'car_id': _car_id,
+      'company_id': _company_id,
+      'branch_id': _branch_id
+    };
+    print('data will save is ${orderData}');
+    try {
+      http.Response response;
+      response = await http.post(Uri.encodeFull(url_to_add_order),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(orderData));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> res = json.decode(response.body);
+        print('data added order is  ${res["data"]}');
+        _iscomplated = true;
+      }
+    } catch (_) {
+      _iscomplated = false;
+      print('cannot create order');
+    }
+    return _iscomplated;
+  }
+
+  Future<void> addOrderFromtransfer(
+    String product_id,
+    String qty,
+    String price,
+    String customer_id,
+    String transfer_id,
   ) async {
     String _user_id = "";
     String _route_id = "";
@@ -251,14 +317,16 @@ class OrderData with ChangeNotifier {
       'qty': qty,
       'price': price,
       'user_id': _user_id,
-      'issue_id': issue_id,
+      'transfer_id': transfer_id,
       'route_id': _route_id,
       'car_id': _car_id,
+      'issue_id': '',
+      'transfer_id': transfer_id,
     };
     print(orderData);
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_add_order),
+      response = await http.post(Uri.encodeFull(url_to_add_order_transfer),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(orderData));
 
@@ -321,16 +389,35 @@ class OrderData with ChangeNotifier {
     } catch (_) {}
   }
 
-  void removeOrder(String id) {
-    listorder.remove(id);
-    print('remove order');
+  void removeOrderCustomer(String order_id, String customer_id) async {
+    // listorder.remove(id);
+    // print('remove order');
+    final Map<String, dynamic> delete_id = {
+      'order_id': order_id,
+      'customer_id': customer_id
+    };
+
+    print('remove data is ${delete_id}');
+
+    try {
+      http.Response response;
+      response = await http.post(Uri.encodeFull(url_to_delete_order_customer),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(delete_id));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> res = json.decode(response.body);
+        print('data delete length is ${res["data"]}');
+      }
+    } catch (_) {
+      print('cannot remove order');
+    }
+    print('remove order customer $customer_id');
     notifyListeners();
   }
 
   void removeOrderDetail(String line_id) async {
-    final Map<String, dynamic> delete_id = {
-      'id': line_id,
-    };
+    final Map<String, dynamic> delete_id = {'id': line_id};
 
     try {
       http.Response response;
@@ -345,5 +432,39 @@ class OrderData with ChangeNotifier {
     } catch (_) {}
     print('remove order line $line_id');
     notifyListeners();
+  }
+
+  Future<bool> closeOrder() async {
+    bool completed = false;
+    //String _order_date = new DateTime.now().toString();
+    String _company_id = "";
+    String _branch_id = "";
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('user_id') != null) {
+      _company_id = prefs.getString('company_id');
+      _branch_id = prefs.getString('branch_id');
+    }
+    final Map<String, dynamic> orderData = {
+      'order_id': idOrder,
+      'company_id': _company_id,
+      'branch_id': _branch_id
+    };
+    print('data will save close order is ${orderData}');
+    try {
+      http.Response response;
+      response = await http.post(Uri.encodeFull(url_to_close_order),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(orderData));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> res = json.decode(response.body);
+        print('data close order is  ${res["data"]}');
+        completed = true;
+      }
+    } catch (_) {
+      print('cannot close order');
+    }
+    print(completed);
+    return completed;
   }
 }

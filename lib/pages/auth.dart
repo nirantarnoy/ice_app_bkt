@@ -207,6 +207,7 @@ class _AuthPageState extends State<AuthPage> {
     final double deviceWidth = MediaQuery.of(context).size.width;
     final double targetWidth = deviceWidth > 550.0 ? 500.0 : deviceWidth * 0.75;
     return Scaffold(
+      backgroundColor: Colors.white,
       // appBar: AppBar(
       //   centerTitle: true,
       //   title: Text(
@@ -259,7 +260,8 @@ class _AuthPageState extends State<AuthPage> {
                           height: 45.0,
                           width: targetWidth,
                           child: new RaisedButton(
-                              elevation: 0.2,
+                              elevation: 5,
+                              splashColor: Colors.grey,
                               shape: new RoundedRectangleBorder(
                                   borderRadius:
                                       new BorderRadius.circular(30.0)),

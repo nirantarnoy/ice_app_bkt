@@ -184,8 +184,8 @@ class _ItemsState extends State<Items> {
       onDismissed: (direction) {
         print(widget._orders[widget._index].id);
         setState(() {
-          // Provider.of<OrderData>(context, listen: false)
-          //     .removeOrderDetail(widget._orders[widget._index].id);
+          Provider.of<OrderData>(context, listen: false)
+              .removeOrderCustomer(widget._id, widget._customer_id);
           widget._orders.removeAt(widget._index);
         });
         Scaffold.of(context).showSnackBar(SnackBar(

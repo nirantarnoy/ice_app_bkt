@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice_app_new/pages/journalissue.dart';
 import 'package:intl/intl.dart';
 import 'package:ice_app_new/providers/issuedata.dart';
 import 'package:provider/provider.dart';
@@ -50,80 +51,162 @@ class Journalissueitem extends StatelessWidget {
     // final IssueData item_issues =
     //     Provider.of<IssueData>(context, listen: false);
     var formatter = NumberFormat('#,##,##0');
-    return Column(
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 10,
-                ),
-                Text("รายการสินค้าประจำวัน",
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey)),
-                // Chip(
-                //   label: Text("อ้างอิง ${item_issues.listissue[0].issue_no}",
-                //       style: TextStyle(color: Colors.white)),
-                //   backgroundColor: Colors.purple,
-                // )
-              ],
-            )
-          ],
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Expanded(
-          child: Consumer<IssueData>(
-            builder: (context, issues, _) => issues.listissue.isNotEmpty
-                ? _buildissueitemList(issues.listissue)
-                : Center(
-                    child: Text(
-                      "ไม่พบข้อมูล",
-                      style: TextStyle(fontSize: 20, color: Colors.grey),
+    return Consumer<IssueData>(
+      builder: (context, issues, _) => issues.listissue.isNotEmpty
+          ? issues.userconfirm == 1
+              ? Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text("รายการสินค้าประจำวัน",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey)),
+                            // Chip(
+                            //   label: Text("อ้างอิง ${item_issues.listissue[0].issue_no}",
+                            //       style: TextStyle(color: Colors.white)),
+                            //   backgroundColor: Colors.purple,
+                            // )
+                          ],
+                        )
+                      ],
                     ),
-                  ),
-          ),
-        ),
-        Card(
-          margin: EdgeInsets.all(15),
-          child: Padding(
-            padding: EdgeInsets.all(8),
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                      child: Consumer<IssueData>(
+                        builder: (context, issues, _) =>
+                            issues.listissue.isNotEmpty
+                                ? _buildissueitemList(issues.listissue)
+                                : Center(
+                                    child: Text(
+                                      "ไม่พบข้อมูล",
+                                      style: TextStyle(
+                                          fontSize: 20, color: Colors.grey),
+                                    ),
+                                  ),
+                      ),
+                    ),
+                    Card(
+                      margin: EdgeInsets.all(15),
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    "สินค้าคงเหลือ",
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.black),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Chip(
+                                    label: Consumer<IssueData>(
+                                        builder: (context, issues, _) => Text(
+                                              issues.totalAmount == null
+                                                  ? 0
+                                                  : "${formatter.format(issues.totalAmount)}",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20),
+                                            )),
+                                    backgroundColor:
+                                        Theme.of(context).primaryColor,
+                                  ),
+                                ]),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(
-                        "สินค้าคงเหลือ",
-                        style: TextStyle(fontSize: 20, color: Colors.purple),
-                      ),
-                      SizedBox(width: 10),
-                      Chip(
-                        label: Consumer<IssueData>(
-                            builder: (context, issues, _) => Text(
-                                  issues.totalAmount == null
-                                      ? 0
-                                      : "${formatter.format(issues.totalAmount)}",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                )),
-                        backgroundColor: Theme.of(context).primaryColor,
-                      ),
-                    ]),
-              ],
+                      new RaisedButton(
+                          elevation: 0.2,
+                          splashColor: Colors.grey,
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(15.0)),
+                          color: Colors.blue[600],
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Icon(
+                                Icons.local_shipping_outlined,
+                                color: Colors.white,
+                              ),
+                              new Text(
+                                'กดรับสินค้าขึ้นรถ',
+                                style: new TextStyle(
+                                    fontSize: 15.0, color: Colors.white),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                            ],
+                          ),
+                          onPressed: () {
+                            return showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text('ยืนยัน'),
+                                content: Text(
+                                    'คุณต้องการยืนยันการรับของขึ้นรถใช่หรือไม่'),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    onPressed: () {
+                                      Provider.of<IssueData>(context,
+                                              listen: false)
+                                          .issueconfirm();
+                                      // Navigator.of(context).pop(true);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              JournalissuePage(),
+                                        ),
+                                      );
+                                    },
+                                    child: Text('ยืนยัน'),
+                                  ),
+                                  FlatButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(false);
+                                    },
+                                    child: Text('ไม่'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                    ],
+                  ),
+                )
+          : Center(
+              child: Text(
+                "ไม่พบข้อมูล",
+                style: TextStyle(fontSize: 20, color: Colors.grey),
+              ),
             ),
-          ),
-        )
-      ],
     );
   }
 }

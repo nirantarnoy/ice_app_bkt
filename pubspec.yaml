@@ -46,6 +46,7 @@ dependencies:
   flutter_typeahead: ^2.0.0
   double_back_to_close: ^1.0.2+mit
   dotted_line: ^3.0.0
+  fluttertoast: ^8.0.6
 
 dev_dependencies:
   flutter_test:
@@ -69,12 +70,6 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/myphoto.jpg
-    - assets/food.jpg
-    - assets/myphoto.jpg
-    - assets/koong.jpg
-    - assets/somtum.jpg
-    - assets/yum.jpg
     - assets/ice_cube.png
     - assets/logo_head.jpg
     - assets/logo_head.png

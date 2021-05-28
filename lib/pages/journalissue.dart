@@ -6,7 +6,9 @@ import 'package:ice_app_new/pages/main_test.dart';
 import 'package:ice_app_new/pages/transfer.dart';
 import 'package:ice_app_new/pages/transferin.dart';
 import 'package:ice_app_new/pages/transferout.dart';
+import 'package:ice_app_new/providers/transferin.dart';
 import 'package:ice_app_new/providers/transferout.dart';
+import 'package:ice_app_new/widgets/transferin/transferin_item.dart';
 import 'package:ice_app_new/widgets/transferout/transferout_item.dart';
 import 'package:intl/intl.dart';
 import 'package:ice_app_new/models/issueitems.dart';
@@ -24,6 +26,7 @@ import '../pages/error.dart';
 import 'package:ice_app_new/helpers/activity_connection.dart';
 
 class JournalissuePage extends StatefulWidget {
+  static const routeName = '/journalissue';
   @override
   _JournalissuePageState createState() => _JournalissuePageState();
 }
@@ -32,8 +35,14 @@ class _JournalissuePageState extends State<JournalissuePage> {
   var _isInit = true;
   var _isLoading = false;
 
+  // Future _hasopenFuture;
   Future _issueFuture;
   Future _transferoutFuture;
+  Future _transferinFuture;
+
+  // Future _obtainHasopenFuture() {
+  //   return Provider.of<IssueData>(context, listen: false).fetIssueitemopen();
+  // }
 
   Future _obtainIssueFuture() {
     return Provider.of<IssueData>(context, listen: false).fetIssueitems();
@@ -44,10 +53,17 @@ class _JournalissuePageState extends State<JournalissuePage> {
         .fetTransferout();
   }
 
+  Future _obtaintransferinFuture() {
+    return Provider.of<TransferinData>(context, listen: false).fetTransferin();
+  }
+
   @override
   initState() {
+    _checkinternet();
+    // _hasopenFuture = _obtainHasopenFuture();
     _issueFuture = _obtainIssueFuture();
     _transferoutFuture = _obtaintransferoutFuture();
+    _transferinFuture = _obtaintransferinFuture();
     //_checkinternet();
     // try {
     //   widget.model.fetchOrders();
@@ -56,6 +72,37 @@ class _JournalissuePageState extends State<JournalissuePage> {
     // }
 
     super.initState();
+  }
+
+  Future<void> _checkinternet() async {
+    var result = await Connectivity().checkConnectivity();
+
+    if (result == ConnectivityResult.none) {
+      _showdialog('พบปัญหา', 'ไม่สามารถเชื่อมต่ออินเตอร์เน็ตได้');
+    } else if (result == ConnectivityResult.mobile) {
+      //_showdialog('Intenet access', 'You are connect mobile data');
+    }
+    if (result == ConnectivityResult.wifi) {
+      //_showdialog('Intenet access', 'You are connect wifi');
+    }
+  }
+
+  _showdialog(title, text) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(title),
+            content: Text(text),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('ตกลง'))
+            ],
+          );
+        });
   }
 
   @override
@@ -170,7 +217,7 @@ class _JournalissuePageState extends State<JournalissuePage> {
           if (dataSnapshort.error != null) {
             return Center(child: CircularProgressIndicator());
           } else {
-            return Container(child: Journalissueitem());
+            return Container(child: Transferinitem());
           }
         }
       },
@@ -216,36 +263,37 @@ class _JournalissuePageState extends State<JournalissuePage> {
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
-              title: Text(
-                'รายการสินค้า',
-                style: TextStyle(color: Colors.white),
+            title: Text(
+              'รายการสินค้า',
+              style: TextStyle(color: Colors.white),
+            ),
+            leading: new IconButton(
+              icon: new Icon(
+                Icons.arrow_back,
+                color: Colors.white,
               ),
-              leading: new IconButton(
-                icon: new Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
+              onPressed: () {
+                Navigator.of(context).pop(MainTest());
+              },
+            ),
+            bottom: TabBar(
+              labelColor: Colors.white,
+              tabs: <Widget>[
+                Tab(
+                  icon: Icon(Icons.move_to_inbox),
+                  text: 'สินค้าเบิก',
                 ),
-                onPressed: () {
-                  Navigator.of(context).pop(MainTest());
-                },
-              ),
-              bottom: TabBar(
-                labelColor: Colors.white,
-                tabs: <Widget>[
-                  Tab(
-                    icon: Icon(Icons.move_to_inbox),
-                    text: 'สินค้าเบิก',
-                  ),
-                  Tab(
-                    icon: Icon(Icons.arrow_circle_down_rounded),
-                    text: 'รับโอนสินค้า',
-                  ),
-                  Tab(
-                    icon: Icon(Icons.arrow_circle_up_rounded),
-                    text: 'โอนสินค้า',
-                  ),
-                ],
-              )),
+                Tab(
+                  icon: Icon(Icons.arrow_circle_down_rounded),
+                  text: 'รับโอนสินค้า',
+                ),
+                Tab(
+                  icon: Icon(Icons.arrow_circle_up_rounded),
+                  text: 'โอนสินค้า',
+                ),
+              ],
+            ),
+          ),
           body: TabBarView(children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(8.0),
