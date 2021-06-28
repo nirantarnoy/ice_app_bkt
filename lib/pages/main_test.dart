@@ -9,6 +9,7 @@ import 'package:ice_app_new/pages/journalissue.dart';
 import 'package:ice_app_new/pages/offlinetest.dart';
 import 'package:ice_app_new/pages/order_print.dart';
 import 'package:ice_app_new/pages/paymentsuccess.dart';
+import 'package:ice_app_new/pages/plan.dart';
 import 'package:ice_app_new/pages/print_bluetooth.dart';
 import 'package:ice_app_new/pages/qrscan.dart';
 import 'package:ice_app_new/pages/stepper.dart';
@@ -300,10 +301,19 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
                   );
                 },
               ),
-              // ListTile(
-              //   title: Text("โหลดสินค้าขึ้นรถ"),
-              //   trailing: Icon(Icons.insert_link),
-              // ),
+              ListTile(
+                title: Text("รับคำสั่งซื้อ"),
+                trailing: Icon(Icons.shopping_cart_outlined),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PlanPage(),
+                    ),
+                  );
+                },
+              ),
+
               ListTile(
                 title: Text("บันทึกขายออฟไลน์"),
                 trailing: Icon(Icons.delivery_dining),

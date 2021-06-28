@@ -14,6 +14,7 @@ import 'package:ice_app_new/pages/take_photo.dart';
 import 'package:ice_app_new/pages/transferin_review.dart';
 import 'package:ice_app_new/pages/transferout_review.dart';
 import 'package:ice_app_new/providers/car.dart';
+import 'package:ice_app_new/providers/plan.dart';
 import 'package:ice_app_new/providers/transferin.dart';
 import 'package:ice_app_new/providers/transferout.dart';
 import 'package:ice_app_new/sqlite/providers/Offlineitem.dart';
@@ -95,6 +96,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<TransferoutData>.value(value: TransferoutData()),
         ChangeNotifierProvider<TransferinData>.value(value: TransferinData()),
         ChangeNotifierProvider<CarData>.value(value: CarData()),
+        ChangeNotifierProvider<PlanData>.value(value: PlanData()),
         ChangeNotifierProvider<OfflineitemData>.value(value: OfflineitemData())
       ],
       child: Consumer(builder: (context, UserData users, _) {
