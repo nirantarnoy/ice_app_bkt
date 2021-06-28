@@ -317,17 +317,23 @@ class _CreateorderPageState extends State<CreateorderPage> {
               SizedBox(
                 height: 10,
               ),
-              Center(
-                child: isuserconfirm == 1
-                    ? Column(
-                        children: [
-                          Consumer<ProductData>(
-                            builder: (context, products, _) =>
-                                _buildproductList(products.listproduct),
-                          ),
-                        ],
-                      )
-                    : Text('ไม่พบรายการ'),
+              Row(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: isuserconfirm == 1
+                          ? Column(
+                              children: [
+                                Consumer<ProductData>(
+                                  builder: (context, products, _) =>
+                                      _buildproductList(products.listproduct),
+                                ),
+                              ],
+                            )
+                          : Text('ไม่พบรายการ'),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -432,7 +438,8 @@ class Items extends StatelessWidget {
                           style: TextStyle(
                               fontSize: 40, color: Colors.deepPurple[400]),
                           onChanged: (String value) {
-                            if (int.parse(value) > int.parse(avl_qty)) {
+                            if (num.tryParse('$value').toDouble() >
+                                num.tryParse('$avl_qty').toDouble()) {
                               showDialog(
                                   context: context,
                                   builder: (context) {
@@ -454,12 +461,14 @@ class Items extends StatelessWidget {
                                   });
                               _saleqtyTextController.text = avl_qty.toString();
                             } else {
+                              print('can sale');
                               _orderData = new Addorder(
                                 customer_id: selectedValue,
                                 product_id: _id,
                                 qty: value,
                                 sale_price: _price,
                               );
+                              print(_orderData.qty);
                             }
                           },
                         )),
@@ -625,7 +634,7 @@ class Items extends StatelessWidget {
     // final String product_id = _id;
     // final String qty = "10";
 
-    if (int.parse(_orderData.qty) <= 0 ||
+    if (double.parse(_orderData.qty) <= 0 ||
         _orderData.qty == null ||
         _orderData.qty.isEmpty ||
         _orderData.qty == "") {

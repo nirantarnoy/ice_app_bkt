@@ -5,6 +5,7 @@ import 'package:ice_app_new/pages/home.dart';
 import 'package:ice_app_new/pages/main_test.dart';
 import 'package:ice_app_new/pages/transfer.dart';
 import 'package:ice_app_new/pages/transferin.dart';
+import 'package:ice_app_new/pages/transferinpage.dart';
 import 'package:ice_app_new/pages/transferout.dart';
 import 'package:ice_app_new/providers/transferin.dart';
 import 'package:ice_app_new/providers/transferout.dart';
@@ -36,6 +37,7 @@ class _JournalissuePageState extends State<JournalissuePage> {
   var _isLoading = false;
 
   // Future _hasopenFuture;
+  Future _ishasissue;
   Future _issueFuture;
   Future _transferoutFuture;
   Future _transferinFuture;
@@ -43,6 +45,10 @@ class _JournalissuePageState extends State<JournalissuePage> {
   // Future _obtainHasopenFuture() {
   //   return Provider.of<IssueData>(context, listen: false).fetIssueitemopen();
   // }
+
+  Future _obtainHasIssueFuture() {
+    return Provider.of<IssueData>(context, listen: false).fetIssueitemopen();
+  }
 
   Future _obtainIssueFuture() {
     return Provider.of<IssueData>(context, listen: false).fetIssueitems();
@@ -54,13 +60,15 @@ class _JournalissuePageState extends State<JournalissuePage> {
   }
 
   Future _obtaintransferinFuture() {
-    return Provider.of<TransferinData>(context, listen: false).fetTransferin();
+    return Provider.of<TransferinData>(context, listen: false)
+        .fetTransferincheck();
   }
 
   @override
   initState() {
     _checkinternet();
     // _hasopenFuture = _obtainHasopenFuture();
+    _ishasissue = _obtainHasIssueFuture();
     _issueFuture = _obtainIssueFuture();
     _transferoutFuture = _obtaintransferoutFuture();
     _transferinFuture = _obtaintransferinFuture();
@@ -206,10 +214,10 @@ class _JournalissuePageState extends State<JournalissuePage> {
   }
 
   Widget _buildProductinList() {
-    IssueData issues = Provider.of<IssueData>(context, listen: false);
+    TransferinData issues = Provider.of<TransferinData>(context, listen: false);
     Widget content;
     content = FutureBuilder(
-      future: _issueFuture,
+      future: _transferinFuture,
       builder: (context, dataSnapshort) {
         if (dataSnapshort.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -217,7 +225,7 @@ class _JournalissuePageState extends State<JournalissuePage> {
           if (dataSnapshort.error != null) {
             return Center(child: CircularProgressIndicator());
           } else {
-            return Container(child: Transferinitem());
+            return Container(child: TransferinNewPage());
           }
         }
       },
@@ -225,7 +233,7 @@ class _JournalissuePageState extends State<JournalissuePage> {
 
     return RefreshIndicator(
       child: content,
-      onRefresh: issues.fetIssueitems,
+      onRefresh: issues.fetTransferincheck,
     );
   }
 
@@ -296,7 +304,7 @@ class _JournalissuePageState extends State<JournalissuePage> {
           ),
           body: TabBarView(children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(0.0),
               child: Column(
                 children: <Widget>[
                   Expanded(child: _buildProductList()),

@@ -1,12 +1,18 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:ice_app_new/models/transfer_total.dart';
+import 'package:ice_app_new/pages/assetcheck.dart';
+import 'package:ice_app_new/pages/createorder_new.dart';
 import 'package:ice_app_new/pages/home.dart';
 import 'package:ice_app_new/pages/journalissue.dart';
 import 'package:ice_app_new/pages/offlinetest.dart';
+import 'package:ice_app_new/pages/ordercheckout.dart';
 import 'package:ice_app_new/pages/paymentcheckout.dart';
 import 'package:ice_app_new/pages/take_photo.dart';
+import 'package:ice_app_new/pages/transferin_review.dart';
+import 'package:ice_app_new/pages/transferout_review.dart';
 import 'package:ice_app_new/providers/car.dart';
 import 'package:ice_app_new/providers/transferin.dart';
 import 'package:ice_app_new/providers/transferout.dart';
@@ -31,8 +37,9 @@ import 'pages/payment.dart';
 //import 'pages/photo_cap.dart';
 
 //void main() => runApp(MyApp());
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(MyApp());
@@ -97,11 +104,12 @@ class _MyAppState extends State<MyApp> {
           // debugShowMaterialGrid: true,
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-              brightness: Brightness.light,
-              primarySwatch: Colors.lightBlue,
-              accentColor: Colors.lightBlue,
-              buttonColor: Colors.blue,
-              fontFamily: 'Kanit-Regular'),
+            brightness: Brightness.light,
+            primarySwatch: Colors.lightBlue,
+            accentColor: Colors.lightBlue,
+            buttonColor: Colors.blue,
+          ),
+          // fontFamily: 'Kanit-Regular'),
           home: DoubleBack(
               message: "กดอีกครั้งเพื่อออก",
               child: users.is_authenuser ? MainTest() : AuthPage()),
@@ -110,11 +118,16 @@ class _MyAppState extends State<MyApp> {
             OrderPage.routeName: (ctx) => OrderPage(),
             OrderDetailPage.routeName: (ctx) => OrderDetailPage(),
             CreateorderPage.routeName: (ctx) => CreateorderPage(),
+            CreateorderNewPage.routeName: (ctx) => CreateorderNewPage(),
             PaymentPage.routeName: (ctx) => PaymentPage(),
             HomePage.routeName: (ctx) => HomePage(),
             PaymentcheckoutPage.routeName: (ctx) => PaymentcheckoutPage(),
+            OrdercheckoutPage.routeName: (ctx) => OrdercheckoutPage(),
             JournalissuePage.routeName: (ctx) => JournalissuePage(),
             OfflinePage.routeName: (ctx) => OfflinePage(),
+            TransferInReviewPage.routeName: (ctx) => TransferInReviewPage(),
+            TransferOutReviewPage.routeName: (ctx) => TransferOutReviewPage(),
+            AssetcheckPage.routeName: (ctx) => AssetcheckPage(),
             //TakePictureScreen.routeName: (ctx) => TakePictureScreen(),
           },
         );

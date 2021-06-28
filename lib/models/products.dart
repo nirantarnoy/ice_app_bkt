@@ -8,13 +8,16 @@ class Products {
   final String image;
   final String issue_id;
   final String onhand;
+  final String price_group_id;
 
-  Products(
-      {@required this.id,
-      @required this.code,
-      @required this.name,
-      @required this.sale_price,
-      this.image,
-      this.issue_id,
-      this.onhand});
+  Products({
+    @required this.id,
+    @required this.code,
+    @required this.name,
+    @required this.sale_price,
+    this.image,
+    this.issue_id,
+    this.onhand,
+    this.price_group_id,
+  });
 }

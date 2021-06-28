@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:ice_app_new/models/addorder.dart';
 
 import 'package:ice_app_new/models/orders.dart';
 import 'package:ice_app_new/models/order_detail.dart';
+import 'package:ice_app_new/models/orders_new.dart';
 import 'package:ice_app_new/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,12 +13,14 @@ class OrderData with ChangeNotifier {
   final String server_api = "";
   final String url_to_order =
       //   "http://192.168.1.120/icesystem/frontend/web/api/order/list";
-      "http://119.59.100.74/icesystem/frontend/web/api/order/list";
+      "http://119.59.100.74/icesystem/frontend/web/api/order/listnew";
   final String url_to_order_detail =
       //   "http://192.168.1.120/icesystem/frontend/web/api/order/listbycustomer";
       "http://119.59.100.74/icesystem/frontend/web/api/order/listbycustomer";
   final String url_to_add_order =
       "http://119.59.100.74/icesystem/frontend/web/api/order/addorder";
+  final String url_to_add_order_new =
+      "http://119.59.100.74/icesystem/frontend/web/api/order/addordernew";
   // "http://192.168.1.120/icesystem/frontend/web/api/order/addorder";
   final String url_to_add_order_transfer =
       "http://119.59.100.74/icesystem/frontend/web/api/order/addordertransfer";
@@ -34,6 +38,8 @@ class OrderData with ChangeNotifier {
       "http://119.59.100.74/icesystem/frontend/web/api/order/deleteorderline";
   final String url_to_close_order =
       "http://119.59.100.74/icesystem/frontend/web/api/order/closeorder";
+  final String url_to_cancel_order =
+      "http://119.59.100.74/icesystem/frontend/web/api/order/cancelorder";
   //  "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorderline";
 
   ///// for common
@@ -43,10 +49,11 @@ class OrderData with ChangeNotifier {
   int _line_id = 0;
 
   String _orderCustomerId = "0";
+  String _searchbycustomer = '';
 
   ///// for order
-  List<Orders> _order;
-  List<Orders> get listorder => _order;
+  List<OrdersNew> _order;
+  List<OrdersNew> get listorder => _order;
 
   int get idOrder => _id;
 
@@ -56,13 +63,19 @@ class OrderData with ChangeNotifier {
   }
 
   String get orderCustomerId => _orderCustomerId;
+  String get searchBycustomer => _searchbycustomer;
 
   set orderCustomerId(String val) {
     _orderCustomerId = val;
     notifyListeners();
   }
 
-  set listorder(List<Orders> val) {
+  set searchBycustomer(String val) {
+    _searchbycustomer = val;
+    notifyListeners();
+  }
+
+  set listorder(List<OrdersNew> val) {
     _order = val;
     notifyListeners();
   }
@@ -96,7 +109,9 @@ class OrderData with ChangeNotifier {
     double total = 0.0;
     if (listorder.isNotEmpty) {
       listorder.forEach((orderItem) {
-        total += double.parse(orderItem.total_amount);
+        if (orderItem.order_line_status != '500') {
+          total += double.parse(orderItem.line_total);
+        }
       });
     }
     return total;
@@ -108,7 +123,9 @@ class OrderData with ChangeNotifier {
       listorder
           .where((items) => items.payment_method_id == "1")
           .forEach((orderItem) {
-        total += double.parse(orderItem.total_amount);
+        if (orderItem.order_line_status != '500') {
+          total += double.parse(orderItem.line_total);
+        }
       });
     }
     return total;
@@ -120,7 +137,9 @@ class OrderData with ChangeNotifier {
       listorder
           .where((items) => items.payment_method_id == "2")
           .forEach((orderItem) {
-        total += double.parse(orderItem.total_amount);
+        if (orderItem.order_line_status != '500') {
+          total += double.parse(orderItem.line_total);
+        }
       });
     }
     return total;
@@ -132,7 +151,9 @@ class OrderData with ChangeNotifier {
       listorder
           .where((items) => items.payment_method_id == "1")
           .forEach((orderItem) {
-        total += double.parse(orderItem.total_qty);
+        if (orderItem.order_line_status != '500') {
+          total += double.parse(orderItem.qty);
+        }
       });
     }
     return total;
@@ -144,7 +165,9 @@ class OrderData with ChangeNotifier {
       listorder
           .where((items) => items.payment_method_id == "2")
           .forEach((orderItem) {
-        total += double.parse(orderItem.total_qty);
+        if (orderItem.order_line_status != '500') {
+          total += double.parse(orderItem.qty);
+        }
       });
     }
     return total;
@@ -153,7 +176,9 @@ class OrderData with ChangeNotifier {
   double get sumqtydetail {
     double total = 0.0;
     listorder_detail.forEach((detailitem) {
-      total += double.parse(detailitem.qty);
+      if (detailitem.order_line_status != '500') {
+        total += double.parse(detailitem.qty);
+      }
     });
     return total;
   }
@@ -161,26 +186,31 @@ class OrderData with ChangeNotifier {
   double get sumamoutdetail {
     double total = 0.0;
     listorder_detail.forEach((detailitem) {
-      total += double.parse(detailitem.price) * double.parse(detailitem.qty);
+      if (detailitem.order_line_status != '500') {
+        total += double.parse(detailitem.price) * double.parse(detailitem.qty);
+      }
     });
     return total;
   }
 
-  Orders findById(String id) {
+  OrdersNew findById(String id) {
     return listorder.firstWhere((order) => order.customer_id == id);
   }
 
   Future<dynamic> fetOrders() async {
     String _car_id;
     String _order_date = new DateTime.now().toString();
+
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('user_id') != null) {
       _car_id = prefs.getString('emp_car_id');
     }
     final Map<String, dynamic> filterData = {
       'car_id': _car_id,
-      'order_date': _order_date
+      'order_date': _order_date,
+      'searchcustomer': _searchbycustomer,
     };
+    print('data fetch order is ${filterData}');
     _isLoading = true;
     notifyListeners();
     try {
@@ -191,7 +221,7 @@ class OrderData with ChangeNotifier {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> res = json.decode(response.body);
-        List<Orders> data = [];
+        List<OrdersNew> data = [];
         print('data length is ${res["data"].length}');
         //  print('data is ${res["data"]}');
 
@@ -203,18 +233,24 @@ class OrderData with ChangeNotifier {
 
         for (var i = 0; i < res['data'].length; i++) {
           idOrder = int.parse(res['data'][i]['id'].toString());
-          final Orders orderresult = Orders(
+          final OrdersNew orderresult = OrdersNew(
             id: res['data'][i]['id'].toString(),
             order_no: res['data'][i]['order_no'].toString(),
             order_date: res['data'][i]['order_date'].toString(),
             customer_id: res['data'][i]['customer_id'].toString(),
             customer_code: res['data'][i]['customer_code'].toString(),
             customer_name: res['data'][i]['customer_name'].toString(),
-            total_amount: res['data'][i]['total_amount'].toString(),
-            payment_method: res['data'][i]['payment_method'].toString(),
+            price: res['data'][i]['price'].toString(),
+            qty: res['data'][i]['qty'].toString(),
+            line_total: res['data'][i]['line_total'].toString(),
             payment_method_id:
                 res['data'][i]['sale_payment_method_id'].toString(),
-            total_qty: res['data'][i]['total_qty'].toString(),
+            product_id: res['data'][i]['product_id'].toString(),
+            product_code: res['data'][i]['product_code'].toString(),
+            product_name: res['data'][i]['product_name'].toString(),
+            order_line_id: res['data'][i]['order_line_id'].toString(),
+            order_line_date: res['data'][i]['order_line_date'].toString(),
+            order_line_status: res['data'][i]['order_line_status'].toString(),
           );
 
           data.add(orderresult);
@@ -231,6 +267,67 @@ class OrderData with ChangeNotifier {
       print('order cannot fetch data');
     }
   }
+  // Future<dynamic> fetOrders() async {
+  //   String _car_id;
+  //   String _order_date = new DateTime.now().toString();
+  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   if (prefs.getString('user_id') != null) {
+  //     _car_id = prefs.getString('emp_car_id');
+  //   }
+  //   final Map<String, dynamic> filterData = {
+  //     'car_id': _car_id,
+  //     'order_date': _order_date
+  //   };
+  //   _isLoading = true;
+  //   notifyListeners();
+  //   try {
+  //     http.Response response;
+  //     response = await http.post(Uri.encodeFull(url_to_order),
+  //         headers: {'Content-Type': 'application/json'},
+  //         body: json.encode(filterData));
+
+  //     if (response.statusCode == 200) {
+  //       Map<String, dynamic> res = json.decode(response.body);
+  //       List<Orders> data = [];
+  //       print('data length is ${res["data"].length}');
+  //       //  print('data is ${res["data"]}');
+
+  //       if (res == null) {
+  //         _isLoading = false;
+  //         notifyListeners();
+  //         return;
+  //       }
+
+  //       for (var i = 0; i < res['data'].length; i++) {
+  //         idOrder = int.parse(res['data'][i]['id'].toString());
+  //         final Orders orderresult = Orders(
+  //           id: res['data'][i]['id'].toString(),
+  //           order_no: res['data'][i]['order_no'].toString(),
+  //           order_date: res['data'][i]['order_date'].toString(),
+  //           customer_id: res['data'][i]['customer_id'].toString(),
+  //           customer_code: res['data'][i]['customer_code'].toString(),
+  //           customer_name: res['data'][i]['customer_name'].toString(),
+  //           total_amount: res['data'][i]['total_amount'].toString(),
+  //           payment_method: res['data'][i]['payment_method'].toString(),
+  //           payment_method_id:
+  //               res['data'][i]['sale_payment_method_id'].toString(),
+  //           total_qty: res['data'][i]['total_qty'].toString(),
+  //         );
+
+  //         data.add(orderresult);
+  //       }
+
+  //       listorder = data;
+  //       _isLoading = false;
+  //       _isApicon = true;
+  //       notifyListeners();
+  //       return listorder;
+  //     }
+  //   } catch (_) {
+  //     _isApicon = false;
+  //     print('order cannot fetch data');
+  //   }
+  // }
 
   Future<bool> addOrder(
     String product_id,
@@ -276,6 +373,68 @@ class OrderData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(Uri.encodeFull(url_to_add_order),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(orderData));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> res = json.decode(response.body);
+        print('data added order is  ${res["data"]}');
+        _iscomplated = true;
+      }
+    } catch (_) {
+      _iscomplated = false;
+      print('cannot create order');
+    }
+    return _iscomplated;
+  }
+
+  Future<bool> addOrderNew(
+    String customer_id,
+    List<Addorder> listdata,
+    String pay_type,
+  ) async {
+    String _user_id = "";
+    String _route_id = "";
+    String _car_id = "";
+    String _company_id = "";
+    String _branch_id = "";
+
+    bool _iscomplated = false;
+
+    String _order_date = new DateTime.now().toString();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('user_id') != null) {
+      _user_id = prefs.getString('user_id');
+      _route_id = prefs.getString('emp_route_id');
+      _car_id = prefs.getString('emp_car_id');
+      _company_id = prefs.getString('company_id');
+      _branch_id = prefs.getString('branch_id');
+    }
+
+    var jsonx = listdata
+        .map((e) => {
+              'product_id': e.product_id,
+              'qty': e.qty,
+              'price': e.sale_price,
+              'price_group_id': e.price_group_id,
+            })
+        .toList();
+
+    final Map<String, dynamic> orderData = {
+      'payment_type_id': pay_type,
+      'order_date': _order_date,
+      'customer_id': customer_id,
+      'user_id': _user_id,
+      'route_id': _route_id,
+      'car_id': _car_id,
+      'company_id': _company_id,
+      'branch_id': _branch_id,
+      'data': jsonx,
+    };
+    print('data will save order new is ${orderData}');
+    try {
+      http.Response response;
+      response = await http.post(Uri.encodeFull(url_to_add_order_new),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(orderData));
 
@@ -347,6 +506,7 @@ class OrderData with ChangeNotifier {
       'order_id': idOrder.toString(),
       'customer_id': orderCustomerId
     };
+    print('order customer data ${filterData}');
     try {
       http.Response response;
       response = await http.post(Uri.encodeFull(url_to_order_detail),
@@ -356,7 +516,7 @@ class OrderData with ChangeNotifier {
       if (response.statusCode == 200) {
         Map<String, dynamic> res = json.decode(response.body);
         List<OrderDetail> data = [];
-        print('data order line length is ${res["data"].length}');
+        print('data order by customer is ${res["data"]}');
         if (res == null) {
           _isLoading = false;
           notifyListeners();
@@ -369,6 +529,7 @@ class OrderData with ChangeNotifier {
             order_date: res['data'][i]['order_date'].toString(),
             line_id: res['data'][i]['line_id'].toString(),
             customer_id: res['data'][i]['customer_id'].toString(),
+            customer_code: res['data'][i]['customer_code'].toString(),
             customer_name: res['data'][i]['customer_name'].toString(),
             product_id: res['data'][i]['product_id'].toString(),
             product_name: res['data'][i]['product_name'].toString(),
@@ -376,6 +537,7 @@ class OrderData with ChangeNotifier {
             qty: res['data'][i]['qty'].toString(),
             price: res['data'][i]['price'].toString(),
             price_group_id: res['data'][i]['price_group_id'].toString(),
+            order_line_status: res['data'][i]['order_line_status'].toString(),
           );
 
           data.add(orderlineresult);
@@ -463,6 +625,48 @@ class OrderData with ChangeNotifier {
       }
     } catch (_) {
       print('cannot close order');
+    }
+    print(completed);
+    return completed;
+  }
+
+  Future<bool> cancelOrder(String line_id, String customer_code,
+      String order_no, String product_code, String reanson) async {
+    bool completed = false;
+    //String _order_date = new DateTime.now().toString();
+    String _company_id = "";
+    String _branch_id = "";
+    String _route_name = "";
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('user_id') != null) {
+      _company_id = prefs.getString('company_id');
+      _branch_id = prefs.getString('branch_id');
+      _route_name = prefs.getString('emp_route_name');
+    }
+    final Map<String, dynamic> orderData = {
+      'line_id': line_id,
+      'company_id': _company_id,
+      'branch_id': _branch_id,
+      'customer_code': customer_code,
+      'order_no': order_no,
+      'product_code': product_code,
+      'route_name': _route_name,
+      'reason': reanson
+    };
+    print('data will save close order is ${orderData}');
+    try {
+      http.Response response;
+      response = await http.post(Uri.encodeFull(url_to_cancel_order),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(orderData));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> res = json.decode(response.body);
+        print('data cancel order is  ${res["data"]}');
+        completed = true;
+      }
+    } catch (_) {
+      print('cannot cancel order');
     }
     print(completed);
     return completed;

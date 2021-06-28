@@ -277,7 +277,7 @@ class _AuthPageState extends State<AuthPage> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[Text('version 0.1')],
+                        children: <Widget>[Text('version 0.8')],
                       )
                     ],
                   ),

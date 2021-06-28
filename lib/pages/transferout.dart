@@ -21,8 +21,8 @@ class TransferoutPage extends StatefulWidget {
 }
 
 class _JournalissuePageState extends State<TransferoutPage> {
-  var _isInit = true;
-  var _isLoading = false;
+  // var _isInit = true;
+  // var _isLoading = false;
 
   Future _transferoutFuture;
   Future _obtainTransferoutFuture() {

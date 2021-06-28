@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:ice_app_new/pages/createorder.dart';
 import 'package:ice_app_new/pages/createorder_new.dart';
 import 'package:ice_app_new/pages/main_test.dart';
+import 'package:ice_app_new/providers/transferin.dart';
 import 'package:ice_app_new/widgets/order/order_item.dart';
 import 'package:ice_app_new/widgets/order/order_item_new.dart';
+import 'package:ice_app_new/widgets/transferin/findtransferin_item.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:connectivity/connectivity.dart';
@@ -14,48 +16,29 @@ import 'package:ice_app_new/helpers/activity_connection.dart';
 import 'package:provider/provider.dart';
 
 import 'package:ice_app_new/providers/order.dart';
-import 'package:ice_app_new/widgets/error/err_api.dart';
+//import 'package:ice_app_new/widgets/error/err_api.dart';
 
-class OrderPage extends StatefulWidget {
-  static const routeName = '/order';
+class TransferinNewPage extends StatefulWidget {
+  static const routeName = '/transferinpage';
   @override
-  _OrderPageState createState() => _OrderPageState();
+  _TransferinPageState createState() => _TransferinPageState();
 }
 
-class _OrderPageState extends State<OrderPage> {
+class _TransferinPageState extends State<TransferinNewPage> {
   var _isInit = true;
   var _isLoading = false;
 
-  Future _orderFuture;
+  Future _transferFuture;
 
-  Future _obtainOrderFuture() {
-    Provider.of<OrderData>(context, listen: false).searchBycustomer = '';
-    return Provider.of<OrderData>(context, listen: false).fetOrders();
+  Future _obtainTransferinFuture() {
+    return Provider.of<TransferinData>(context, listen: false)
+        .fetTransferincheck();
   }
 
   @override
   initState() {
     _checkinternet();
-
-    _orderFuture = _obtainOrderFuture();
-    // setState(() {
-    //   _isLoading = true;
-    // });
-    // Future.delayed(Duration.zero).then((_) async {
-    //   await Provider.of<OrderData>(context, listen: false)
-    //       .fetOrders()
-    //       .then((_) {
-    //     setState(() {
-    //       _isLoading = false;
-    //     });
-    //   });
-    // });
-    // try {
-    //   widget.model.fetchOrders();
-    // } on TimeoutException catch (_) {
-    //   _showdialog('Noity', 'Connection time out!');
-    // }
-    // Provider.of<OrderData>(context).fetOrders();
+    _transferFuture = _obtainTransferinFuture();
     super.initState();
   }
 
@@ -73,7 +56,7 @@ class _OrderPageState extends State<OrderPage> {
 
   void refreshData() {
     setState(() {
-      _orderFuture = _obtainOrderFuture();
+      _transferFuture = _obtainTransferinFuture();
     });
   }
 
@@ -113,9 +96,9 @@ class _OrderPageState extends State<OrderPage> {
         });
   }
 
-  // Widget _buildOrdersList() {
-  //   return Consumer(builder: (context, OrderData orders, Widget child) {
-  //     // orders.fetOrders();
+  // Widget _buildfindtransfersList() {
+  //   return Consumer(builder: (context, TransferinData findtransfers, Widget child) {
+  //     // findtransfers.fetfindtransfers();
   //     Widget content = Center(
   //         child: Text(
   //       'ไม่พบข้อมูล!',
@@ -123,7 +106,7 @@ class _OrderPageState extends State<OrderPage> {
   //           fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.grey),
   //     ));
   //     // print("data length = " + products.listproduct.toString());
-  //     if (orders.is_apicon) {
+  //     if (findtransfers.is_apicon) {
   //       content = FutureBuilder(
   //           future: ,
   //           builder: (context, dataSnapshort) => {
@@ -147,17 +130,18 @@ class _OrderPageState extends State<OrderPage> {
   //     }
   //     //return content;
   //     return RefreshIndicator(
-  //       onRefresh: orders.fetOrders,
+  //       onRefresh: findtransfers.fetfindtransfers,
   //       child: content,
   //     );
   //   });
   // }
 
   Widget _buidorderlist() {
-    OrderData orders = Provider.of<OrderData>(context, listen: false);
+    TransferinData findtransfers =
+        Provider.of<TransferinData>(context, listen: false);
     Widget content;
     content = FutureBuilder(
-      future: _orderFuture,
+      future: _transferFuture,
       builder: (context, dataSnapshort) {
         if (dataSnapshort.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -165,7 +149,7 @@ class _OrderPageState extends State<OrderPage> {
           if (dataSnapshort.error != null) {
             return Center(child: CircularProgressIndicator());
           } else {
-            return Container(child: OrderItemNew());
+            return Container(child: FindtransferinItem());
           }
         }
       },
@@ -173,7 +157,7 @@ class _OrderPageState extends State<OrderPage> {
 
     return RefreshIndicator(
       child: content,
-      onRefresh: orders.fetOrders,
+      onRefresh: findtransfers.fetTransferincheck,
     );
   }
 
@@ -183,36 +167,6 @@ class _OrderPageState extends State<OrderPage> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: Text(
-            'รายการขายสินค้า',
-            style: TextStyle(color: Colors.white),
-          ),
-          leading: new IconButton(
-            icon: new Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.of(context).pop(MainTest());
-            },
-          ),
-          actions: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pushNamed(CreateorderNewPage.routeName);
-                },
-                child: Icon(
-                  Icons.add_circle_outline,
-                  size: 30.0,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
         body: _buidorderlist(),
       ),
     );

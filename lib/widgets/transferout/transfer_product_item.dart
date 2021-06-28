@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:ice_app_new/pages/transfersuccess.dart';
 import 'package:ice_app_new/providers/car.dart';
 import 'package:ice_app_new/providers/transferout.dart';
 import 'package:intl/intl.dart';
@@ -28,34 +29,41 @@ class _TransferProductItemState extends State<TransferProductItem> {
     super.initState();
   }
 
-  void _submitForm(List<TransferProduct> transferdata, String car_id) {
+  void _submitForm(
+      List<TransferProduct> transferdata, String route_id, String car_id) {
     print('transferdata is ${transferdata[0].qty}');
     if (transferdata.isNotEmpty) {
       Future<bool> res = Provider.of<TransferoutData>(context, listen: false)
-          .addTransfer(car_id, transferdata);
-      Navigator.of(context).pop();
-      if (res == true) {
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: <Widget>[
-                Icon(
-                  Icons.check_circle,
-                  color: Colors.white,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  "ทำรายการสำเร็จ",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-            backgroundColor: Colors.green,
-          ),
-        );
-      }
+          .addTransfer(route_id, car_id, transferdata);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TransfersuccessPage(),
+        ),
+      );
+      //Navigator.of(context).pop();
+      // if (res == true) {
+      //   Scaffold.of(context).showSnackBar(
+      //     SnackBar(
+      //       content: Row(
+      //         children: <Widget>[
+      //           Icon(
+      //             Icons.check_circle,
+      //             color: Colors.white,
+      //           ),
+      //           SizedBox(
+      //             width: 10,
+      //           ),
+      //           Text(
+      //             "ทำรายการสำเร็จ",
+      //             style: TextStyle(color: Colors.white),
+      //           ),
+      //         ],
+      //       ),
+      //       backgroundColor: Colors.green,
+      //     ),
+      //   );
+      // }
     }
   }
 
@@ -100,6 +108,7 @@ class _TransferProductItemState extends State<TransferProductItem> {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final TextEditingController _typeAheadController = TextEditingController();
     String selectedValue;
+    String selectedCarValue;
 
     var formatter = NumberFormat('#,##,##0');
     return Column(
@@ -258,7 +267,7 @@ class _TransferProductItemState extends State<TransferProductItem> {
                                                             // leading: Icon(Icons.shopping_cart),
                                                             title: Text(
                                                                 suggestion
-                                                                    .name),
+                                                                    .route_name),
                                                             // subtitle: Text('\$${suggestion['price']}'),
                                                           );
                                                         },
@@ -268,11 +277,14 @@ class _TransferProductItemState extends State<TransferProductItem> {
                                                               items.id);
                                                           setState(() {
                                                             selectedValue =
+                                                                items.route_id;
+                                                            selectedCarValue =
                                                                 items.id;
 
                                                             _typeAheadController
                                                                     .text =
-                                                                items.name;
+                                                                items
+                                                                    .route_name;
                                                           });
                                                         },
                                                         noItemsFoundBuilder:
@@ -329,9 +341,11 @@ class _TransferProductItemState extends State<TransferProductItem> {
                                                 textColor: Colors.white,
                                                 onPressed: () {
                                                   _submitForm(
-                                                      transferdata
-                                                          .transferproductitems,
-                                                      selectedValue);
+                                                    transferdata
+                                                        .transferproductitems,
+                                                    selectedValue,
+                                                    selectedCarValue,
+                                                  );
                                                 },
                                                 child: Text("บันทีก"),
                                               ),

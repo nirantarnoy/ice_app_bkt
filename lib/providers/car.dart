@@ -34,12 +34,23 @@ class CarData with ChangeNotifier {
 
   Future<dynamic> fethCar() async {
     String _current_route_id = "";
+    String _company_id = "";
+    String _branch_id = "";
+    String _car_id = "";
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('user_id') != null) {
       _current_route_id = prefs.getString('emp_route_id');
+      _company_id = prefs.getString('company_id');
+      _branch_id = prefs.getString('branch_id');
+      _car_id = prefs.getString('emp_car_id');
     }
 
-    final Map<String, dynamic> filterData = {'route_id': _current_route_id};
+    final Map<String, dynamic> filterData = {
+      'route_id': _current_route_id,
+      'company_id': _company_id,
+      'branch_id': _branch_id,
+      'car_id': _car_id,
+    };
     // _isLoading = true;
     notifyListeners();
     try {
@@ -70,6 +81,8 @@ class CarData with ChangeNotifier {
             id: res['data'][i]['id'].toString(),
             code: res['data'][i]['code'].toString(),
             name: res['data'][i]['name'].toString(),
+            route_id: res['data'][i]['route_id'].toString(),
+            route_name: res['data'][i]['route_name'].toString(),
           );
 
           //  print('data from server is ${customerresult}');

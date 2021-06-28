@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:ice_app_new/models/issueitems.dart';
+import 'package:ice_app_new/models/reviewload.dart';
 import 'package:ice_app_new/models/transferproduct.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,12 +12,17 @@ class IssueData with ChangeNotifier {
       "http://119.59.100.74/icesystem/frontend/web/api/journalissue/checkopen";
 
   final String url_to_issue_list =
-      "http://119.59.100.74/icesystem/frontend/web/api/journalissue/list";
+      "http://119.59.100.74/icesystem/frontend/web/api/journalissue/list2";
   final String url_to_user_confirm =
-      "http://119.59.100.74/icesystem/frontend/web/api/journalissue/issueconfirm";
+      "http://119.59.100.74/icesystem/frontend/web/api/journalissue/issueconfirm2";
+  final String url_to_user_confirm_cancel =
+      "http://119.59.100.74/icesystem/frontend/web/api/journalissue/issueconfirmcancel";
 
   List<Issueitems> _issue;
   List<Issueitems> get listissue => _issue;
+  List<ReviewLoadData> _reviewload;
+  List<ReviewLoadData> get listreview => _reviewload;
+
   bool _isLoading = false;
   bool _isApicon = false;
 
@@ -45,6 +51,11 @@ class IssueData with ChangeNotifier {
 
   set listissue(List<Issueitems> val) {
     _issue = val;
+    notifyListeners();
+  }
+
+  set listreview(List<ReviewLoadData> val) {
+    _reviewload = val;
     notifyListeners();
   }
 
@@ -86,67 +97,86 @@ class IssueData with ChangeNotifier {
     return total;
   }
 
-  // Future<bool> fetIssueitemopen() async {
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  Future<bool> fetIssueitemopen() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  //   String _issue_date = new DateTime.now().toString();
-  //   String _routeid = '';
-  //   if (prefs.getString('user_id') != null) {
-  //     _routeid = prefs.getString('emp_route_id');
-  //   }
-  //   final Map<String, dynamic> filterData = {
-  //     'route_id': _routeid,
-  //     'issue_date': _issue_date
-  //   };
-  //   print(filterData);
-  //   _isLoading = true;
-  //   notifyListeners();
-  //   try {
-  //     http.Response response;
-  //     response = await http.post(
-  //       Uri.encodeFull(url_to_issue_list_open),
-  //       headers: {'Content-Type': 'application/json'},
-  //       body: json.encode(filterData),
-  //     );
+    String _issue_date = new DateTime.now().toString();
+    String _routeid = '';
+    if (prefs.getString('user_id') != null) {
+      _routeid = prefs.getString('emp_route_id');
+    }
+    final Map<String, dynamic> filterData = {
+      'route_id': _routeid,
+      'issue_date': _issue_date
+    };
+    print(filterData);
+    _isLoading = true;
+    notifyListeners();
+    try {
+      http.Response response;
+      response = await http.post(
+        Uri.encodeFull(url_to_issue_list_open),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(filterData),
+      );
 
-  //     if (response.statusCode == 200) {
-  //       _isApicon = true;
-  //       Map<String, dynamic> res = json.decode(response.body);
+      if (response.statusCode == 200) {
+        _isApicon = true;
+        Map<String, dynamic> res = json.decode(response.body);
 
-  //       print('data customer length is ${res["data"].length}');
-  //       print('data server is ${res["data"]}');
+        print('data customer length is ${res["data"].length}');
+        print('data has new issue is ${res["data"]}');
 
-  //       if (res == null) {
-  //         _isLoading = false;
-  //         notifyListeners();
-  //         return false;
-  //       }
+        if (res == null) {
+          _isLoading = false;
+          notifyListeners();
+          return false;
+        }
 
-  //       if (res['data'] == null) {
-  //         _isLoading = false;
-  //         notifyListeners();
-  //         return false;
-  //       }
+        if (res['data'] == null) {
+          _isLoading = false;
+          notifyListeners();
+          return false;
+        }
 
-  //       String has_record = '';
-  //       String has_status = '';
-  //       for (var i = 0; i < res['data'].length; i++) {
-  //         has_record = res['data'][i]['has_record'].toString();
-  //         has_status = res['data'][i]['status'].toString();
-  //       }
+        String has_record = '';
+        String has_status = '';
 
-  //       if (has_record == "1" && has_status == "1") {
-  //         hasissue_open = true;
-  //       }
-  //       _isLoading = false;
-  //       notifyListeners();
-  //       return hasissue_open;
-  //     }
-  //   } catch (_) {
-  //     _isApicon = false;
-  //     print('cannot connect api.');
-  //   }
-  // }
+        List<ReviewLoadData> data = [];
+
+        for (var i = 0; i < res['data'].length; i++) {
+          has_record = res['data'][i]['has_record'].toString();
+          idIssue = int.parse(res['data'][i]['issue_id'].toString());
+          has_status = res['data'][i]['status'].toString();
+
+          final ReviewLoadData issueresult = ReviewLoadData(
+            issue_id: res['data'][i]['issue_id'].toString(),
+            code: res['data'][i]['code'].toString(),
+            name: res['data'][i]['name'].toString(),
+            qty: res['data'][i]['qty'].toString(),
+          );
+
+          data.add(issueresult);
+        }
+
+        print('list is ${data}');
+
+        if (has_record == "1" && has_status == "1") {
+          hasissue_open = true;
+          userconfirm = 0;
+        } else {
+          hasissue_open = false;
+        }
+        listreview = data;
+        _isLoading = false;
+        notifyListeners();
+        return hasissue_open;
+      }
+    } catch (_) {
+      _isApicon = false;
+      print('cannot connect api.');
+    }
+  }
 
   Future<dynamic> fetIssueitems() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -198,7 +228,7 @@ class IssueData with ChangeNotifier {
         }
 
         for (var i = 0; i < res['data'].length; i++) {
-          idIssue = int.parse(res['data'][i]['issue_id'].toString());
+          //  idIssue = int.parse(res['data'][i]['issue_id'].toString());
 
           if (res['data'][i]['status'].toString() == "1") {
             userconfirm = 0;
@@ -241,19 +271,22 @@ class IssueData with ChangeNotifier {
     String _branch_id = "";
     String _issue_date = new DateTime.now().toString();
     String _userid = '';
+    String _route_id = '';
     if (prefs.getString('user_id') != null) {
       _userid = prefs.getString('user_id');
       _company_id = prefs.getString('company_id');
       _branch_id = prefs.getString('branch_id');
+      _route_id = prefs.getString('emp_route_id');
     }
     final Map<String, dynamic> updateData = {
       'user_id': _userid,
       'issue_id': idIssue,
       'company_id': _company_id,
-      'branch_id': _branch_id
+      'branch_id': _branch_id,
+      'route_id': _route_id
     };
 
-    print(updateData);
+    print('confirmissue is ${updateData}');
     _isLoading = true;
     notifyListeners();
     try {
@@ -291,6 +324,76 @@ class IssueData with ChangeNotifier {
             return false;
           }
         }
+        // hasissue_open = false;
+        return true;
+      }
+    } catch (_) {
+      _isApicon = false;
+      print('cannot connect api.');
+      return false;
+    }
+  }
+
+  Future<bool> issueconfirmcancel() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String _company_id = "";
+    String _branch_id = "";
+    String _issue_date = new DateTime.now().toString();
+    String _userid = '';
+    String _route_id = '';
+    if (prefs.getString('user_id') != null) {
+      _userid = prefs.getString('user_id');
+      _company_id = prefs.getString('company_id');
+      _branch_id = prefs.getString('branch_id');
+      _route_id = prefs.getString('emp_route_id');
+    }
+    final Map<String, dynamic> updateData = {
+      'user_id': _userid,
+      'issue_id': idIssue,
+      'company_id': _company_id,
+      'branch_id': _branch_id,
+      'route_id': _route_id
+    };
+
+    print('confirmissue is ${updateData}');
+    _isLoading = true;
+    notifyListeners();
+    try {
+      http.Response response;
+      response = await http.post(
+        Uri.encodeFull(url_to_user_confirm_cancel),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(updateData),
+      );
+
+      if (response.statusCode == 200) {
+        _isApicon = true;
+        Map<String, dynamic> res = json.decode(response.body);
+        List<Issueitems> data = [];
+
+        print('data confirm cancel length is ${res["data"].length}');
+        print('data server cancel is ${res["data"]}');
+
+        if (res == null) {
+          _isLoading = false;
+          notifyListeners();
+          return false;
+        }
+
+        if (res['data'] == null) {
+          _isLoading = false;
+          notifyListeners();
+          return false;
+        }
+
+        for (var i = 0; i < res['data'].length; i++) {
+          if (res['data'][i]['id'].toString() == "1") {
+            return true;
+          } else {
+            return false;
+          }
+        }
+        return true;
       }
     } catch (_) {
       _isApicon = false;

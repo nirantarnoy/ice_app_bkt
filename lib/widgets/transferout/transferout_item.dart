@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ice_app_new/pages/transferout_review.dart';
 import 'package:intl/intl.dart';
 import 'package:ice_app_new/pages/createtransfer.dart';
 import 'package:ice_app_new/providers/transferout.dart';
@@ -17,12 +18,12 @@ class Transferoutitem extends StatelessWidget {
           itemCount: transferout_items.length,
           itemBuilder: (BuildContext context, int index) {
             return Items(
-                transferout_items[index].transfer_id.toString(),
-                transferout_items[index].journal_no.toString(),
-                transferout_items[index].to_route.toString(),
-                transferout_items[index].to_order_no.toString(),
-                transferout_items[index].to_car_no.toString(),
-                transferout_items[index].qty.toString());
+              transferout_items[index].transfer_id.toString(),
+              transferout_items[index].journal_no.toString(),
+              transferout_items[index].to_route_id.toString(),
+              transferout_items[index].to_route_name.toString(),
+              transferout_items[index].transfer_status.toString(),
+            );
           },
         );
       } else {
@@ -82,43 +83,44 @@ class Transferoutitem extends StatelessWidget {
         Expanded(child: _buildissueitemList(item_transferout.listtransferout)),
         Row(
           children: <Widget>[
-            Expanded(
-              child: Card(
-                margin: EdgeInsets.only(left: 15, right: 20),
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              "จำนวน",
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.purple),
-                            ),
-                            SizedBox(width: 10),
-                            Chip(
-                              label: Consumer<TransferoutData>(
-                                builder: (context, transferouts, _) => Text(
-                                  transferouts.totalAmount == null
-                                      ? 0
-                                      : '${formatter.format(transferouts.totalAmount)}',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                ),
-                              ),
-                              backgroundColor: Theme.of(context).primaryColor,
-                            ),
-                          ]),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            // Expanded(
+            //   child: Card(
+            //     margin: EdgeInsets.only(left: 15, right: 20),
+            //     child: Padding(
+            //       padding: EdgeInsets.all(8),
+            //       child: Column(
+            //         children: <Widget>[
+            //           SizedBox(
+            //             height: 10,
+            //           ),
+            //           Row(
+            //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //             children: <Widget>[
+            //               Text(
+            //                 "จำนวน",
+            //                 style:
+            //                     TextStyle(fontSize: 20, color: Colors.purple),
+            //               ),
+            //               SizedBox(width: 10),
+            //               Chip(
+            //                 label: Consumer<TransferoutData>(
+            //                   builder: (context, transferouts, _) => Text(
+            //                     transferouts.totalAmount == null
+            //                         ? 0
+            //                         : '${formatter.format(transferouts.totalAmount)}',
+            //                     style: TextStyle(
+            //                         color: Colors.white, fontSize: 20),
+            //                   ),
+            //                 ),
+            //                 backgroundColor: Theme.of(context).primaryColor,
+            //               ),
+            //             ],
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: FloatingActionButton(
@@ -158,25 +160,25 @@ class Items extends StatelessWidget {
   //orders _orders;
   final String _transfer_id;
   final String _journal_no;
-  final String _to_route;
-  final String _to_order_no;
-  final String _to_car_no;
-  final String _qty;
+  final String _to_route_id;
+  final String _to_route_name;
+  final String _transfer_status;
 
   Items(
     this._transfer_id,
     this._journal_no,
-    this._to_route,
-    this._to_order_no,
-    this._to_car_no,
-    this._qty,
+    this._to_route_id,
+    this._to_route_name,
+    this._transfer_status,
   );
   @override
   Widget build(BuildContext context) {
     var formatter = NumberFormat('#,##,##0');
     return new GestureDetector(
-      onTap: () => Navigator.pushNamed(
-          context, '/ordersdetail/' + this._transfer_id.toString()),
+      onTap: () => Navigator.of(context)
+          .pushNamed(TransferOutReviewPage.routeName, arguments: {
+        'transfer_id': _transfer_id,
+      }),
       child: Column(
         children: <Widget>[
           ListTile(
@@ -192,21 +194,31 @@ class Items extends StatelessWidget {
             ),
             subtitle: Row(
               children: <Widget>[
-                Text("ทะเบียน"),
+                Text("สายส่ง"),
                 SizedBox(
                   width: 10,
                 ),
                 Text(
-                  "${_to_car_no}",
+                  "${_to_route_name}",
                   style: TextStyle(color: Colors.green),
                 ),
               ],
             ),
-            trailing: Text('${formatter.format(double.parse("0"))}',
-                style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.orange[800])),
+            trailing: _transfer_status == "1"
+                ? Text(
+                    "Open",
+                    style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold),
+                  )
+                : Text(
+                    "Close",
+                    style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold),
+                  ),
           ),
           Divider(),
         ],

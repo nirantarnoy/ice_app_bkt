@@ -204,8 +204,11 @@ class PaymentreceiveData with ChangeNotifier {
       if (response.statusCode == 200) {
         Map<String, dynamic> res = json.decode(response.body);
         print('data add payment is  ${res["data"]}');
+        return true;
       }
-    } catch (_) {}
+    } catch (_) {
+      return false;
+    }
   }
 
   void removePayline(String line_id) async {

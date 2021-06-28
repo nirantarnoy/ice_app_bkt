@@ -19,6 +19,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Future _orderFuture;
   Future _obtainOrderFuture() {
+    Provider.of<OrderData>(context, listen: false).searchBycustomer = '';
     return Provider.of<OrderData>(context, listen: false).fetOrders();
   }
 
@@ -121,7 +122,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var formatter = NumberFormat('#,##,##0');
+    var formatter = NumberFormat('#,##,##0.#');
     DateFormat dateformatter = DateFormat('dd-MM-yyyy');
     return SafeArea(
         child: Scaffold(

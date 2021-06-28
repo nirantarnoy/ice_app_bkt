@@ -11,7 +11,7 @@ class ProductData with ChangeNotifier {
       "http://119.59.100.74/icesystem/frontend/web/api/product/list";
   final String url_to_product_issue_list =
       //  "http://192.168.1.120/icesystem/frontend/web/api/product/list";
-      "http://119.59.100.74/icesystem/frontend/web/api/product/issuelist";
+      "http://119.59.100.74/icesystem/frontend/web/api/product/issuelist2";
   // "http://119.59.100.74/icesystem/frontend/web/api/product/list";
   final String url_to_product_detail =
       //   "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
@@ -68,7 +68,7 @@ class ProductData with ChangeNotifier {
         Map<String, dynamic> res = json.decode(response.body);
         List<Products> data = [];
         // print('data length is ${res["data"].length}');
-        print('data server is ${res["data"]}');
+        print('product data is ${res["data"]}');
 
         if (res == null) {
           _isLoading = false;
@@ -86,13 +86,15 @@ class ProductData with ChangeNotifier {
           //print(res['data'][i]['code']);
           // data.add(product);
           final Products productresult = Products(
-              id: res['data'][i]['id'].toString(),
-              code: res['data'][i]['code'].toString(),
-              name: res['data'][i]['name'].toString(),
-              sale_price: res['data'][i]['sale_price'].toString(),
-              image: res['data'][i]['image'].toString(),
-              issue_id: res['data'][i]['issue_id'].toString(),
-              onhand: res['data'][i]['onhand'].toString());
+            id: res['data'][i]['id'].toString(),
+            code: res['data'][i]['code'].toString(),
+            name: res['data'][i]['name'].toString(),
+            sale_price: res['data'][i]['sale_price'].toString(),
+            image: res['data'][i]['image'].toString(),
+            issue_id: res['data'][i]['issue_id'].toString(),
+            onhand: res['data'][i]['onhand'].toString(),
+            price_group_id: res['data'][i]['price_group_id'].toString(),
+          );
 
           //  print('data from server is ${productresult}');
           data.add(productresult);
@@ -129,7 +131,7 @@ class ProductData with ChangeNotifier {
         Map<String, dynamic> res = json.decode(response.body);
         List<Products> data = [];
         // print('data length is ${res["data"].length}');
-        print('data server is ${res["data"]}');
+        print('product data is ${res["data"]}');
 
         if (res == null) {
           _isLoading = false;

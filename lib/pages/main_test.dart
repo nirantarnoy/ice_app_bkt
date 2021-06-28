@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:ice_app_new/models/delivery_route.dart';
+import 'package:ice_app_new/pages/auth.dart';
+import 'package:ice_app_new/pages/blue_print.dart';
+import 'package:ice_app_new/pages/customer_asset.dart';
 import 'package:ice_app_new/pages/home.dart';
+import 'package:ice_app_new/pages/issuesuccess.dart';
 import 'package:ice_app_new/pages/journalissue.dart';
 import 'package:ice_app_new/pages/offlinetest.dart';
+import 'package:ice_app_new/pages/order_print.dart';
+import 'package:ice_app_new/pages/paymentsuccess.dart';
+import 'package:ice_app_new/pages/print_bluetooth.dart';
+import 'package:ice_app_new/pages/qrscan.dart';
+import 'package:ice_app_new/pages/stepper.dart';
 import 'package:ice_app_new/pages/take_photo.dart';
 import 'package:ice_app_new/widgets/journalissue/journalissue_item.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -63,12 +72,15 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
         appTitle = '';
       }
       if (index == 1) {
-        appTitle = 'ขายสินค้า';
-      }
-      if (index == 2) {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => JournalissuePage()));
         appTitle = 'หน้าหลัก';
+        _currentIndex = 0;
+      }
+      if (index == 2) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => OrderPage()));
+        appTitle = 'รายการขายสินค้า';
         _currentIndex = 0;
       }
       if (index == 3) {
@@ -112,7 +124,9 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
     successInformation = await logout();
     if (successInformation['success']) {
       print('logout success');
-      Navigator.of(context).pop();
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => AuthPage()));
+      // Navigator.of(context).pop();
     }
   }
 
@@ -162,7 +176,7 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
     List<Widget> tabs = [
       //JournalissuePage(),
       HomePage(),
-      OrderPage(),
+      null,
       null,
       null
       //PaymentPage(),
@@ -176,7 +190,8 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
           iconTheme: IconThemeData(color: Colors.white),
           title: Text(
             appTitle,
-            style: TextStyle(fontFamily: 'Cloud-Bold', color: Colors.white),
+            style: TextStyle(color: Colors.white),
+            //      style: TextStyle(fontFamily: 'Cloud-Bold', color: Colors.white),
           ),
           actions: <Widget>[
             // IconButton(
@@ -276,6 +291,14 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
               ListTile(
                 title: Text("Sycn ข้อมูล"),
                 trailing: Icon(Icons.sync_alt_outlined),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => OrderPrintPage(),
+                    ),
+                  );
+                },
               ),
               // ListTile(
               //   title: Text("โหลดสินค้าขึ้นรถ"),
@@ -288,7 +311,7 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => OfflinePage(),
+                      builder: (context) => StepperPage(), //OfflinePage(),
                     ),
                   );
                 },
@@ -302,20 +325,48 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
               // Divider(),
               ListTile(
                 title: Text("ตรวจสอบ ถัง/กระสอบ"),
-                trailing: Icon(Icons.qr_code_scanner_sharp),
+                trailing: Icon(Icons.camera_alt_outlined),
                 onTap: () => {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => TakePictureScreen()))
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CustomerAssetPage(),
+                    ),
+                  )
+                  //  Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (context) => TakePictureScreen(),),)
                 },
               ),
+              ListTile(
+                title: Text("QR Scan"),
+                trailing: Icon(Icons.qr_code_scanner_sharp),
+                onTap: () => {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => QrscanPage()))
+                },
+              ),
+              // TakePictureScreen()
               // Divider(),
               // ListTile(
               //   title: Text("ยืมสินค้า"),
               //   trailing: Icon(Icons.cached_outlined),
               //   onTap: () => {},
               // ),
+              Divider(),
+              ListTile(
+                title: Text("ตั้งค่าเครื่องพิมพ์"),
+                trailing: Icon(Icons.print),
+                onTap: () => {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => BluePrintPage()))
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => PrintBluetoothPage()))
+                },
+              ),
               Divider(),
               Consumer<UserData>(
                 builder: (context, users, _) => ListTile(
@@ -345,9 +396,9 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
                 BottomNavigationBarItem(
                     icon: Icon(Icons.home), title: Text('หน้าหลัก')),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.shopping_cart), title: Text('ขายสินค้า')),
-                BottomNavigationBarItem(
                     icon: Icon(Icons.transform_sharp), title: Text('สินค้า')),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.shopping_cart), title: Text('ขายสินค้า')),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.beenhere),
                   title: Text('รับชำระเงิน'),

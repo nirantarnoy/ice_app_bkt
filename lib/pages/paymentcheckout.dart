@@ -4,6 +4,7 @@ import 'package:ice_app_new/models/enum_paytype.dart';
 import 'package:ice_app_new/models/paymentselected.dart';
 import 'package:ice_app_new/pages/main_test.dart';
 import 'package:ice_app_new/pages/payment.dart';
+import 'package:ice_app_new/pages/paymentsuccess.dart';
 import 'package:ice_app_new/providers/paymentreceive.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -50,27 +51,27 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
                 ),
                 direction: DismissDirection.endToStart,
                 confirmDismiss: (direction) {
-                  return showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text('แจ้งเตือน'),
-                      content: Text('ต้องการลบข้อมูลใช่หรือไม่'),
-                      actions: <Widget>[
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(true);
-                          },
-                          child: Text('ยืนยัน'),
-                        ),
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(false);
-                          },
-                          child: Text('ไม่'),
-                        ),
-                      ],
-                    ),
-                  );
+                  // return showDialog(
+                  //   context: context,
+                  //   builder: (context) => AlertDialog(
+                  //     title: Text('แจ้งเตือน'),
+                  //     content: Text('ต้องการลบข้อมูลใช่หรือไม่'),
+                  //     actions: <Widget>[
+                  //       FlatButton(
+                  //         onPressed: () {
+                  //           Navigator.of(context).pop(true);
+                  //         },
+                  //         child: Text('ยืนยัน'),
+                  //       ),
+                  //       FlatButton(
+                  //         onPressed: () {
+                  //           Navigator.of(context).pop(false);
+                  //         },
+                  //         child: Text('ไม่'),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // );
                 },
                 onDismissed: (direction) {
                   print(paymentlist[index].order_id);
@@ -221,32 +222,69 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
 
     // _formKey.currentState.save();
 
-    Provider.of<PaymentreceiveData>(context, listen: false)
-        .addPayment2(_formData['pay_type'], _formData['pay_date'], listitems)
-        .then(
-      (_) {
-        // Scaffold.of(context).showSnackBar(SnackBar(
-        //   content: Row(
-        //     children: <Widget>[
-        //       Icon(
-        //         Icons.check_circle,
-        //         color: Colors.white,
-        //       ),
-        //       SizedBox(
-        //         width: 10,
-        //       ),
-        //       Text(
-        //         "ทำรายการสำเร็จ",
-        //         style: TextStyle(color: Colors.white),
-        //       ),
-        //     ],
-        //   ),
-        //   backgroundColor: Colors.green,
-        // ));
+    bool res = await Provider.of<PaymentreceiveData>(context, listen: false)
+        .addPayment2(_formData['pay_type'], _formData['pay_date'], listitems);
 
-        Navigator.of(context).pop();
-      },
-    );
+    if (res == true) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => PaymentsuccessPage(),
+        ),
+      );
+    } else {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Row(
+          children: <Widget>[
+            Icon(
+              Icons.error,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "ทำรายการไม่สำเร็จ ลองใหม่อีกครั้ง",
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+        backgroundColor: Colors.red,
+      ));
+    }
+
+    // Provider.of<PaymentreceiveData>(context, listen: false)
+    //     .addPayment2(_formData['pay_type'], _formData['pay_date'], listitems)
+    //     .then(
+    //   (_) {
+    //     Navigator.push(
+    //       context,
+    //       MaterialPageRoute(
+    //         builder: (_) => PaymentsuccessPage(),
+    //       ),
+    //     );
+    //     // Scaffold.of(context).showSnackBar(SnackBar(
+    //     //   content: Row(
+    //     //     children: <Widget>[
+    //     //       Icon(
+    //     //         Icons.check_circle,
+    //     //         color: Colors.white,
+    //     //       ),
+    //     //       SizedBox(
+    //     //         width: 10,
+    //     //       ),
+    //     //       Text(
+    //     //         "ทำรายการสำเร็จ",
+    //     //         style: TextStyle(color: Colors.white),
+    //     //       ),
+    //     //     ],
+    //     //   ),
+    //     //   backgroundColor: Colors.green,
+    //     // ));
+
+    //     //Navigator.of(context).pop();
+    //   },
+    // );
     // setState(() {
     //   Provider.of<PaymentreceiveData>(context, listen: false)
     //       .fetPaymentreceive(widget._customer_id);
@@ -290,9 +328,9 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
     final payment_data = ModalRoute.of(context).settings.arguments as Map; //
     List<Paymentselected> paymentselected = payment_data['paymentlist'];
     //print('list length = ${paymentselected.length.toString()}');
+    //paymentselected[0].order_amount
     paymentselected.forEach((elm) {
-      total_amount =
-          (total_amount + int.parse(paymentselected[0].order_amount));
+      total_amount = (total_amount + int.parse(elm.order_amount));
     });
     return SafeArea(
       child: Scaffold(

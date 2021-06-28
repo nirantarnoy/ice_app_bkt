@@ -1,6 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
+import "package:async/async.dart";
+import 'package:ice_app_new/models/addchecklist.dart';
+import 'package:ice_app_new/models/checklist.dart';
+
+import 'package:path/path.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:ice_app_new/models/customer_asset.dart';
 
 import 'package:ice_app_new/models/customers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,8 +21,22 @@ class CustomerData with ChangeNotifier {
       // "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
       "http://119.59.100.74/icesystem/frontend/web/api/customer/detail";
 
+  final String url_to_customer_asset =
+      // "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
+      "http://119.59.100.74/icesystem/frontend/web/api/customer/assetlist";
+  final String url_to_asset_checklist_save =
+      // "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
+      "http://119.59.100.74/icesystem/frontend/web/api/customer/assetchecklist";
+  final String url_to_asset_checklist =
+      // "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
+      "http://119.59.100.74/icesystem/frontend/web/api/customer/checklist";
+
   List<Customers> _customer;
+  List<CustomerAsset> _customer_asset;
+  List<Checklist> _assetchecklist;
   List<Customers> get listcustomer => _customer;
+  List<CustomerAsset> get listcustomerasset => _customer_asset;
+  List<Checklist> get listassetchecklist => _assetchecklist;
   bool _isLoading = false;
   int _id = 0;
 
@@ -28,6 +49,16 @@ class CustomerData with ChangeNotifier {
 
   set listcustomer(List<Customers> val) {
     _customer = val;
+    notifyListeners();
+  }
+
+  set listcustomerasset(List<CustomerAsset> val) {
+    _customer_asset = val;
+    notifyListeners();
+  }
+
+  set listassetchecklist(List<Checklist> val) {
+    _assetchecklist = val;
     notifyListeners();
   }
 
@@ -104,54 +135,205 @@ class CustomerData with ChangeNotifier {
         .toList();
   }
 
-  // Future<void> addOrder(String product_id, int qty, int customer_id) async {
-  //   final Map<String, dynamic> orderData = {
-  //     'product_id': product_id,
-  //     'qty': qty,
-  //     'customer_id': customer_id
-  //   };
-  //   try {
-  //     http.Response response;
-  //     response = await http.post(Uri.encodeFull(url_to_customer),
-  //         headers: {'Content-Type': 'application/json'},
-  //         body: json.encode(orderData));
+  Future<dynamic> fetCustomerAsset(String customer_id) async {
+    String _company_id = "";
+    String _branch_id = "";
 
-  //     if (response.statusCode == 200) {}
-  //   } catch (_) {}
-  // }
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('user_id') != null) {
+      _company_id = prefs.getString('company_id');
+      _branch_id = prefs.getString('branch_id');
+    }
 
-  // Future<Orders> getDetails() async {
-  //   try {
-  //     http.Response response;
-  //     response = await http.get(Uri.encodeFull(url_to_customer),
-  //         headers: {'Content-Type': 'application/json'});
+    final Map<String, dynamic> filterData = {
+      'customer_id': customer_id,
+      'company_id': _company_id,
+      'branch_id': _branch_id
+    };
+    // _isLoading = true;
+    print('data to find asset is ${filterData}');
+    notifyListeners();
+    try {
+      http.Response response;
+      response = await http.post(
+        Uri.encodeFull(url_to_customer_asset),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(filterData),
+      );
 
-  //     if (response.statusCode == 200) {
-  //       Map<String, dynamic> res = json.decode(response.body);
-  //       List<Orders> data = [];
-  //       print('data length is ${res["data"].length}');
-  //       if (res == null) {
-  //         _isLoading = false;
-  //         notifyListeners();
-  //         return null;
-  //       }
-  //       for (var i = 0; i < res['data'].length - 1; i++) {
-  //         final Orders orderresult = Orders(
-  //           id: res['data'][i]['id'],
-  //           order_no: res['data'][i]['order_no'],
-  //           order_date: res['data'][i]['order_date'],
-  //           customer_name: res['data'][i]['customer_name'],
-  //           note: res['data'][i]['note'],
-  //         );
+      if (response.statusCode == 200) {
+        Map<String, dynamic> res = json.decode(response.body);
+        List<CustomerAsset> data = [];
+        print('data customer length is ${res["data"].length}');
+        //    print('data server is ${res["data"]}');
 
-  //         data.add(orderresult);
-  //       }
+        if (res == null) {
+          _isLoading = false;
+          notifyListeners();
+          return;
+        }
 
-  //       listcustomer = data;
-  //       _isLoading = false;
-  //       notifyListeners();
-  //       return listcustomer;
-  //     }
-  //   } catch (_) {}
-  // }
+        for (var i = 0; i < res['data'].length; i++) {
+          // var product = Customers.fromJson(res[i]);
+          //print(res['data'][i]['code']);
+          // data.add(product);
+          final CustomerAsset assetresult = CustomerAsset(
+            id: res['data'][i]['id'].toString(),
+            product_id: res['data'][i]['product_id'].toString(),
+            code: res['data'][i]['code'].toString(),
+            name: res['data'][i]['name'].toString(),
+            qty: res['data'][i]['qty'].toString(),
+            status: res['data'][i]['status'].toString(),
+            photo: res['data'][i]['photo'].toString(),
+          );
+
+          print('data asset from server is ${assetresult.product_id}');
+          data.add(assetresult);
+        }
+
+        listcustomerasset = data;
+        _isLoading = false;
+        notifyListeners();
+        return listcustomerasset;
+      }
+    } catch (_) {}
+  }
+
+  Future<dynamic> addChecklist(String image, List<Addchecklist> listcheck,
+      String _customer_id, String _product_id) async {
+    String _company_id = "";
+    String _branch_id = "";
+    String _route_id = "";
+    String _user_id = "";
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('user_id') != null) {
+      _company_id = prefs.getString('company_id');
+      _branch_id = prefs.getString('branch_id');
+      _user_id = prefs.getString('user_id');
+      _route_id = prefs.getString('emp_route_id');
+    }
+
+    // var stream =
+    //     new http.ByteStream(DelegatingStream.typed(imagefile.openRead()));
+    // var length = await imagefile.length();
+
+    var jsonx = listcheck
+        .map((e) => {
+              'id': e.id,
+              'is_check': e.is_check,
+            })
+        .toList();
+
+    final Map<String, dynamic> filterData = {
+      'company_id': _company_id,
+      'branch_id': _branch_id,
+      'customer_id': _customer_id,
+      'product_id': _product_id,
+      'image': image,
+      'name': '',
+      'route_id': _route_id,
+      'user_id': _user_id,
+      'datalist': jsonx
+    };
+    // _isLoading = true;
+    print('data to save checklist is ${filterData['datalist']}');
+    //  notifyListeners();
+    //print('image path is ${imagefile.path}');
+    try {
+      // var uri = Uri.parse(url_to_asset_checklist_save);
+      // var request = new http.MultipartRequest("POST", uri);
+      // var multipartFile =
+      //     await http.MultipartFile.fromPath("image", imagefile.path);
+
+      // print('file add is ${multipartFile}');
+      // request.files.add(multipartFile);
+      // request.fields['name'] = name;
+      // var respond = await request.send();
+      // if (respond.statusCode == 200) {
+      //   print("Image Uploaded");
+      // } else {
+      //   print("Upload Failed server status is ${respond.statusCode}");
+      // }
+
+      http.Response response;
+      response = await http.post(
+        Uri.encodeFull(url_to_asset_checklist_save),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(filterData),
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> res = json.decode(response.body);
+        List<CustomerAsset> data = [];
+        print('data checklist save length is ${res["data"].length}');
+        //    print('data server is ${res["data"]}');
+
+        if (res == null) {
+          _isLoading = false;
+          notifyListeners();
+          return;
+        }
+        _isLoading = false;
+        notifyListeners();
+        return listcustomerasset;
+      }
+    } catch (_) {}
+  }
+
+  Future<dynamic> fetChecklist() async {
+    // String _current_route_id = "";
+    String _company_id = "";
+    String _branch_id = "";
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('user_id') != null) {
+      // _current_route_id = prefs.getString('emp_route_id');
+      _company_id = prefs.getString('company_id');
+      _branch_id = prefs.getString('branch_id');
+    }
+
+    final Map<String, dynamic> filterData = {
+      //'route_id': _current_route_id,
+      'company_id': _company_id,
+      'branch_id': _branch_id
+    };
+    // _isLoading = true;
+    notifyListeners();
+    try {
+      http.Response response;
+      response = await http.post(
+        Uri.encodeFull(url_to_asset_checklist),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(filterData),
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> res = json.decode(response.body);
+        List<Checklist> data = [];
+        print('data checklist length is ${res["data"].length}');
+        //    print('data server is ${res["data"]}');
+
+        if (res == null) {
+          _isLoading = false;
+          notifyListeners();
+          return;
+        }
+
+        for (var i = 0; i < res['data'].length; i++) {
+          final Checklist checklistresult = Checklist(
+            id: res['data'][i]['id'].toString(),
+            code: res['data'][i]['code'].toString(),
+            name: res['data'][i]['name'].toString(),
+          );
+          data.add(checklistresult);
+        }
+
+        listassetchecklist = data;
+        _isLoading = false;
+        notifyListeners();
+        return listassetchecklist;
+      }
+    } catch (_) {}
+  }
 }

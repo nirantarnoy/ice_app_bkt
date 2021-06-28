@@ -3,62 +3,54 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 
-Future<void> main() async {
-  // Ensure that plugin services are initialized so that `availableCameras()`
-  // can be called before `runApp()`
-  WidgetsFlutterBinding.ensureInitialized();
+// Future<void> main() async {
+//   // Ensure that plugin services are initialized so that `availableCameras()`
+//   // can be called before `runApp()`
+//   WidgetsFlutterBinding.ensureInitialized();
 
-  // Obtain a list of the available cameras on the device.
-  final cameras = await availableCameras();
+//   // Obtain a list of the available cameras on the device.
+//   final cameras = await availableCameras();
 
-  // Get a specific camera from the list of available cameras.
-  final firstCamera = cameras.first;
+//   // Get a specific camera from the list of available cameras.
+//   final firstCamera = cameras.first;
 
-  runApp(
-    MaterialApp(
-      theme: ThemeData.dark(),
-      home: TakePictureScreen(
-        // Pass the appropriate camera to the TakePictureScreen widget.
-        camera: firstCamera,
-      ),
-    ),
-  );
-}
+//   runApp(
+//     MaterialApp(
+//       theme: ThemeData.dark(),
+//       home: TakePictureScreen(
+//         // Pass the appropriate camera to the TakePictureScreen widget.
+//         camera: firstCamera,
+//       ),
+//     ),
+//   );
+// }
 
 // A screen that allows users to take a picture using a given camera.
 class TakePictureScreen extends StatefulWidget {
-  final CameraDescription camera;
+  // final CameraDescription camera;
 
-  const TakePictureScreen({
-    Key key,
-    @required this.camera,
-  }) : super(key: key);
+  // const TakePictureScreen({
+  //   Key key,
+  //   @required this.camera,
+  // }) : super(key: key);
 
   @override
   TakePictureScreenState createState() => TakePictureScreenState();
 }
 
 class TakePictureScreenState extends State<TakePictureScreen> {
+  CameraDescription camera;
   CameraController _controller;
   Future<void> _initializeControllerFuture;
 
   @override
   void initState() {
     super.initState();
-    // To display the current output from the Camera,
-    // create a CameraController.
-    _controller = CameraController(
-      // Get a specific camera from the list of available cameras.
-      widget.camera,
-      // Define the resolution to use.
-      ResolutionPreset.medium,
-    );
-
-    // Next, initialize the controller. This returns a Future.
-    _initializeControllerFuture = _controller.initialize();
+    getCamera();
   }
 
   @override
@@ -68,10 +60,44 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     super.dispose();
   }
 
+  Future<void> getCamera() async {
+// Obtain a list of the available cameras on the device.
+    final cameras = await availableCameras();
+
+    // Get a specific camera from the list of available cameras.
+    final firstCamera = cameras.first;
+
+    camera = firstCamera;
+    // To display the current output from the Camera,
+    // create a CameraController.
+    _controller = CameraController(
+      // Get a specific camera from the list of available cameras.
+      //widget.camera,
+      camera,
+      // Define the resolution to use.
+      ResolutionPreset.veryHigh,
+    );
+
+    // Next, initialize the controller. This returns a Future.
+    _initializeControllerFuture = _controller.initialize();
+  }
+
+  Future<void> _takephoto() async {
+    final pickedFile = await ImagePicker().getImage(source: ImageSource.camera);
+    if (pickedFile == null) print('not image nana'); // null;
+    try {
+      final appDir = await getExternalStorageDirectory();
+      if (appDir != null) {
+        print('save photo is ${appDir.path}');
+        return File(pickedFile.path).copy('${appDir.path}/name.png');
+      }
+    } catch (e) {}
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Take a picture')),
+      appBar: AppBar(title: Text('ถ่ายภาพ')),
       // Wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner
       // until the controller has finished initializing.
@@ -88,8 +114,12 @@ class TakePictureScreenState extends State<TakePictureScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.camera_alt),
-        // Provide an onPressed callback.
+        child: Icon(
+          Icons.camera_alt,
+          color: Colors.white,
+        ),
+        // onPressed: _takephoto,
+        //Provide an onPressed callback.
         onPressed: () async {
           // Take the Picture in a try / catch block. If anything goes wrong,
           // catch the error.
@@ -118,6 +148,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             );
           } catch (e) {
             // If an error occurs, log the error to the console.
+            print('has error');
             print(e);
           }
         },
@@ -134,11 +165,44 @@ class DisplayPictureScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Display the Picture')),
-      // The image is stored as a file on the device. Use the `Image.file`
-      // constructor with the given path to display the image.
-      body: Image.file(File(imagePath)),
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.white),
+          title: Text(
+            'แสดงภาพถ่าย',
+            style: TextStyle(color: Colors.white),
+          ),
+          actions: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {},
+                child: Icon(
+                  Icons.check,
+                  size: 26.0,
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {},
+                child: Icon(
+                  Icons.close,
+                  size: 26.0,
+                ),
+              ),
+            ),
+          ],
+        ),
+        // The image is stored as a file on the device. Use the `Image.file`
+        // constructor with the given path to display the image.
+        body: Image.file(
+          File(imagePath),
+        ),
+      ),
     );
   }
 }

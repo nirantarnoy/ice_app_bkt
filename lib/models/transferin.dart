@@ -10,6 +10,7 @@ class Transferin {
   final String product_id;
   final String product_name;
   final String sale_price;
+  final String transfer_status;
 
   Transferin({
     this.transfer_id,
@@ -21,5 +22,6 @@ class Transferin {
     this.product_id,
     this.product_name,
     this.sale_price,
+    this.transfer_status,
   });
 }

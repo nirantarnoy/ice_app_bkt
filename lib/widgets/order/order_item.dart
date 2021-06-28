@@ -52,7 +52,7 @@ class OrderItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final OrderData orders = Provider.of<OrderData>(context);
     // orders.fetOrders();
-    var formatter = NumberFormat('#,##,##0');
+    var formatter = NumberFormat('#,##,##0.#');
     return Column(
       children: <Widget>[
         Column(children: <Widget>[
@@ -91,7 +91,7 @@ class OrderItem extends StatelessWidget {
         SizedBox(height: 5),
         Expanded(
           child: orders.listorder.isNotEmpty
-              ? _buildordersList(orders.listorder)
+              ? _buildordersList(null)
               : Center(
                   child: Text(
                     "ไม่พบข้อมูล",
