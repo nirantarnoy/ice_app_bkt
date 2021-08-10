@@ -9,14 +9,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class IssueData with ChangeNotifier {
   final String url_to_issue_list_open =
-      "http://119.59.100.74/icesystem/frontend/web/api/journalissue/checkopen";
+      "http://103.253.73.108/icesystem/frontend/web/api/journalissue/checkopen";
 
   final String url_to_issue_list =
-      "http://119.59.100.74/icesystem/frontend/web/api/journalissue/list2";
+      "http://103.253.73.108/icesystem/frontend/web/api/journalissue/list2";
   final String url_to_user_confirm =
-      "http://119.59.100.74/icesystem/frontend/web/api/journalissue/issueconfirm2";
+      "http://103.253.73.108/icesystem/frontend/web/api/journalissue/issueconfirm2";
   final String url_to_user_confirm_cancel =
-      "http://119.59.100.74/icesystem/frontend/web/api/journalissue/issueconfirmcancel";
+      "http://103.253.73.108/icesystem/frontend/web/api/journalissue/issueconfirmcancel";
 
   List<Issueitems> _issue;
   List<Issueitems> get listissue => _issue;

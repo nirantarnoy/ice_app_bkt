@@ -10,15 +10,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 class TransferoutData with ChangeNotifier {
   final String url_to_out_list =
       //  "http://192.168.1.120/icesystem/frontend/web/api/transfer/outlist";
-      "http://119.59.100.74/icesystem/frontend/web/api/transfer/outlistnew";
+      "http://103.253.73.108/icesystem/frontend/web/api/transfer/outlistnew";
   final String url_to_in_list =
       //   "http://192.168.1.120/icesystem/frontend/web/api/transfer/inlist";
-      "http://119.59.100.74/icesystem/frontend/web/api/transfer/inlist";
-  //"http://119.59.100.74/icesystem/frontend/web/api/customer/list";
+      "http://103.253.73.108/icesystem/frontend/web/api/transfer/inlist";
+  //"http://103.253.73.108/icesystem/frontend/web/api/customer/list";
   final String url_to_add_transfer =
       //   "http://192.168.1.120/icesystem/frontend/web/api/transfer/inlist";
-      "http://119.59.100.74/icesystem/frontend/web/api/transfer/addtransfer";
-  //"http://119.59.100.74/icesystem/frontend/web/api/customer/list";
+      "http://103.253.73.108/icesystem/frontend/web/api/transfer/addtransfer";
+  //"http://103.253.73.108/icesystem/frontend/web/api/customer/list";
 
   List<Transferout> _transferout;
   List<Transferout> get listtransferout => _transferout;

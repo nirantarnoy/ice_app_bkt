@@ -8,11 +8,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DeliveryRouteData with ChangeNotifier {
   final String url_to_DeliveryRoute_list =
       //  "http://192.168.1.120/icesystem/frontend/web/api/customer/list";
-      "http://119.59.100.74/icesystem/frontend/web/api/customer/list";
-  //"http://119.59.100.74/icesystem/frontend/web/api/customer/list";
+      "http://103.253.73.108/icesystem/frontend/web/api/customer/list";
+  //"http://103.253.73.108/icesystem/frontend/web/api/customer/list";
   final String url_to_DeliveryRoute_detail =
       // "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
-      "http://119.59.100.74/icesystem/frontend/web/api/customer/detail";
+      "http://103.253.73.108/icesystem/frontend/web/api/customer/detail";
 
   List<DeliveryRoute> _DeliveryRoute;
   List<DeliveryRoute> get listDeliveryRoute => _DeliveryRoute;

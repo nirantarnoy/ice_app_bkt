@@ -52,6 +52,7 @@ dependencies:
   flutter_barcode_scanner: ^1.0.1
   barcode_widget: ^1.5.0
   screenshot: ^1.2.1
+  image_gallery_saver: ^1.6.9
 
 dev_dependencies:
   flutter_test:

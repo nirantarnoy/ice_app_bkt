@@ -9,13 +9,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class TransferinData with ChangeNotifier {
   final String url_to_in_list =
       //   "http://192.168.1.120/icesystem/frontend/web/api/transfer/inlist";
-      "http://119.59.100.74/icesystem/frontend/web/api/transfer/inlist";
+      "http://103.253.73.108/icesystem/frontend/web/api/transfer/inlist";
   final String url_to_find_transfer =
       //   "http://192.168.1.120/icesystem/frontend/web/api/transfer/inlist";
-      "http://119.59.100.74/icesystem/frontend/web/api/transfer/findtransfer";
+      "http://103.253.73.108/icesystem/frontend/web/api/transfer/findtransfer";
   final String url_to_accept_transfer =
       //   "http://192.168.1.120/icesystem/frontend/web/api/transfer/inlist";
-      "http://119.59.100.74/icesystem/frontend/web/api/transfer/accepttransfer";
+      "http://103.253.73.108/icesystem/frontend/web/api/transfer/accepttransfer";
 
   List<Transferin> _transferin;
   List<Transferin> get listtransferin => _transferin;

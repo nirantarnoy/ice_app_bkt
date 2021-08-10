@@ -13,33 +13,33 @@ class OrderData with ChangeNotifier {
   final String server_api = "";
   final String url_to_order =
       //   "http://192.168.1.120/icesystem/frontend/web/api/order/list";
-      "http://119.59.100.74/icesystem/frontend/web/api/order/listnew";
+      "http://103.253.73.108/icesystem/frontend/web/api/order/listnew";
   final String url_to_order_detail =
       //   "http://192.168.1.120/icesystem/frontend/web/api/order/listbycustomer";
-      "http://119.59.100.74/icesystem/frontend/web/api/order/listbycustomer";
+      "http://103.253.73.108/icesystem/frontend/web/api/order/listbycustomer";
   final String url_to_add_order =
-      "http://119.59.100.74/icesystem/frontend/web/api/order/addorder";
+      "http://103.253.73.108/icesystem/frontend/web/api/order/addorder";
   final String url_to_add_order_new =
-      "http://119.59.100.74/icesystem/frontend/web/api/order/addordernew";
+      "http://103.253.73.108/icesystem/frontend/web/api/order/addordernew";
   // "http://192.168.1.120/icesystem/frontend/web/api/order/addorder";
   final String url_to_add_order_transfer =
-      "http://119.59.100.74/icesystem/frontend/web/api/order/addordertransfer";
+      "http://103.253.73.108/icesystem/frontend/web/api/order/addordertransfer";
   // "http://192.168.1.120/icesystem/frontend/web/api/order/addorder";
   final String url_to_update_order =
-      "http://119.59.100.74/icesystem/frontend/web/api/order/updateorder";
+      "http://103.253.73.108/icesystem/frontend/web/api/order/updateorder";
   //   "http://192.168.1.120/icesystem/frontend/web/api/order/updateorder";
   final String url_to_delete_order_customer =
       //    "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorder";
-      "http://119.59.100.74/icesystem/frontend/web/api/order/deleteordercustomer";
+      "http://103.253.73.108/icesystem/frontend/web/api/order/deleteordercustomer";
   final String url_to_update_order_detail =
       //   "http://192.168.1.120/icesystem/frontend/web/api/order/updateorderdetail";
-      "http://119.59.100.74/icesystem/frontend/web/api/order/updateorderdetail";
+      "http://103.253.73.108/icesystem/frontend/web/api/order/updateorderdetail";
   final String url_to_delete_order_detail =
-      "http://119.59.100.74/icesystem/frontend/web/api/order/deleteorderline";
+      "http://103.253.73.108/icesystem/frontend/web/api/order/deleteorderline";
   final String url_to_close_order =
-      "http://119.59.100.74/icesystem/frontend/web/api/order/closeorder";
+      "http://103.253.73.108/icesystem/frontend/web/api/order/closeorder";
   final String url_to_cancel_order =
-      "http://119.59.100.74/icesystem/frontend/web/api/order/cancelorder";
+      "http://103.253.73.108/icesystem/frontend/web/api/order/cancelorder";
   //  "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorderline";
 
   ///// for common
@@ -630,8 +630,13 @@ class OrderData with ChangeNotifier {
     return completed;
   }
 
-  Future<bool> cancelOrder(String line_id, String customer_code,
-      String order_no, String product_code, String reanson) async {
+  Future<bool> cancelOrder(
+      String line_id,
+      String customer_id,
+      String customer_code,
+      String order_no,
+      String product_code,
+      String reanson) async {
     bool completed = false;
     //String _order_date = new DateTime.now().toString();
     String _company_id = "";
@@ -647,13 +652,14 @@ class OrderData with ChangeNotifier {
       'line_id': line_id,
       'company_id': _company_id,
       'branch_id': _branch_id,
+      'customer_id': customer_id,
       'customer_code': customer_code,
       'order_no': order_no,
       'product_code': product_code,
       'route_name': _route_name,
       'reason': reanson
     };
-    print('data will save close order is ${orderData}');
+    print('data will cancel order is ${orderData}');
     try {
       http.Response response;
       response = await http.post(Uri.encodeFull(url_to_cancel_order),

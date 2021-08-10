@@ -5,11 +5,14 @@ import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:ice_app_new/models/transfer_total.dart';
 import 'package:ice_app_new/pages/assetcheck.dart';
 import 'package:ice_app_new/pages/createorder_new.dart';
+import 'package:ice_app_new/pages/createplan.dart';
 import 'package:ice_app_new/pages/home.dart';
 import 'package:ice_app_new/pages/journalissue.dart';
 import 'package:ice_app_new/pages/offlinetest.dart';
 import 'package:ice_app_new/pages/ordercheckout.dart';
 import 'package:ice_app_new/pages/paymentcheckout.dart';
+import 'package:ice_app_new/pages/plancheckout.dart';
+import 'package:ice_app_new/pages/plandetail.dart';
 import 'package:ice_app_new/pages/take_photo.dart';
 import 'package:ice_app_new/pages/transferin_review.dart';
 import 'package:ice_app_new/pages/transferout_review.dart';
@@ -130,6 +133,9 @@ class _MyAppState extends State<MyApp> {
             TransferInReviewPage.routeName: (ctx) => TransferInReviewPage(),
             TransferOutReviewPage.routeName: (ctx) => TransferOutReviewPage(),
             AssetcheckPage.routeName: (ctx) => AssetcheckPage(),
+            CreateplanPage.routeName: (ctx) => CreateplanPage(),
+            PlancheckoutPage.routeName: (ctx) => PlancheckoutPage(),
+            PlanDetailPage.routeName: (ctx) => PlanDetailPage(),
             //TakePictureScreen.routeName: (ctx) => TakePictureScreen(),
           },
         );

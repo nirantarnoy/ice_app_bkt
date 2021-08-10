@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:ice_app_new/models/plan.dart';
+import 'package:ice_app_new/pages/plandetail.dart';
 import 'package:ice_app_new/providers/customer.dart';
 import 'package:ice_app_new/providers/plan.dart';
 import 'package:intl/intl.dart';
@@ -271,8 +272,8 @@ class _ItemsState extends State<Items> {
       onDismissed: (direction) {
         print(widget._plans[widget._index].id);
         setState(() {
-          Provider.of<OrderData>(context, listen: false)
-              .removeOrderDetail(widget._id);
+          Provider.of<PlanData>(context, listen: false)
+              .removePlanCustomer(widget._id, widget._customer_id);
           widget._plans.removeAt(widget._index);
         });
         Scaffold.of(context).showSnackBar(SnackBar(
@@ -296,41 +297,23 @@ class _ItemsState extends State<Items> {
       },
       child: GestureDetector(
         onTap: () {
-          var setData = Provider.of<OrderData>(context, listen: false);
-          setData.idOrder = int.parse(widget._id);
-          setData.orderCustomerId = widget._customer_id;
-          Navigator.of(context).pushNamed(OrderDetailPage.routeName,
-              arguments: {
-                'customer_id': widget._customer_id,
-                'order_id': widget._id
-              });
+          var setData = Provider.of<PlanData>(context, listen: false);
+          setData.idPlan = int.parse(widget._id);
+          setData.planCustomerId = widget._customer_id;
+          Navigator.of(context).pushNamed(PlanDetailPage.routeName, arguments: {
+            'customer_id': widget._customer_id,
+            'plan_id': widget._id
+          });
         }, // Navigator.of(context).pushNamed(OrderDetailPage.routeName),
         child: Column(
           children: <Widget>[
             ListTile(
-              // leading: RaisedButton(
-              //     color:
-              //         _payment_method_id == "1" ? Colors.green : Colors.purple[300],
-              //     onPressed: () {},
-              //     child: Text(
-              //       "$_payment_method",
-              //       style: TextStyle(color: Colors.white),
-              //     )),
-              // leading: Chip(
-              //   label:
-              //       Text("${_order_no}", style: TextStyle(color: Colors.white)),
-              //   backgroundColor: Colors.green[500],
-              // ),
-              leading: Chip(
-                label: Text(''),
-                backgroundColor: Colors.blue[200],
-              ),
               title: Text(
                 "${widget._customer_name}",
                 style: TextStyle(fontSize: 14, color: Colors.black),
               ),
               subtitle: Text(
-                "",
+                "${widget._trans_date}",
                 style: TextStyle(color: Colors.cyan[700]),
               ),
               trailing: Column(),

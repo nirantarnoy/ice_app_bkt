@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:ice_app_new/pages/createorder.dart';
 import 'package:ice_app_new/pages/createorder_new.dart';
+import 'package:ice_app_new/pages/createplan.dart';
 import 'package:ice_app_new/pages/main_test.dart';
 import 'package:ice_app_new/providers/plan.dart';
 import 'package:ice_app_new/widgets/plan/plan_item.dart';
@@ -138,7 +139,7 @@ class _PlanPageState extends State<PlanPage> {
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.of(context).pushNamed(CreateorderNewPage.routeName);
+                  Navigator.of(context).pushNamed(CreateplanPage.routeName);
                 },
                 child: Icon(
                   Icons.add_circle_outline,

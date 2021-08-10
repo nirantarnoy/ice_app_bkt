@@ -6,13 +6,17 @@ import 'package:currencies/currencies.dart';
 import 'package:flutter/material.dart';
 import 'package:ice_app_new/pages/order.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:ice_app_new/models/order_detail.dart';
 
 import 'package:provider/provider.dart';
 
 import 'package:ice_app_new/providers/order.dart';
 import 'package:ice_app_new/models/orders.dart';
+
+enum SingingCharacter { reason1, reason2, reason3 }
 
 class OrderDetailPage extends StatefulWidget {
   static const routeName = '/orderdetail';
@@ -30,9 +34,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   final ScreenshotController screenshotController =
       ScreenshotController(); // screenshot capture
   File screenshot;
+  SingingCharacter _character = SingingCharacter.reason1;
   final Map<String, dynamic> _formData = {
     'cancel_reason': '',
   };
+
   var _isInit = true;
   var _isLoading = false;
 
@@ -45,6 +51,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   @override
   initState() {
     _orderFuture = _obtainOrderFuture();
+    _formData['cancel_reason'] = 'คีย์ผิด';
+    print(_formData['cancel_reason']);
     super.initState();
   }
 
@@ -72,10 +80,38 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         .capture(delay: Duration(milliseconds: 10))
         .then((capturedImage) async {
       ShowCapturedWidget(context, capturedImage);
+      saveImage(capturedImage);
     }).catchError((onError) {
       print(onError);
     });
     // final Uint8List bytes = await widget.screenshot.
+  }
+
+  _buildScreenshot2() async {
+    final directory = (await getTemporaryDirectory()).path;
+    String fileName = DateTime.now().microsecondsSinceEpoch.toString();
+    String imagePath = '$directory/$fileName';
+
+    screenshotController
+        .captureAndSave(directory,
+            fileName: fileName, delay: Duration(milliseconds: 10))
+        .then((value) => _prinImage(imagePath));
+
+    // print('file name screenshot is ${directory}');
+  }
+
+  Future<String> saveImage(Uint8List bytes) async {
+    // final directory = (await getApplicationDocumentsDirectory()).path;
+    // final image = File('$directory/slip.png');
+    // image.writeAsBytesSync(bytes);
+
+    final time = DateTime.now()
+        .toIso8601String()
+        .replaceAll('.', '-')
+        .replaceAll(':', '-');
+    final name = 'screenshot_$time';
+    final result = await ImageGallerySaver.saveImage(bytes, name: name);
+    return result['filePath'];
   }
 
   Future<dynamic> ShowCapturedWidget(
@@ -90,9 +126,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           title: Text("พิมพ์สลิป"),
         ),
         body: Center(
-            child: capturedImage != null
-                ? Image.memory(capturedImage)
-                : Container()),
+          child:
+              capturedImage != null ? Image.memory(capturedImage) : Container(),
+        ),
+        // body: Center(child: ,),
       ),
     );
   }
@@ -104,25 +141,71 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   //}
 
   Widget _buildreason() {
-    return TextFormField(
-      keyboardType: TextInputType.text,
-      style: TextStyle(fontSize: 16),
-      textAlign: TextAlign.left,
-      decoration: InputDecoration(
-          labelText: 'ระบุเหตุผล', filled: true, fillColor: Colors.white),
-      validator: (String value) {
-        if (value.isEmpty || value.length < 1) {
-          return 'กรุณากรอกเหตุ';
-        }
-      },
-      onSaved: (String value) {
-        _formData['cancel_reason'] = value;
-      },
+    // return TextFormField(
+    //   keyboardType: TextInputType.text,
+    //   style: TextStyle(fontSize: 16),
+    //   textAlign: TextAlign.left,
+    //   decoration: InputDecoration(
+    //       labelText: 'ระบุเหตุผล', filled: true, fillColor: Colors.white),
+    //   validator: (String value) {
+    //     if (value.isEmpty || value.length < 1) {
+    //       return 'กรุณากรอกเหตุ';
+    //     }
+    //   },
+    //   onSaved: (String value) {
+    //     _formData['cancel_reason'] = value;
+    //   },
+    // );
+    return Column(
+      children: <Widget>[
+        ListTile(
+          title: const Text('คีย์ผิด'),
+          leading: Radio<SingingCharacter>(
+            value: SingingCharacter.reason1,
+            groupValue: _character,
+            onChanged: (SingingCharacter value) {
+              setState(() {
+                _character = value;
+                _formData['cancel_reason'] = 'คีย์ผิด';
+                print(_formData['cancel_reason']);
+              });
+            },
+          ),
+        ),
+        ListTile(
+          title: const Text('ยอดเบิ้ล'),
+          leading: Radio<SingingCharacter>(
+            value: SingingCharacter.reason2,
+            groupValue: _character,
+            onChanged: (SingingCharacter value) {
+              setState(() {
+                _character = value;
+                _formData['cancel_reason'] = 'ยอดเบิ้ล';
+                print(_formData['cancel_reason']);
+              });
+            },
+          ),
+        ),
+        ListTile(
+          title: const Text('อื่นๆ'),
+          leading: Radio<SingingCharacter>(
+            value: SingingCharacter.reason3,
+            groupValue: _character,
+            onChanged: (SingingCharacter value) {
+              setState(() {
+                _character = value;
+                _formData['cancel_reason'] = 'อื่นๆ';
+                print(_formData['cancel_reason']);
+              });
+            },
+          ),
+        ),
+      ],
     );
   }
 
-  void _submitForm(String customer_code, String order_no, String product_code,
-      String line_id) async {
+  void _submitForm(String customer_code, String customer_id, String order_no,
+      String product_code, String line_id) async {
     if (!_formKey.currentState.validate()) {
       return;
     }
@@ -130,8 +213,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     _formKey.currentState.save();
 
     Provider.of<OrderData>(context, listen: false)
-        .cancelOrder(line_id, customer_code, order_no, product_code,
-            _formData['cancel_reason'])
+        .cancelOrder(line_id, customer_id, customer_code, order_no,
+            product_code, _formData['cancel_reason'])
         .then(
       (_) {
         Scaffold.of(context).showSnackBar(SnackBar(
@@ -162,8 +245,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     });
   }
 
-  Widget _buildordersList(List<OrderDetail> orders, String customer_name,
-      String order_date, String order_no) {
+  Widget _buildordersList(List<OrderDetail> orders, String customer_id,
+      String customer_name, String order_date, String order_no) {
     final orderdata = Provider.of<OrderData>(context, listen: false);
     var formatter2 = NumberFormat('#,##,##0.#');
     final double deviceWidth = MediaQuery.of(context).size.width;
@@ -254,8 +337,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                               borderRadius: BorderRadius.circular(10)),
                           child: Container(
                             width: MediaQuery.of(context).size.width - 10,
-                            height: MediaQuery.of(context).size.height - 300,
-                            // height: MediaQuery.of(context).size.height - 100,
+                            // height: MediaQuery.of(context).size.height - 300,
+                            height: MediaQuery.of(context).size.height - 100,
                             // width: double.infinity,
                             // height: double.infinity,
                             child: Form(
@@ -318,6 +401,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                                   color: Colors.white)),
                                           onPressed: () {
                                             _submitForm(
+                                              customer_id,
                                               customer_name,
                                               order_no,
                                               orders[index].product_code,
@@ -515,6 +599,28 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     //   }
     // });
   }
+
+  Future<dynamic> _prinImage(String captureimage) async {
+    print('$captureimage');
+    //SIZE
+    // 0- normal size text
+    // 1- only bold text
+    // 2- bold with medium text
+    // 3- bold with large text
+    //ALIGN
+    // 0- ESC_ALIGN_LEFT
+    // 1- ESC_ALIGN_CENTER
+    // 2- ESC_ALIGN_RIGHT
+    int total_amount = 0;
+    DateTime _order_date = new DateTime.now();
+
+    bluetooth.isConnected.then((isConnected) {
+      if (isConnected) {
+        bluetooth.printImage(captureimage);
+        bluetooth.paperCut();
+      }
+    });
+  }
   //   Future _printThermalBluetooth() async {
   //   print('_printThermalBluetooth');
   //   this
@@ -710,6 +816,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                             builder: (context, orderdetails, _) =>
                                 _buildordersList(
                                     orderdetails.listorder_detail,
+                                    loadCustomerorder.customer_id,
                                     loadCustomerorder.customer_code,
                                     loadCustomerorder.order_date,
                                     loadCustomerorder.order_no),
@@ -727,6 +834,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                             _testPrint(
                                                 orderdetails.listorder_detail,
                                                 'Test');
+                                            //_buildScreenshot2(); // screenshot capture
                                             //_buildScreenshot(); // screenshot capture
                                           },
                                           child: Text(

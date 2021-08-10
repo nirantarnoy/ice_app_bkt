@@ -277,7 +277,7 @@ class _AuthPageState extends State<AuthPage> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[Text('version 0.8')],
+                        children: <Widget>[Text('version 1.0')],
                       )
                     ],
                   ),
@@ -290,3 +290,4 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 }
+// 0.9 แผนผลิต

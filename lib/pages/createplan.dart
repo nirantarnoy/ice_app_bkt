@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ice_app_new/models/Addplan.dart';
 import 'package:ice_app_new/models/car.dart';
 import 'package:ice_app_new/pages/ordercheckout.dart';
+import 'package:ice_app_new/pages/plancheckout.dart';
 import 'package:ice_app_new/providers/paymentreceive.dart';
 import 'package:ice_app_new/providers/product.dart';
 import 'package:ice_app_new/widgets/order/order_item.dart';
@@ -15,24 +17,22 @@ import 'package:ice_app_new/providers/issuedata.dart';
 import 'package:ice_app_new/models/customers.dart';
 import 'package:ice_app_new/widgets/sale/sale_product_item.dart';
 import 'package:ice_app_new/providers/customer.dart';
-import 'package:ice_app_new/providers/order.dart';
 
-import 'package:ice_app_new/models/addorder.dart';
 import 'package:ice_app_new/models/products.dart';
 import 'package:ice_app_new/models/issueitems.dart';
 
-class CreateorderNewPage extends StatefulWidget {
-  static const routeName = '/createordernew';
+class CreateplanPage extends StatefulWidget {
+  static const routeName = '/createplan';
   @override
-  _CreateorderNewPageState createState() => _CreateorderNewPageState();
+  _CreateplanPageState createState() => _CreateplanPageState();
 }
 
-class _CreateorderNewPageState extends State<CreateorderNewPage> {
+class _CreateplanPageState extends State<CreateplanPage> {
   final TextEditingController _typeAheadController = TextEditingController();
   String selectedValue;
   String selectedValueName;
   int isuserconfirm = 0;
-  List<Addorder> orderItems = [];
+  List<Addplan> orderItems = [];
 
   var _isInit = true;
   var _isLoading = false;
@@ -142,7 +142,7 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
                         //   Icons.check,
                         //   color: Colors.green,
                         // ),
-                        Text("รายการละเอียดสินค้า"),
+                        Text("รายการสินค้า"),
                         SizedBox(width: 10),
                         Spacer(),
                         IconButton(
@@ -186,25 +186,25 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
                       children: <Widget>[
                         Center(
                           child: Row(children: <Widget>[
-                            Text(
-                              "ราคา",
-                              style: TextStyle(
-                                  color: Colors.black87, fontSize: 18),
-                            ),
-                            Text(
-                              " ${price}",
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 20),
-                            ),
-                            Text(
-                              " คงเหลือ",
-                              style: TextStyle(
-                                  color: Colors.black87, fontSize: 18),
-                            ),
-                            Text(
-                              " ${onhand}",
-                              style: TextStyle(color: Colors.red, fontSize: 20),
-                            ),
+                            // Text(
+                            //   "ราคา",
+                            //   style: TextStyle(
+                            //       color: Colors.black87, fontSize: 18),
+                            // ),
+                            // Text(
+                            //   " ${price}",
+                            //   style:
+                            //       TextStyle(color: Colors.black, fontSize: 20),
+                            // ),
+                            // Text(
+                            //   " คงเหลือ",
+                            //   style: TextStyle(
+                            //       color: Colors.black87, fontSize: 18),
+                            // ),
+                            // Text(
+                            //   " ${onhand}",
+                            //   style: TextStyle(color: Colors.red, fontSize: 20),
+                            // ),
                           ]),
                         ),
                       ],
@@ -227,32 +227,32 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
                           style: TextStyle(
                               fontSize: 40, color: Colors.deepPurple[400]),
                           onChanged: (String value) {
-                            if (num.tryParse('$value').toDouble() >
-                                num.tryParse('$onhand').toDouble()) {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: Text(
-                                        'พบข้อผิดพลาด',
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                      content:
-                                          Text('จำนวนขายมากกว่าจำนวนคงเหลือ'),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop(false);
-                                            },
-                                            child: Text('ตกลง'))
-                                      ],
-                                    );
-                                  });
-                              _saleqtyTextController.text = onhand.toString();
-                            } else {
-                              // print('can sale');
+                            // if (num.tryParse('$value').toDouble() >
+                            //     num.tryParse('$onhand').toDouble()) {
+                            //   showDialog(
+                            //       context: context,
+                            //       builder: (context) {
+                            //         return AlertDialog(
+                            //           title: Text(
+                            //             'พบข้อผิดพลาด',
+                            //             style: TextStyle(color: Colors.red),
+                            //           ),
+                            //           content:
+                            //               Text('จำนวนขายมากกว่าจำนวนคงเหลือ'),
+                            //           actions: <Widget>[
+                            //             FlatButton(
+                            //                 onPressed: () {
+                            //                   Navigator.of(context).pop(false);
+                            //                 },
+                            //                 child: Text('ตกลง'))
+                            //           ],
+                            //         );
+                            //       });
+                            //   _saleqtyTextController.text = onhand.toString();
+                            // } else {
+                            //   // print('can sale');
 
-                            }
+                            // }
                           },
                         )),
                       ],
@@ -279,21 +279,13 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
                               if (num.tryParse(_saleqtyTextController.text)
                                       .toDouble() >
                                   0) {
-                                orderItems.forEach((element) {
-                                  orderItems.removeWhere((item) =>
-                                      item.product_id == product_id &&
-                                      item.qty == _saleqtyTextController.text);
-                                });
-
-                                final Addorder order_item = new Addorder(
+                                final Addplan order_item = new Addplan(
                                   customer_id: selectedValue,
                                   customer_name: selectedValueName,
                                   product_id: product_id,
                                   product_code: product_code,
                                   product_name: product_name,
                                   qty: _saleqtyTextController.text,
-                                  sale_price: price,
-                                  price_group_id: price_group_id,
                                 );
                                 setState(() {
                                   orderItems.add(order_item);
@@ -487,7 +479,7 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
           title: Text(
-            'ทำรายการขายสินค้า',
+            'ทำรายการสั่งผลิต',
             style: TextStyle(
               color: Colors.white,
             ),
@@ -703,7 +695,7 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
                             return false;
                           } else {
                             Navigator.of(context).pushNamed(
-                                OrdercheckoutPage.routeName,
+                                PlancheckoutPage.routeName,
                                 arguments: {
                                   'orderitemlist': orderItems,
                                 });

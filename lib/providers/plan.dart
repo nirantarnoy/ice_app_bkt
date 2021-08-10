@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'package:ice_app_new/models/addorder.dart';
+import 'package:ice_app_new/models/Addplan.dart';
 
 import 'package:ice_app_new/models/plan.dart';
 import 'package:ice_app_new/models/plan_detail.dart';
@@ -12,14 +12,16 @@ class PlanData with ChangeNotifier {
   final String server_api = "";
   final String url_to_plan =
       //   "http://192.168.1.120/icesystem/frontend/web/api/order/list";
-      "http://119.59.100.74/icesystem/frontend/web/api/plan/listplan";
+      "http://103.253.73.108/icesystem/frontend/web/api/plan/listplan";
   final String url_to_add_plan =
-      "http://119.59.100.74/icesystem/frontend/web/api/plan/addplan";
+      "http://103.253.73.108/icesystem/frontend/web/api/plan/addplan";
   final String url_to_delete_plan =
-      "http://119.59.100.74/icesystem/frontend/web/api/plan/deleteplan";
+      "http://103.253.73.108/icesystem/frontend/web/api/plan/deleteplan";
   //  "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorderline";
   final String url_to_plan_by_customer =
-      "http://119.59.100.74/icesystem/frontend/web/api/plan/listplanbycustomer";
+      "http://103.253.73.108/icesystem/frontend/web/api/plan/listplanbycustomer";
+  final String url_to_delete_plan_line =
+      "http://103.253.73.108/icesystem/frontend/web/api/plan/deleteplanline";
 
   ///// for common
   bool _isLoading = false;
@@ -107,7 +109,7 @@ class PlanData with ChangeNotifier {
   }
 
   Plan findById(String id) {
-    return listplan.firstWhere((order) => order.route_id == id);
+    return listplan.firstWhere((plan) => plan.id == id);
   }
 
   Future<dynamic> fetPlan() async {
@@ -175,12 +177,9 @@ class PlanData with ChangeNotifier {
   }
 
   Future<bool> addPlan(
-    String product_id,
-    String qty,
-    String price,
     String customer_id,
-    String issue_id,
-    String payment_type_id,
+    List<Addplan> listdata,
+    String pay_type,
   ) async {
     String _user_id = "";
     String _route_id = "";
@@ -190,7 +189,7 @@ class PlanData with ChangeNotifier {
 
     bool _iscomplated = false;
 
-    String _order_date = new DateTime.now().toString();
+    String _plan_date = new DateTime.now().toString();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('user_id') != null) {
       _user_id = prefs.getString('user_id');
@@ -200,21 +199,24 @@ class PlanData with ChangeNotifier {
       _branch_id = prefs.getString('branch_id');
     }
 
+    var jsonx = listdata
+        .map((e) => {
+              'product_id': e.product_id,
+              'qty': e.qty,
+            })
+        .toList();
+
     final Map<String, dynamic> orderData = {
-      'payment_type_id': payment_type_id,
-      'order_date': _order_date,
-      'product_id': product_id,
+      'plan_date': _plan_date,
       'customer_id': customer_id,
-      'qty': qty,
-      'price': price,
       'user_id': _user_id,
-      'issue_id': issue_id,
       'route_id': _route_id,
       'car_id': _car_id,
       'company_id': _company_id,
-      'branch_id': _branch_id
+      'branch_id': _branch_id,
+      'data': jsonx,
     };
-    print('data will save is ${orderData}');
+    print('data will save order new is ${orderData}');
     try {
       http.Response response;
       response = await http.post(Uri.encodeFull(url_to_add_plan),
@@ -277,48 +279,90 @@ class PlanData with ChangeNotifier {
     } catch (_) {}
   }
 
-  // void removeOrderCustomer(String order_id, String customer_id) async {
-  //   // listorder.remove(id);
-  //   // print('remove order');
-  //   final Map<String, dynamic> delete_id = {
-  //     'order_id': order_id,
-  //     'customer_id': customer_id
-  //   };
+  Future<bool> cancelPlan(String line_id, String customer_code, String order_no,
+      String product_code, String reanson) async {
+    bool completed = false;
+    // //String _order_date = new DateTime.now().toString();
+    // String _company_id = "";
+    // String _branch_id = "";
+    // String _route_name = "";
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // if (prefs.getString('user_id') != null) {
+    //   _company_id = prefs.getString('company_id');
+    //   _branch_id = prefs.getString('branch_id');
+    //   _route_name = prefs.getString('emp_route_name');
+    // }
+    // final Map<String, dynamic> orderData = {
+    //   'line_id': line_id,
+    //   'company_id': _company_id,
+    //   'branch_id': _branch_id,
+    //   'customer_code': customer_code,
+    //   'order_no': order_no,
+    //   'product_code': product_code,
+    //   'route_name': _route_name,
+    //   'reason': reanson
+    // };
+    // print('data will save close order is ${orderData}');
+    // try {
+    //   http.Response response;
+    //   response = await http.post(Uri.encodeFull(url_to_cancel_plan),
+    //       headers: {'Content-Type': 'application/json'},
+    //       body: json.encode(orderData));
 
-  //   print('remove data is ${delete_id}');
+    //   if (response.statusCode == 200) {
+    //     Map<String, dynamic> res = json.decode(response.body);
+    //     print('data cancel order is  ${res["data"]}');
+    //     completed = true;
+    //   }
+    // } catch (_) {
+    //   print('cannot cancel order');
+    // }
+    // print(completed);
+    return completed;
+  }
 
-  //   try {
-  //     http.Response response;
-  //     response = await http.post(Uri.encodeFull(url_to_delete_order_customer),
-  //         headers: {'Content-Type': 'application/json'},
-  //         body: json.encode(delete_id));
+  void removePlanCustomer(String order_id, String customer_id) async {
+    // listorder.remove(id);
+    // print('remove order');
+    final Map<String, dynamic> delete_id = {
+      'plan_id': order_id,
+      'customer_id': customer_id
+    };
 
-  //     if (response.statusCode == 200) {
-  //       Map<String, dynamic> res = json.decode(response.body);
-  //       print('data delete length is ${res["data"]}');
-  //     }
-  //   } catch (_) {
-  //     print('cannot remove order');
-  //   }
-  //   print('remove order customer $customer_id');
-  //   notifyListeners();
-  // }
+    print('remove data is ${delete_id}');
 
-  // void removeOrderDetail(String line_id) async {
-  //   final Map<String, dynamic> delete_id = {'id': line_id};
+    try {
+      http.Response response;
+      response = await http.post(Uri.encodeFull(url_to_delete_plan),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(delete_id));
 
-  //   try {
-  //     http.Response response;
-  //     response = await http.post(Uri.encodeFull(url_to_delete_order_detail),
-  //         headers: {'Content-Type': 'application/json'},
-  //         body: json.encode(delete_id));
+      if (response.statusCode == 200) {
+        Map<String, dynamic> res = json.decode(response.body);
+        print('data delete length is ${res["data"]}');
+      }
+    } catch (_) {
+      print('cannot remove order');
+    }
+    print('remove order customer $customer_id');
+    notifyListeners();
+  }
 
-  //     if (response.statusCode == 200) {
-  //       Map<String, dynamic> res = json.decode(response.body);
-  //       print('data delete length is ${res["data"]}');
-  //     }
-  //   } catch (_) {}
-  //   print('remove order line $line_id');
-  //   notifyListeners();
-  // }
+  void removePlanDetail(String line_id) async {
+    final Map<String, dynamic> delete_id = {'id': line_id};
+
+    try {
+      http.Response response;
+      response = await http.post(Uri.encodeFull(url_to_delete_plan_line),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(delete_id));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> res = json.decode(response.body);
+        print('data delete length is ${res["data"]}');
+      }
+    } catch (_) {}
+    print('remove order line $line_id');
+    notifyListeners();
+  }
 }
