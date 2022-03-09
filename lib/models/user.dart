@@ -12,17 +12,20 @@ class User {
   final String emp_car_name;
   final String company_id;
   final String branch_id;
+  final String route_type;
 
-  User(
-      {@required this.id,
-      @required this.username,
-      @required this.emp_code,
-      @required this.emp_name,
-      @required this.emp_photo,
-      @required this.emp_route_id,
-      @required this.emp_route_name,
-      @required this.emp_car_id,
-      @required this.emp_car_name,
-      @required this.company_id,
-      @required this.branch_id});
+  User({
+    @required this.id,
+    @required this.username,
+    @required this.emp_code,
+    @required this.emp_name,
+    @required this.emp_photo,
+    @required this.emp_route_id,
+    @required this.emp_route_name,
+    @required this.emp_car_id,
+    @required this.emp_car_name,
+    @required this.company_id,
+    @required this.branch_id,
+    @required this.route_type,
+  });
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ice_app_new/pages/home.dart';
+//import 'package:ice_app_new/pages/home.dart';
 import 'package:ice_app_new/pages/main_test.dart';
-import 'package:ice_app_new/pages/payment.dart';
-import 'package:ice_app_new/pages/transferout.dart';
-import 'package:ice_app_new/pages/transferin.dart';
+//import 'package:ice_app_new/pages/payment.dart';
+//import 'package:ice_app_new/pages/transferout.dart';
+//import 'package:ice_app_new/pages/transferin.dart';
 
 class PaymentsuccessPage extends StatefulWidget {
   @override

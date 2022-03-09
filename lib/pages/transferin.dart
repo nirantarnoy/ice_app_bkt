@@ -1,18 +1,18 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:ice_app_new/models/transferout.dart';
+//import 'package:ice_app_new/models/transferout.dart';
 import 'package:ice_app_new/providers/transferin.dart';
 
-import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:connectivity/connectivity.dart';
+// import 'package:rflutter_alert/rflutter_alert.dart';
+// import 'package:connectivity/connectivity.dart';
 
 import 'package:provider/provider.dart';
-import 'package:ice_app_new/providers/transferout.dart';
+//import 'package:ice_app_new/providers/transferout.dart';
 import 'package:ice_app_new/widgets/transferin/transferin_item.dart';
 import 'package:ice_app_new/widgets/error/err_api.dart';
-import 'package:ice_app_new/widgets/error/err_internet_con.dart';
-import '../pages/error.dart';
+//import 'package:ice_app_new/widgets/error/err_internet_con.dart';
+//import '../pages/error.dart';
 
 import 'package:ice_app_new/helpers/activity_connection.dart';
 

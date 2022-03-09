@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ice_app_new/pages/journalissue.dart';
+// import 'package:ice_app_new/pages/journalissue.dart';
 import 'package:ice_app_new/pages/main_test.dart';
-import 'package:ice_app_new/pages/order.dart';
+// import 'package:ice_app_new/pages/order.dart';
 
 class IssuesuccessPage extends StatefulWidget {
   @override

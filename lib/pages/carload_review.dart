@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ice_app_new/models/products.dart';
+//import 'package:ice_app_new/models/products.dart';
 import 'package:ice_app_new/models/reviewload.dart';
 import 'package:ice_app_new/pages/issuesuccess.dart';
-import 'package:ice_app_new/pages/journalissue.dart';
+//import 'package:ice_app_new/pages/journalissue.dart';
 import 'package:ice_app_new/providers/issuedata.dart';
+import 'package:ice_app_new/sqlite/providers/customer_price.dart';
+import 'package:ice_app_new/sqlite/providers/db_provider.dart';
 import 'package:provider/provider.dart';
 
 class CarloadReviewPage extends StatefulWidget {
@@ -14,11 +17,31 @@ class CarloadReviewPage extends StatefulWidget {
 }
 
 class _CarloadReviewState extends State<CarloadReviewPage> {
+  @override
+  initState() {
+    _callDb();
+    super.initState();
+  }
+
+  Future _callDb() async {
+    int chk_db = await DbHelper.instance.checkDB();
+    print(chk_db);
+  }
+
+  Future deleteData() async {
+    await DbHelper.instance.deleteCustpriceAll();
+  }
+
+  Future callapidata() async {
+    await Provider.of<CustomerpriceData>(context, listen: false)
+        .fetpriceonline();
+  }
+
   Widget _buildlist(List<ReviewLoadData> issue_items) {
     Widget productCards;
     if (issue_items.isNotEmpty) {
       if (issue_items.length > 0) {
-        //print("has list");
+        print("has list");
         productCards = new ListView.builder(
           itemCount: issue_items.length,
           itemBuilder: (BuildContext context, int index) {
@@ -177,7 +200,8 @@ class _CarloadReviewState extends State<CarloadReviewPage> {
                                 Provider.of<IssueData>(context, listen: false)
                                     .issueconfirm();
                                 // Navigator.of(context).pop(true);
-
+                                // deleteData(); // clear data before
+                                // callapidata(); // insert data to sqlite
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

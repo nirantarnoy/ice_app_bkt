@@ -1,20 +1,21 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:ice_app_new/pages/createorder.dart';
+import 'package:ice_app_new/page_offline/createorder_new_offline.dart';
+//import 'package:ice_app_new/pages/createorder.dart';
 import 'package:ice_app_new/pages/createorder_new.dart';
 import 'package:ice_app_new/pages/main_test.dart';
-import 'package:ice_app_new/widgets/order/order_item.dart';
+//import 'package:ice_app_new/widgets/order/order_item.dart';
 import 'package:ice_app_new/widgets/order/order_item_new.dart';
-import 'package:scoped_model/scoped_model.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+//import 'package:scoped_model/scoped_model.dart';
+//import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:connectivity/connectivity.dart';
 
-import 'package:ice_app_new/helpers/activity_connection.dart';
+//import 'package:ice_app_new/helpers/activity_connection.dart';
 import 'package:provider/provider.dart';
 
 import 'package:ice_app_new/providers/order.dart';
-import 'package:ice_app_new/widgets/error/err_api.dart';
+//import 'package:ice_app_new/widgets/error/err_api.dart';
 
 class OrderPage extends StatefulWidget {
   static const routeName = '/order';
@@ -22,9 +23,12 @@ class OrderPage extends StatefulWidget {
   _OrderPageState createState() => _OrderPageState();
 }
 
-class _OrderPageState extends State<OrderPage> {
+class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
   var _isInit = true;
   var _isLoading = false;
+
+  bool _showBackToTopButton = false;
+  ScrollController _scrollController;
 
   Future _orderFuture;
 
@@ -38,6 +42,18 @@ class _OrderPageState extends State<OrderPage> {
     _checkinternet();
 
     _orderFuture = _obtainOrderFuture();
+    _scrollController = ScrollController()
+      ..addListener(() {
+        setState(() {
+          if (_scrollController.offset >= 400) {
+            print('offset is ${_scrollController.offset}');
+            _showBackToTopButton = true;
+          } else {
+            _showBackToTopButton = false;
+            print('offset is ${_scrollController.offset}');
+          }
+        });
+      });
     // setState(() {
     //   _isLoading = true;
     // });
@@ -69,6 +85,16 @@ class _OrderPageState extends State<OrderPage> {
     // }
     // _isInit = false;
     super.didChangeDependencies();
+  }
+
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToTop() {
+    _scrollController.animateTo(0,
+        duration: Duration(seconds: 3), curve: Curves.linear);
   }
 
   void refreshData() {
@@ -202,6 +228,7 @@ class _OrderPageState extends State<OrderPage> {
               padding: EdgeInsets.only(right: 20.0),
               child: GestureDetector(
                 onTap: () {
+                  //  Navigator.of(context).pushNamed(CreateorderNewOfflinePage.routeName);
                   Navigator.of(context).pushNamed(CreateorderNewPage.routeName);
                 },
                 child: Icon(
@@ -214,6 +241,12 @@ class _OrderPageState extends State<OrderPage> {
           ],
         ),
         body: _buidorderlist(),
+        floatingActionButton: _showBackToTopButton == false
+            ? null
+            : FloatingActionButton(
+                onPressed: _scrollToTop,
+                child: Icon(Icons.arrow_upward),
+              ),
       ),
     );
   }

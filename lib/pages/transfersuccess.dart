@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ice_app_new/pages/Transfer.dart';
 import 'package:ice_app_new/pages/main_test.dart';
-import 'package:ice_app_new/pages/transferout.dart';
-import 'package:ice_app_new/pages/transferin.dart';
 
 class TransfersuccessPage extends StatefulWidget {
   @override

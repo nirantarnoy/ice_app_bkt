@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:ice_app_new/models/car.dart';
+//import 'package:ice_app_new/models/car.dart';
 import 'package:ice_app_new/pages/ordercheckout.dart';
 import 'package:ice_app_new/providers/paymentreceive.dart';
 import 'package:ice_app_new/providers/product.dart';
-import 'package:ice_app_new/widgets/order/order_item.dart';
+import 'package:ice_app_new/sqlite/providers/db_provider.dart';
+//import 'package:ice_app_new/widgets/order/order_item.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
@@ -12,14 +13,14 @@ import 'package:ice_app_new/providers/customer.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:ice_app_new/providers/issuedata.dart';
 
-import 'package:ice_app_new/models/customers.dart';
-import 'package:ice_app_new/widgets/sale/sale_product_item.dart';
-import 'package:ice_app_new/providers/customer.dart';
-import 'package:ice_app_new/providers/order.dart';
+// import 'package:ice_app_new/models/customers.dart';
+// import 'package:ice_app_new/widgets/sale/sale_product_item.dart';
+// import 'package:ice_app_new/providers/customer.dart';
+// import 'package:ice_app_new/providers/order.dart';
 
 import 'package:ice_app_new/models/addorder.dart';
 import 'package:ice_app_new/models/products.dart';
-import 'package:ice_app_new/models/issueitems.dart';
+//import 'package:ice_app_new/models/issueitems.dart';
 
 class CreateorderNewPage extends StatefulWidget {
   static const routeName = '/createordernew';
@@ -50,31 +51,31 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
 
   @override
   void didChangeDependencies() {
-    if (_isInit) {
-      Provider.of<CustomerData>(context, listen: false)
-          .fetCustomers()
-          .then((_) {
-        setState(() {
-          _isLoading = false;
+    // if (_isInit) {
+    //   Provider.of<CustomerData>(context, listen: false)
+    //       .fetCustomers()
+    //       .then((_) {
+    //     setState(() {
+    //       _isLoading = false;
 
-          // print('issue id is ${selectedIssue}');
-        });
-      });
+    //       // print('issue id is ${selectedIssue}');
+    //     });
+    //   });
 
-      // setState(() {
-      //   _isLoading = true;
+    //   // setState(() {
+    //   //   _isLoading = true;
 
-      // });
+    //   // });
 
-      // Provider.of<ProductData>(context, listen: false)
-      //     .fetProducts("")
-      //     .then((_) {
-      //   setState(() {
-      //     _isLoading = false;
-      //   });
-      // });
-    }
-    _isInit = false;
+    //   // Provider.of<ProductData>(context, listen: false)
+    //   //     .fetProducts("")
+    //   //     .then((_) {
+    //   //   setState(() {
+    //   //     _isLoading = false;
+    //   //   });
+    //   // });
+    // }
+    // _isInit = false;
     super.didChangeDependencies();
   }
 
@@ -373,6 +374,7 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
                   child: Hero(
                     tag: "${products[index].id}",
                     child: Material(
+                      color: Colors.lightGreen[300],
                       child: InkWell(
                         onTap: () {
                           // String _avl = Provider.of<IssueData>(context, listen: false)
@@ -422,23 +424,29 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   // Image.asset("assets/ice_cube.png"),
-                                  Icon(
-                                    Icons.image_rounded,
-                                    color: Colors.deepPurple,
-                                  ),
+                                  // Icon(
+                                  //   Icons.image_rounded,
+                                  //   color: Colors.deepPurple,
+                                  // ),
                                   SizedBox(
                                     height: 10,
                                   ),
                                   Center(
                                     child: Column(
                                       children: [
-                                        Text("${products[index].name}"),
+                                        Text(
+                                          "${products[index].name}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                         SizedBox(
                                           height: 10,
                                         ),
                                         Text("${products[index].sale_price} B",
                                             style: TextStyle(
-                                                color: Colors.blue[800])),
+                                              color: Colors.red[800],
+                                              fontWeight: FontWeight.bold,
+                                            )),
                                       ],
                                     ),
                                   )
@@ -500,6 +508,7 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
           child: Column(
             children: <Widget>[
               Card(
+                shadowColor: Colors.transparent,
                 margin: EdgeInsets.all(8),
                 child: Padding(
                   padding: EdgeInsets.all(2),
@@ -537,7 +546,10 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
                               //   return await BackendService.getSuggestions(pattern);
                               // },
                               suggestionsCallback: (pattern) async {
-                                return await _customer.findCustomer(pattern);
+                                return await _customer
+                                    .findCustomer(pattern); // online
+                                // return await DbHelper.instance
+                                //     .findCustomer(pattern); // offline
                               },
                               itemBuilder: (context, suggestion) {
                                 return ListTile(
@@ -549,11 +561,13 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
 
                               onSuggestionSelected: (items) {
                                 setState(() {
-                                  selectedValue = items.id;
+                                  selectedValue = items.id.toString();
                                   selectedValueName = items.name;
+
                                   IssueData issuedata = Provider.of<IssueData>(
                                       context,
                                       listen: false);
+
                                   issuedata.fetIssueitems();
                                   if (issuedata.userconfirm == 1) {
                                     Provider.of<ProductData>(context,

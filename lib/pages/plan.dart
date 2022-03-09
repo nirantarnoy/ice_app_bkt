@@ -1,19 +1,19 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:ice_app_new/pages/createorder.dart';
-import 'package:ice_app_new/pages/createorder_new.dart';
+// import 'package:ice_app_new/pages/createorder.dart';
+// import 'package:ice_app_new/pages/createorder_new.dart';
 import 'package:ice_app_new/pages/createplan.dart';
 import 'package:ice_app_new/pages/main_test.dart';
 import 'package:ice_app_new/providers/plan.dart';
 import 'package:ice_app_new/widgets/plan/plan_item.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+//import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:connectivity/connectivity.dart';
 
-import 'package:ice_app_new/helpers/activity_connection.dart';
+//import 'package:ice_app_new/helpers/activity_connection.dart';
 import 'package:provider/provider.dart';
 
-import 'package:ice_app_new/widgets/error/err_api.dart';
+//import 'package:ice_app_new/widgets/error/err_api.dart';
 
 class PlanPage extends StatefulWidget {
   static const routeName = '/plan';
@@ -122,7 +122,7 @@ class _PlanPageState extends State<PlanPage> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text(
-            'รายการสั่งผลิต',
+            'รายการสั่งซื้อวัดถัดไป',
             style: TextStyle(color: Colors.white),
           ),
           leading: new IconButton(

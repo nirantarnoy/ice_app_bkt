@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
-import 'package:currencies/currencies.dart';
 import 'package:flutter/material.dart';
 import 'package:ice_app_new/models/plan_detail.dart';
 import 'package:ice_app_new/pages/plan.dart';
@@ -376,7 +375,7 @@ class _PlanDetailPageState extends State<PlanDetailPage> {
                     // ),
                     trailing: plans[index].status != '500'
                         ? Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Text(
                                 "x${plans[index].qty}",
@@ -555,43 +554,43 @@ class _PlanDetailPageState extends State<PlanDetailPage> {
                     padding: EdgeInsets.all(0),
                     child: Column(
                       children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Expanded(
-                              child: Container(
-                                height: 40,
-                                color: Colors.green[700],
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Column(
-                                      children: <Widget>[
-                                        Row(
-                                          children: <Widget>[
-                                            Column(
-                                              children: <Widget>[
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Text(
-                                                    loadCustomerplan
-                                                        .customer_name,
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: Colors.white))
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.start,
+                        //   children: <Widget>[
+                        //     Expanded(
+                        //       child: Container(
+                        //         height: 40,
+                        //         color: Colors.green[700],
+                        //         child: Row(
+                        //           mainAxisAlignment: MainAxisAlignment.center,
+                        //           children: <Widget>[
+                        //             Column(
+                        //               children: <Widget>[
+                        //                 Row(
+                        //                   children: <Widget>[
+                        //                     Column(
+                        //                       children: <Widget>[
+                        //                         SizedBox(
+                        //                           height: 10,
+                        //                         ),
+                        //                         Text(
+                        //                             loadCustomerplan
+                        //                                 .customer_name,
+                        //                             style: TextStyle(
+                        //                                 fontSize: 16,
+                        //                                 color: Colors.white))
+                        //                       ],
+                        //                     ),
+                        //                   ],
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                         SizedBox(
                           height: 10,
                         ),

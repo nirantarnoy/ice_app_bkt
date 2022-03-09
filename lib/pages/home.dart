@@ -1,9 +1,12 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:ice_app_new/models/paymentdaily.dart';
+import 'package:ice_app_new/models/paymentreceive.dart';
 import 'package:ice_app_new/pages/main_test.dart';
-import 'package:ice_app_new/providers/product.dart';
+// import 'package:ice_app_new/providers/product.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ice_app_new/providers/paymentreceive.dart';
 
 import 'package:intl/intl.dart';
 import 'package:dotted_line/dotted_line.dart';
@@ -16,24 +19,58 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  bool _showBackToTopButton = false;
+  ScrollController _scrollController;
+
   Future _orderFuture;
+  Future _paymentdailyFuture;
+
   Future _obtainOrderFuture() {
     Provider.of<OrderData>(context, listen: false).searchBycustomer = '';
     return Provider.of<OrderData>(context, listen: false).fetOrders();
+  }
+
+  Future _obtainPaymentdailyFuture() {
+    return Provider.of<PaymentreceiveData>(context, listen: false)
+        .fetPaymentdaily();
   }
 
   @override
   void initState() {
     _checkinternet();
     _orderFuture = _obtainOrderFuture();
+    _paymentdailyFuture = _obtainPaymentdailyFuture();
     super.initState();
+
+    _scrollController = ScrollController()
+      ..addListener(() {
+        setState(() {
+          if (_scrollController.offset >= 20) {
+            //print('offset is ${_scrollController.offset}');
+            _showBackToTopButton = true;
+          } else {
+            _showBackToTopButton = false;
+            //print('offset is ${_scrollController.offset}');
+          }
+        });
+      });
+  }
+
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToTop() {
+    _scrollController.animateTo(0,
+        duration: Duration(milliseconds: 500), curve: Curves.linear);
   }
 
   Future<void> _checkinternet() async {
     var result = await Connectivity().checkConnectivity();
-
     if (result == ConnectivityResult.none) {
+      Theme.of(context).accentColor;
       _showdialog('พบปัญหา', 'ไม่สามารถเชื่อมต่ออินเตอร์เน็ตได้');
     } else if (result == ConnectivityResult.mobile) {
       //_showdialog('Intenet access', 'You are connect mobile data');
@@ -65,58 +102,242 @@ class _HomePageState extends State<HomePage> {
     return RaisedButton(
         elevation: 5,
         shape: new RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(15.0)),
-        color: Colors.white,
+            borderRadius: new BorderRadius.circular(10.0)),
+        color: Colors.blue,
         child: new Text('จบการขาย',
-            style: new TextStyle(fontSize: 20.0, color: Colors.blue[700])),
+            style: new TextStyle(fontSize: 20.0, color: Colors.white)),
         onPressed: () {
           return showDialog(
             context: context,
-            builder: (context) => AlertDialog(
-              title: Text('ยืนยัน'),
-              content: Text('ต้องการส่งข้อมูลการขายประจำวันใช่หรือไม่'),
-              actions: <Widget>[
-                FlatButton(
-                  onPressed: () async {
-                    bool res =
-                        await Provider.of<OrderData>(context, listen: false)
-                            .closeOrder();
-                    print(res);
-                    if (res == true) {
-                      Fluttertoast.showToast(
-                          msg: "ทำรายการสำเร็จ",
-                          toastLength: Toast.LENGTH_LONG,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.green,
-                          textColor: Colors.white,
-                          fontSize: 16.0);
-                    } else {
-                      Fluttertoast.showToast(
-                          msg: "ทำรายการไม่สำเร็จ",
-                          toastLength: Toast.LENGTH_LONG,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.red,
-                          textColor: Colors.white,
-                          fontSize: 16.0);
-                    }
-                    //Navigator.of(context).pop(true);
-                    // Navigator.pushNamed(context, '/home');
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MainTest()));
-                  },
-                  child: Text('ยืนยัน'),
+            barrierDismissible: false,
+            builder: (context) => Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Icon(
+                      Icons.privacy_tip_outlined,
+                      size: 32,
+                      color: Colors.lightGreen,
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Text(
+                      'ยืนยันการทำรายการ',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Text(
+                      'ต้องการจบการขายวันนี้ใช่หรือไม่',
+                      style: TextStyle(fontWeight: FontWeight.normal),
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: MaterialButton(
+                            color: Colors.lightGreen,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50)),
+                            onPressed: () async {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    child: Container(
+                                      height: 200,
+                                      child: new Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          new CircularProgressIndicator(),
+                                          SizedBox(
+                                            width: 20,
+                                          ),
+                                          new Text("กำลังบันทึกข้อมูล"),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                              bool res = await Provider.of<OrderData>(context,
+                                      listen: false)
+                                  .closeOrder("1"); // จบขายคืนสต๊อก
+                              print(res);
+                              if (res == true) {
+                                Fluttertoast.showToast(
+                                    msg: "ทำรายการสำเร็จ",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.green,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: "ทำรายการไม่สำเร็จ",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                              }
+                              //Navigator.of(context).pop(true);
+                              // Navigator.pushNamed(context, '/home');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MainTest()));
+                            },
+                            child: Text('คืนสินค้า'),
+                          ),
+                        ),
+                        Spacer(),
+                        Expanded(
+                          child: MaterialButton(
+                            color: Colors.amber,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50)),
+                            onPressed: () async {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    child: Container(
+                                      height: 200,
+                                      child: new Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          new CircularProgressIndicator(),
+                                          SizedBox(
+                                            width: 20,
+                                          ),
+                                          new Text("กำลังบันทึกข้อมูล"),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                              bool res = await Provider.of<OrderData>(context,
+                                      listen: false)
+                                  .closeOrder("0"); // จบขายไม่คืนสต๊อก
+                              print(res);
+                              if (res == true) {
+                                Fluttertoast.showToast(
+                                    msg: "ทำรายการสำเร็จ",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.green,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: "ทำรายการไม่สำเร็จ",
+                                    toastLength: Toast.LENGTH_LONG,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                              }
+                              //Navigator.of(context).pop(true);
+                              // Navigator.pushNamed(context, '/home');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MainTest()));
+                            },
+                            child: Text('ไม่คืนสินค้า'),
+                          ),
+                        ),
+                        Spacer(),
+                        Expanded(
+                          child: MaterialButton(
+                            color: Colors.grey[400],
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50)),
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                            child: Text('ไม่ใช่'),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
-                FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                  child: Text('ไม่'),
-                ),
-              ],
+              ),
             ),
           );
+          // return showDialog(
+          //   context: context,
+          //   builder: (context) => AlertDialog(
+          //     title: Text('ยืนยัน'),
+          //     content: Text('ต้องการส่งข้อมูลการขายประจำวันใช่หรือไม่'),
+          //     actions: <Widget>[
+          //       FlatButton(
+          //         onPressed: () async {
+          //           bool res =
+          //               await Provider.of<OrderData>(context, listen: false)
+          //                   .closeOrder();
+          //           print(res);
+          //           if (res == true) {
+          //             Fluttertoast.showToast(
+          //                 msg: "ทำรายการสำเร็จ",
+          //                 toastLength: Toast.LENGTH_LONG,
+          //                 gravity: ToastGravity.BOTTOM,
+          //                 timeInSecForIosWeb: 1,
+          //                 backgroundColor: Colors.green,
+          //                 textColor: Colors.white,
+          //                 fontSize: 16.0);
+          //           } else {
+          //             Fluttertoast.showToast(
+          //                 msg: "ทำรายการไม่สำเร็จ",
+          //                 toastLength: Toast.LENGTH_LONG,
+          //                 gravity: ToastGravity.BOTTOM,
+          //                 timeInSecForIosWeb: 1,
+          //                 backgroundColor: Colors.red,
+          //                 textColor: Colors.white,
+          //                 fontSize: 16.0);
+          //           }
+          //           //Navigator.of(context).pop(true);
+          //           // Navigator.pushNamed(context, '/home');
+          //           Navigator.push(context,
+          //               MaterialPageRoute(builder: (context) => MainTest()));
+          //         },
+          //         child: Text('ยืนยัน'),
+          //       ),
+          //       FlatButton(
+          //         onPressed: () {
+          //           Navigator.of(context).pop(false);
+          //         },
+          //         child: Text('ไม่'),
+          //       ),
+          //     ],
+          //   ),
+          // );
         });
   }
 
@@ -127,9 +348,20 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
         child: Scaffold(
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Container(
           //  color: Theme.of(context).accentColor,
-          color: Colors.lightBlue,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [
+                Colors.grey[50],
+                Colors.blue,
+              ],
+            ),
+          ),
+          //  color: Colors.lightBlue,
           child: FutureBuilder(
               future: _orderFuture,
               builder: (context, dataSnapshort) {
@@ -176,7 +408,9 @@ class _HomePageState extends State<HomePage> {
                         Padding(
                           padding: EdgeInsets.all(10.0),
                           child: Card(
-                            elevation: 4,
+                            elevation: 8,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                             shadowColor: Colors.black,
                             child: Row(
                               children: <Widget>[
@@ -259,11 +493,13 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 2),
+                        //  SizedBox(height: 2),
                         Padding(
                           padding: EdgeInsets.all(10.0),
                           child: Card(
                             elevation: 4,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                             shadowColor: Colors.black,
                             //color: Colors.transparent,
                             child: Row(
@@ -342,11 +578,13 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-                        SizedBox(height: 2),
+                        //  SizedBox(height: 2),
                         Padding(
                           padding: EdgeInsets.all(10.0),
                           child: Card(
                             elevation: 4,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                             shadowColor: Colors.black,
                             child: Row(
                               children: <Widget>[
@@ -356,7 +594,7 @@ class _HomePageState extends State<HomePage> {
                                       height: 10,
                                     ),
                                     Text(
-                                      'รวมทั้งสิ้น',
+                                      'รวมขายทั้งหมด',
                                       style: TextStyle(
                                           color: Colors.red,
                                           fontSize: 18.0,
@@ -406,6 +644,76 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
+                        // SizedBox(
+                        //   height: 5,
+                        // ),
+                        Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Card(
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            shadowColor: Colors.black,
+                            color: Colors.lightGreen[300],
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Column(children: <Widget>[
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      'รับชำระหนี้',
+                                      style: TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    //Divider(),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: DottedLine(
+                                        direction: Axis.horizontal,
+                                        lineLength: double.infinity,
+                                        lineThickness: 1.0,
+                                        dashLength: 4.0,
+                                        dashColor: Colors.grey,
+                                        dashRadius: 0.0,
+                                        dashGapLength: 4.0,
+                                        dashGapColor: Colors.transparent,
+                                        dashGapRadius: 0.0,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Consumer<PaymentreceiveData>(
+                                            builder:
+                                                (context, _paymentdaily, _) =>
+                                                    Column(
+                                              children: [
+                                                Text('รวมเงิน'),
+                                                Text(
+                                                  '${formatter.format(_paymentdaily.orderStatus > 0 ? 0 : _paymentdaily.totalPayment)}',
+                                                  style: TextStyle(
+                                                      color: Colors.black54,
+                                                      fontSize: 30,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 15),
+                                  ]),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                         SizedBox(height: 15),
                         Padding(
                           padding: EdgeInsets.fromLTRB(0.0, 35.0, 10.0, 0.0),
@@ -428,6 +736,15 @@ class _HomePageState extends State<HomePage> {
               }),
         ),
       ),
+      floatingActionButton: _showBackToTopButton == false
+          ? null
+          : FloatingActionButton(
+              onPressed: _scrollToTop,
+              child: Icon(
+                Icons.arrow_upward,
+                color: Colors.white,
+              ),
+            ),
     ));
   }
 }

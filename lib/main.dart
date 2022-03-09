@@ -1,9 +1,14 @@
-import 'package:camera/camera.dart';
+// import 'package:camera/camera.dart';
+//import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:double_back_to_close/double_back_to_close.dart';
-import 'package:ice_app_new/models/transfer_total.dart';
+import 'package:ice_app_new/page_offline/createorder_new_offline.dart';
+// import 'package:ice_app_new/models/transfer_total.dart';
 import 'package:ice_app_new/pages/assetcheck.dart';
+import 'package:ice_app_new/pages/carload_review.dart';
+import 'package:ice_app_new/pages/checkinpage.dart';
+import 'package:ice_app_new/pages/createorder_boot.dart';
 import 'package:ice_app_new/pages/createorder_new.dart';
 import 'package:ice_app_new/pages/createplan.dart';
 import 'package:ice_app_new/pages/home.dart';
@@ -11,9 +16,10 @@ import 'package:ice_app_new/pages/journalissue.dart';
 import 'package:ice_app_new/pages/offlinetest.dart';
 import 'package:ice_app_new/pages/ordercheckout.dart';
 import 'package:ice_app_new/pages/paymentcheckout.dart';
+import 'package:ice_app_new/pages/paymenthistory.dart';
 import 'package:ice_app_new/pages/plancheckout.dart';
 import 'package:ice_app_new/pages/plandetail.dart';
-import 'package:ice_app_new/pages/take_photo.dart';
+// import 'package:ice_app_new/pages/take_photo.dart';
 import 'package:ice_app_new/pages/transferin_review.dart';
 import 'package:ice_app_new/pages/transferout_review.dart';
 import 'package:ice_app_new/providers/car.dart';
@@ -21,7 +27,9 @@ import 'package:ice_app_new/providers/plan.dart';
 import 'package:ice_app_new/providers/transferin.dart';
 import 'package:ice_app_new/providers/transferout.dart';
 import 'package:ice_app_new/sqlite/providers/Offlineitem.dart';
+import 'package:ice_app_new/sqlite/providers/customer_price.dart';
 import 'package:provider/provider.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 
 import 'pages/auth.dart';
 
@@ -62,7 +70,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     // setState(() {
-    //   _isAuthenticated = false;
+    //   _isNetworkconnect = false;
     // });
     // _model.autoAuthenticate();
     // _model.userSubject.listen((bool isAuthenticated) {
@@ -100,7 +108,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<TransferinData>.value(value: TransferinData()),
         ChangeNotifierProvider<CarData>.value(value: CarData()),
         ChangeNotifierProvider<PlanData>.value(value: PlanData()),
-        ChangeNotifierProvider<OfflineitemData>.value(value: OfflineitemData())
+        ChangeNotifierProvider<OfflineitemData>.value(value: OfflineitemData()),
+        ChangeNotifierProvider<CustomerpriceData>.value(
+            value: CustomerpriceData())
       ],
       child: Consumer(builder: (context, UserData users, _) {
         // checkAuthen(users);
@@ -108,25 +118,34 @@ class _MyAppState extends State<MyApp> {
         return MaterialApp(
           // debugShowMaterialGrid: true,
           debugShowCheckedModeBanner: false,
+          themeMode: ThemeMode.light,
           theme: ThemeData(
             brightness: Brightness.light,
             primarySwatch: Colors.lightBlue,
             accentColor: Colors.lightBlue,
             buttonColor: Colors.blue,
           ),
+          darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            accentColor: Colors.amber,
+          ),
           // fontFamily: 'Kanit-Regular'),
           home: DoubleBack(
               message: "กดอีกครั้งเพื่อออก",
-              child: users.is_authenuser ? MainTest() : AuthPage()),
+              //     child: users.is_authenuser ? MainTest() : AuthPage()),
+              child: users.is_authenuser ? MainTest() : CheckinPage()),
 
           routes: {
             OrderPage.routeName: (ctx) => OrderPage(),
             OrderDetailPage.routeName: (ctx) => OrderDetailPage(),
             CreateorderPage.routeName: (ctx) => CreateorderPage(),
             CreateorderNewPage.routeName: (ctx) => CreateorderNewPage(),
+            CreateorderBootPage.routeName: (ctx) => CreateorderBootPage(),
             PaymentPage.routeName: (ctx) => PaymentPage(),
+            CarloadReviewPage.routeName: (ctx) => CarloadReviewPage(),
             HomePage.routeName: (ctx) => HomePage(),
             PaymentcheckoutPage.routeName: (ctx) => PaymentcheckoutPage(),
+            PaymenthistoryPage.routeName: (ctx) => PaymenthistoryPage(),
             OrdercheckoutPage.routeName: (ctx) => OrdercheckoutPage(),
             JournalissuePage.routeName: (ctx) => JournalissuePage(),
             OfflinePage.routeName: (ctx) => OfflinePage(),
@@ -136,6 +155,8 @@ class _MyAppState extends State<MyApp> {
             CreateplanPage.routeName: (ctx) => CreateplanPage(),
             PlancheckoutPage.routeName: (ctx) => PlancheckoutPage(),
             PlanDetailPage.routeName: (ctx) => PlanDetailPage(),
+            CreateorderNewOfflinePage.routeName: (ctx) =>
+                CreateorderNewOfflinePage(),
             //TakePictureScreen.routeName: (ctx) => TakePictureScreen(),
           },
         );

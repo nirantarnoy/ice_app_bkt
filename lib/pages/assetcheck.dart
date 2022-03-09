@@ -4,20 +4,20 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ice_app_new/models/addchecklist.dart';
 import 'package:ice_app_new/models/checklist.dart';
-import 'package:ice_app_new/models/customer_asset.dart';
-import 'package:ice_app_new/pages/take_photo.dart';
-import 'package:ice_app_new/providers/product.dart';
+// import 'package:ice_app_new/models/customer_asset.dart';
+// import 'package:ice_app_new/pages/take_photo.dart';
+// import 'package:ice_app_new/providers/product.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:ice_app_new/providers/customer.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:ice_app_new/providers/issuedata.dart';
+//import 'package:ice_app_new/providers/issuedata.dart';
 
-import 'package:ice_app_new/models/customers.dart';
-import 'package:ice_app_new/providers/customer.dart';
+// import 'package:ice_app_new/models/customers.dart';
+// import 'package:ice_app_new/providers/customer.dart';
 
-import 'package:ice_app_new/models/products.dart';
+// import 'package:ice_app_new/models/products.dart';
 
 class AssetcheckPage extends StatefulWidget {
   static const routeName = '/assetcheck';

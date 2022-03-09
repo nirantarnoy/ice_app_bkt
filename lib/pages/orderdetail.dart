@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
-import 'package:currencies/currencies.dart';
+//import 'package:currencies/currencies.dart';
 import 'package:flutter/material.dart';
 import 'package:ice_app_new/pages/order.dart';
 import 'package:intl/intl.dart';
@@ -14,7 +14,7 @@ import 'package:ice_app_new/models/order_detail.dart';
 import 'package:provider/provider.dart';
 
 import 'package:ice_app_new/providers/order.dart';
-import 'package:ice_app_new/models/orders.dart';
+//import 'package:ice_app_new/models/orders.dart';
 
 enum SingingCharacter { reason1, reason2, reason3 }
 

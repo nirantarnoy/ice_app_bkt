@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ice_app_new/models/Addplan.dart';
-import 'package:ice_app_new/models/car.dart';
-import 'package:ice_app_new/pages/ordercheckout.dart';
+// import 'package:ice_app_new/models/car.dart';
+// import 'package:ice_app_new/pages/ordercheckout.dart';
 import 'package:ice_app_new/pages/plancheckout.dart';
 import 'package:ice_app_new/providers/paymentreceive.dart';
 import 'package:ice_app_new/providers/product.dart';
-import 'package:ice_app_new/widgets/order/order_item.dart';
+// import 'package:ice_app_new/widgets/order/order_item.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
+// import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
 import 'package:ice_app_new/providers/customer.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:ice_app_new/providers/issuedata.dart';
+// import 'package:ice_app_new/providers/issuedata.dart';
 
-import 'package:ice_app_new/models/customers.dart';
-import 'package:ice_app_new/widgets/sale/sale_product_item.dart';
-import 'package:ice_app_new/providers/customer.dart';
+// import 'package:ice_app_new/models/customers.dart';
+// import 'package:ice_app_new/widgets/sale/sale_product_item.dart';
+// import 'package:ice_app_new/providers/customer.dart';
 
 import 'package:ice_app_new/models/products.dart';
-import 'package:ice_app_new/models/issueitems.dart';
+// import 'package:ice_app_new/models/issueitems.dart';
 
 class CreateplanPage extends StatefulWidget {
   static const routeName = '/createplan';
@@ -44,7 +44,9 @@ class _CreateplanPageState extends State<CreateplanPage> {
     // } on TimeoutException catch (_) {
     //   _showdialog('Noity', 'Connection time out!');
     // }
-    // Provider.of<OrderData>(context).fetOrders();
+    Provider.of<ProductData>(context, listen: false)
+        .fetProductissue(selectedValue);
+    isuserconfirm = 1;
     super.initState();
   }
 
@@ -372,29 +374,29 @@ class _CreateplanPageState extends State<CreateplanPage> {
                           //     .firstWhere((value) => value.product_id == _id)
                           //     .avl_qty;
                           String _avl = products[index].onhand;
-                          if (selectedValue == null || selectedValue == '') {
-                            Scaffold.of(context).showSnackBar(
-                              SnackBar(
-                                content: Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.error,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      "เลือกรายชื่อลูกค้าก่อน",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                            return false;
-                          }
+                          // if (selectedValue == null || selectedValue == '') {
+                          //   Scaffold.of(context).showSnackBar(
+                          //     SnackBar(
+                          //       content: Row(
+                          //         children: <Widget>[
+                          //           Icon(
+                          //             Icons.error,
+                          //             color: Colors.white,
+                          //           ),
+                          //           SizedBox(
+                          //             width: 10,
+                          //           ),
+                          //           Text(
+                          //             "เลือกรายชื่อลูกค้าก่อน",
+                          //             style: TextStyle(color: Colors.white),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //       backgroundColor: Colors.red,
+                          //     ),
+                          //   );
+                          //   return false;
+                          // }
                           _editBottomSheet(
                             context,
                             products[index].name,
@@ -417,6 +419,7 @@ class _CreateplanPageState extends State<CreateplanPage> {
                                   Icon(
                                     Icons.image_rounded,
                                     color: Colors.deepPurple,
+                                    size: 40,
                                   ),
                                   SizedBox(
                                     height: 10,
@@ -425,12 +428,12 @@ class _CreateplanPageState extends State<CreateplanPage> {
                                     child: Column(
                                       children: [
                                         Text("${products[index].name}"),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text("${products[index].sale_price} B",
-                                            style: TextStyle(
-                                                color: Colors.blue[800])),
+                                        // SizedBox(
+                                        //   height: 10,
+                                        // ),
+                                        // Text("${products[index].sale_price} B",
+                                        //     style: TextStyle(
+                                        //         color: Colors.blue[800])),
                                       ],
                                     ),
                                   )
@@ -491,123 +494,123 @@ class _CreateplanPageState extends State<CreateplanPage> {
           color: Colors.white,
           child: Column(
             children: <Widget>[
-              Card(
-                margin: EdgeInsets.all(8),
-                child: Padding(
-                  padding: EdgeInsets.all(2),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        // Text(
-                        //   "ยอดขาย",
-                        //   style: TextStyle(fontSize: 20, color: Colors.black87),
-                        // ),
-                        // SizedBox(width: 5),
-                        // Chip(
-                        //   label: Text(
-                        //     "${formatter.format(orders.totalAmount)}",
-                        //     style: TextStyle(color: Colors.white, fontSize: 20),
-                        //   ),
-                        //   backgroundColor: Theme.of(context).primaryColor,
-                        // ),
-                        // Text("บาท",
-                        //     style: TextStyle(fontSize: 20, color: Colors.black87)),
-                        Expanded(
-                          child: Consumer<CustomerData>(
-                            builder: (context, _customer, _) => TypeAheadField(
-                              textFieldConfiguration: TextFieldConfiguration(
-                                controller: _typeAheadController,
-                                autofocus: false,
-                                style: DefaultTextStyle.of(context)
-                                    .style
-                                    .copyWith(fontStyle: FontStyle.normal),
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    hintText: 'ค้นหาลูกค้า'),
-                              ),
-                              // suggestionsCallback: (pattern) async {
-                              //   return await BackendService.getSuggestions(pattern);
-                              // },
-                              suggestionsCallback: (pattern) async {
-                                return await _customer.findCustomer(pattern);
-                              },
-                              itemBuilder: (context, suggestion) {
-                                return ListTile(
-                                  // leading: Icon(Icons.shopping_cart),
-                                  title: Text(suggestion.name),
-                                  // subtitle: Text('\$${suggestion['price']}'),
-                                );
-                              },
+              // Card(
+              //   margin: EdgeInsets.all(8),
+              //   child: Padding(
+              //     padding: EdgeInsets.all(2),
+              //     child: Row(
+              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //         children: <Widget>[
+              //           // Text(
+              //           //   "ยอดขาย",
+              //           //   style: TextStyle(fontSize: 20, color: Colors.black87),
+              //           // ),
+              //           // SizedBox(width: 5),
+              //           // Chip(
+              //           //   label: Text(
+              //           //     "${formatter.format(orders.totalAmount)}",
+              //           //     style: TextStyle(color: Colors.white, fontSize: 20),
+              //           //   ),
+              //           //   backgroundColor: Theme.of(context).primaryColor,
+              //           // ),
+              //           // Text("บาท",
+              //           //     style: TextStyle(fontSize: 20, color: Colors.black87)),
+              //           // Expanded(
+              //           //   child: Consumer<CustomerData>(
+              //           //     builder: (context, _customer, _) => TypeAheadField(
+              //           //       textFieldConfiguration: TextFieldConfiguration(
+              //           //         controller: _typeAheadController,
+              //           //         autofocus: false,
+              //           //         style: DefaultTextStyle.of(context)
+              //           //             .style
+              //           //             .copyWith(fontStyle: FontStyle.normal),
+              //           //         decoration: InputDecoration(
+              //           //             border: OutlineInputBorder(),
+              //           //             hintText: 'ค้นหาลูกค้า'),
+              //           //       ),
+              //           //       // suggestionsCallback: (pattern) async {
+              //           //       //   return await BackendService.getSuggestions(pattern);
+              //           //       // },
+              //           //       suggestionsCallback: (pattern) async {
+              //           //         return await _customer.findCustomer(pattern);
+              //           //       },
+              //           //       itemBuilder: (context, suggestion) {
+              //           //         return ListTile(
+              //           //           // leading: Icon(Icons.shopping_cart),
+              //           //           title: Text(suggestion.name),
+              //           //           // subtitle: Text('\$${suggestion['price']}'),
+              //           //         );
+              //           //       },
 
-                              onSuggestionSelected: (items) {
-                                setState(() {
-                                  selectedValue = items.id;
-                                  selectedValueName = items.name;
-                                  IssueData issuedata = Provider.of<IssueData>(
-                                      context,
-                                      listen: false);
-                                  issuedata.fetIssueitems();
-                                  if (issuedata.userconfirm == 1) {
-                                    Provider.of<ProductData>(context,
-                                            listen: false)
-                                        .fetProductissue(selectedValue);
-                                    isuserconfirm = 1;
-                                  }
+              //           //       onSuggestionSelected: (items) {
+              //           //         setState(() {
+              //           //           selectedValue = items.id;
+              //           //           selectedValueName = items.name;
+              //           //           IssueData issuedata = Provider.of<IssueData>(
+              //           //               context,
+              //           //               listen: false);
+              //           //           issuedata.fetIssueitems();
+              //           //           if (issuedata.userconfirm == 1) {
+              //           //             Provider.of<ProductData>(context,
+              //           //                     listen: false)
+              //           //                 .fetProductissue(selectedValue);
+              //           //             isuserconfirm = 1;
+              //           //           }
 
-                                  this._typeAheadController.text = items.name;
-                                });
-                              },
-                              noItemsFoundBuilder: (context) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Text(
-                                        'ไม่พบข้อมูล',
-                                        style: TextStyle(
-                                            fontSize: 16, color: Colors.red),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        FlatButton(
-                          color: Colors.grey[100],
-                          height: 30,
-                          onPressed: () {
-                            selectedValue = '';
-                            selectedValue = '';
-                            selectedValueName = '';
-                            IssueData issuedata =
-                                Provider.of<IssueData>(context, listen: false);
-                            issuedata.fetIssueitems();
-                            if (issuedata.userconfirm == 1) {
-                              Provider.of<ProductData>(context, listen: false)
-                                  .fetProductissue(selectedValue);
-                              isuserconfirm = 1;
-                            }
+              //           //           this._typeAheadController.text = items.name;
+              //           //         });
+              //           //       },
+              //           //       noItemsFoundBuilder: (context) {
+              //           //         return Padding(
+              //           //           padding: const EdgeInsets.all(8.0),
+              //           //           child: Row(
+              //           //             mainAxisAlignment: MainAxisAlignment.center,
+              //           //             children: <Widget>[
+              //           //               Text(
+              //           //                 'ไม่พบข้อมูล',
+              //           //                 style: TextStyle(
+              //           //                     fontSize: 16, color: Colors.red),
+              //           //               ),
+              //           //             ],
+              //           //           ),
+              //           //         );
+              //           //       },
+              //           //     ),
+              //           //   ),
+              //           // ),
+              //           // SizedBox(
+              //           //   width: 5,
+              //           // ),
+              //           FlatButton(
+              //             color: Colors.grey[100],
+              //             height: 30,
+              //             onPressed: () {
+              //               selectedValue = '';
+              //               selectedValue = '';
+              //               selectedValueName = '';
+              //               IssueData issuedata =
+              //                   Provider.of<IssueData>(context, listen: false);
+              //               issuedata.fetIssueitems();
+              //               if (issuedata.userconfirm == 1) {
+              //                 Provider.of<ProductData>(context, listen: false)
+              //                     .fetProductissue(selectedValue);
+              //                 isuserconfirm = 1;
+              //               }
 
-                            this._typeAheadController.text = '';
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.refresh_rounded,
-                              size: 45,
-                              color: Colors.grey[500],
-                            ),
-                          ),
-                        ),
-                      ]),
-                ),
-              ),
+              //               this._typeAheadController.text = '';
+              //             },
+              //             child: Padding(
+              //               padding: const EdgeInsets.all(8.0),
+              //               child: Icon(
+              //                 Icons.refresh_rounded,
+              //                 size: 45,
+              //                 color: Colors.grey[500],
+              //               ),
+              //             ),
+              //           ),
+              //         ]),
+              //   ),
+              // ),
               SizedBox(
                 height: 10,
               ),

@@ -1,21 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:ice_app_new/pages/createorder.dart';
-import 'package:ice_app_new/pages/createorder_new.dart';
-import 'package:ice_app_new/pages/main_test.dart';
 import 'package:ice_app_new/providers/transferin.dart';
-import 'package:ice_app_new/widgets/order/order_item.dart';
-import 'package:ice_app_new/widgets/order/order_item_new.dart';
 import 'package:ice_app_new/widgets/transferin/findtransferin_item.dart';
-import 'package:scoped_model/scoped_model.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:connectivity/connectivity.dart';
-
-import 'package:ice_app_new/helpers/activity_connection.dart';
 import 'package:provider/provider.dart';
-
-import 'package:ice_app_new/providers/order.dart';
 //import 'package:ice_app_new/widgets/error/err_api.dart';
 
 class TransferinNewPage extends StatefulWidget {

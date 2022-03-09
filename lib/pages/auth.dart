@@ -40,7 +40,7 @@ class _AuthPageState extends State<AuthPage> {
         child: CircleAvatar(
           backgroundColor: Colors.transparent,
           radius: 70.0,
-          child: Image.asset('assets/logo_head.png'),
+          child: Image.asset('assets/VP.png'),
           // child: Text('ICE',
           //     style: TextStyle(
           //         fontSize: 38.0,
@@ -231,6 +231,13 @@ class _AuthPageState extends State<AuthPage> {
                   child: Column(
                     children: <Widget>[
                       _showLogo(),
+                      // Text(
+                      //   'VP ICE',
+                      //   style: TextStyle(
+                      //       fontSize: 50,
+                      //       fontWeight: FontWeight.bold,
+                      //       color: Colors.blue[700]),
+                      // ),
                       SizedBox(
                         height: 20,
                       ),
@@ -277,7 +284,11 @@ class _AuthPageState extends State<AuthPage> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[Text('version 1.0')],
+                        children: <Widget>[Text('version 1.9')],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[Text('update 21-02-2022')],
                       )
                     ],
                   ),

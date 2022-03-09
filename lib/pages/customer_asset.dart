@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:ice_app_new/models/car.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:ice_app_new/models/car.dart';
 import 'package:ice_app_new/models/customer_asset.dart';
 import 'package:ice_app_new/pages/assetcheck.dart';
-import 'package:ice_app_new/pages/ordercheckout.dart';
-import 'package:ice_app_new/providers/paymentreceive.dart';
-import 'package:ice_app_new/providers/product.dart';
+// import 'package:ice_app_new/pages/ordercheckout.dart';
+// import 'package:ice_app_new/providers/paymentreceive.dart';
+// import 'package:ice_app_new/providers/product.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
 import 'package:ice_app_new/providers/customer.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:ice_app_new/providers/issuedata.dart';
+// import 'package:ice_app_new/providers/issuedata.dart';
 
-import 'package:ice_app_new/models/customers.dart';
-import 'package:ice_app_new/providers/customer.dart';
+// import 'package:ice_app_new/models/customers.dart';
+// import 'package:ice_app_new/providers/customer.dart';
 
 import 'package:ice_app_new/models/addorder.dart';
-import 'package:ice_app_new/models/products.dart';
+// import 'package:ice_app_new/models/products.dart';
 
 class CustomerAssetPage extends StatefulWidget {
   static const routeName = '/createordernew';

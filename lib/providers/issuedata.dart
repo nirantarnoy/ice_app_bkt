@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:ice_app_new/models/issueitems.dart';
 import 'package:ice_app_new/models/reviewload.dart';
+import 'package:ice_app_new/models/routeolestock.dart';
 import 'package:ice_app_new/models/transferproduct.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +14,8 @@ class IssueData with ChangeNotifier {
 
   final String url_to_issue_list =
       "http://103.253.73.108/icesystem/frontend/web/api/journalissue/list2";
+  final String url_to_oldstockroute_list =
+      "http://103.253.73.108/icesystem/frontend/web/api/journalissue/oldstockroute";
   final String url_to_user_confirm =
       "http://103.253.73.108/icesystem/frontend/web/api/journalissue/issueconfirm2";
   final String url_to_user_confirm_cancel =
@@ -20,6 +23,8 @@ class IssueData with ChangeNotifier {
 
   List<Issueitems> _issue;
   List<Issueitems> get listissue => _issue;
+  List<RouteOldStock> _oldstock;
+  List<RouteOldStock> get listoldstock => _oldstock;
   List<ReviewLoadData> _reviewload;
   List<ReviewLoadData> get listreview => _reviewload;
 
@@ -29,7 +34,7 @@ class IssueData with ChangeNotifier {
   List<TransferProduct> _transferProducts;
   List<TransferProduct> get transferproductitems => _transferProducts;
 
-  int _avl_qty = 0;
+  //int _avl_qty = 0;
   int _id = 0;
   int _transferouttotal = 0;
   bool _hasissue_open = false;
@@ -51,6 +56,11 @@ class IssueData with ChangeNotifier {
 
   set listissue(List<Issueitems> val) {
     _issue = val;
+    notifyListeners();
+  }
+
+  set listoldstock(List<RouteOldStock> val) {
+    _oldstock = val;
     notifyListeners();
   }
 
@@ -81,8 +91,20 @@ class IssueData with ChangeNotifier {
     double total = 0.0;
     listissue.forEach((paymentitem) {
       total += double.parse(paymentitem.avl_qty);
+      // double old_qty = getOldqty(paymentitem.product_id);
+      // total = total + old_qty;
     });
     return total;
+  }
+
+  double getOldqty(String product_id) {
+    double old_qty = 0.0;
+    listoldstock.forEach((element) {
+      if (element.product_id == product_id) {
+        old_qty = double.parse(element.qty);
+      }
+    });
+    return old_qty;
   }
 
   Future<Null> resetqty() {
@@ -159,9 +181,9 @@ class IssueData with ChangeNotifier {
           data.add(issueresult);
         }
 
-        print('list is ${data}');
+        print('list is issue ${data}');
 
-        if (has_record == "1" && has_status == "1") {
+        if (has_record == "1" && has_status == "150") {
           hasissue_open = true;
           userconfirm = 0;
         } else {
@@ -230,7 +252,7 @@ class IssueData with ChangeNotifier {
         for (var i = 0; i < res['data'].length; i++) {
           //  idIssue = int.parse(res['data'][i]['issue_id'].toString());
 
-          if (res['data'][i]['status'].toString() == "1") {
+          if (res['data'][i]['status'].toString() == "150") {
             userconfirm = 0;
           } else if (res['data'][i]['status'].toString() == "2") {
             userconfirm = 1;
@@ -484,5 +506,85 @@ class IssueData with ChangeNotifier {
       }
     });
     notifyListeners();
+  }
+
+  Future<dynamic> fetoldstockroute() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String _company_id = "";
+    String _branch_id = "";
+    String _issue_date = new DateTime.now().toString();
+    String _routeid = '';
+    if (prefs.getString('user_id') != null) {
+      _routeid = prefs.getString('emp_route_id');
+      _company_id = prefs.getString('company_id');
+      _branch_id = prefs.getString('branch_id');
+    }
+    final Map<String, dynamic> filterData = {
+      'route_id': _routeid,
+      'company_id': _company_id,
+      'branch_id': _branch_id
+    };
+    print(filterData);
+    _isLoading = true;
+    notifyListeners();
+    try {
+      http.Response response;
+      response = await http.post(
+        Uri.encodeFull(url_to_oldstockroute_list),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(filterData),
+      );
+
+      if (response.statusCode == 200) {
+        _isApicon = true;
+        Map<String, dynamic> res = json.decode(response.body);
+        List<RouteOldStock> data = [];
+
+        print('data old length is ${res["data"].length}');
+        print('data server is ${res["data"]}');
+
+        if (res == null) {
+          _isLoading = false;
+          notifyListeners();
+          return;
+        }
+
+        if (res['data'] == null) {
+          _isLoading = false;
+          notifyListeners();
+          return;
+        }
+
+        for (var i = 0; i < res['data'].length; i++) {
+          //  idIssue = int.parse(res['data'][i]['issue_id'].toString());
+
+          // if (res['data'][i]['status'].toString() == "150") {
+          //   userconfirm = 0;
+          // } else if (res['data'][i]['status'].toString() == "2") {
+          //   userconfirm = 1;
+          // }
+          final RouteOldStock oldstockresult = RouteOldStock(
+            product_code: res['data'][i]['product_code'].toString(),
+            product_id: res['data'][i]['product_id'].toString(),
+            product_name: res['data'][i]['product_name'].toString(),
+            qty: res['data'][i]['qty'].toString(),
+          );
+
+          //  print('data from server is ${issueresult}');
+
+          data.add(oldstockresult);
+        }
+
+        listoldstock = data;
+
+        _isLoading = false;
+        notifyListeners();
+        return listoldstock;
+      }
+    } catch (_) {
+      _isApicon = false;
+      print('cannot connect api.');
+    }
   }
 }

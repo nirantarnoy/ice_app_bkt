@@ -47,6 +47,7 @@ class OrderData with ChangeNotifier {
   bool _isApicon = true;
   int _id = 0;
   int _line_id = 0;
+  String _order_status = '1';
 
   String _orderCustomerId = "0";
   String _searchbycustomer = '';
@@ -369,7 +370,7 @@ class OrderData with ChangeNotifier {
       'company_id': _company_id,
       'branch_id': _branch_id
     };
-    print('data will save is ${orderData}');
+    //  print('data will save is ${orderData}');
     try {
       http.Response response;
       response = await http.post(Uri.encodeFull(url_to_add_order),
@@ -378,12 +379,12 @@ class OrderData with ChangeNotifier {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> res = json.decode(response.body);
-        print('data added order is  ${res["data"]}');
+        //   print('data added order is  ${res["data"]}');
         _iscomplated = true;
       }
     } catch (_) {
       _iscomplated = false;
-      print('cannot create order');
+      // print('cannot create order');
     }
     return _iscomplated;
   }
@@ -392,6 +393,7 @@ class OrderData with ChangeNotifier {
     String customer_id,
     List<Addorder> listdata,
     String pay_type,
+    String discount,
   ) async {
     String _user_id = "";
     String _route_id = "";
@@ -430,6 +432,7 @@ class OrderData with ChangeNotifier {
       'company_id': _company_id,
       'branch_id': _branch_id,
       'data': jsonx,
+      'discount': discount,
     };
     print('data will save order new is ${orderData}');
     try {
@@ -445,7 +448,7 @@ class OrderData with ChangeNotifier {
       }
     } catch (_) {
       _iscomplated = false;
-      print('cannot create order');
+      // print('cannot create order');
     }
     return _iscomplated;
   }
@@ -596,20 +599,28 @@ class OrderData with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> closeOrder() async {
+  Future<bool> closeOrder(String is_return_stock) async {
     bool completed = false;
     //String _order_date = new DateTime.now().toString();
     String _company_id = "";
     String _branch_id = "";
+    String _user_id = "";
+    String _route_id = "";
+    String _return_stock = is_return_stock;
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('user_id') != null) {
       _company_id = prefs.getString('company_id');
       _branch_id = prefs.getString('branch_id');
+      _user_id = prefs.getString('user_id');
+      _route_id = prefs.getString('emp_route_id');
     }
     final Map<String, dynamic> orderData = {
       'order_id': idOrder,
+      'route_id': _route_id,
+      'user_id': _user_id,
       'company_id': _company_id,
-      'branch_id': _branch_id
+      'branch_id': _branch_id,
+      'return_stock': _return_stock
     };
     print('data will save close order is ${orderData}');
     try {

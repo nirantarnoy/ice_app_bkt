@@ -7,14 +7,14 @@ import 'package:ice_app_new/providers/customer.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:ice_app_new/providers/issuedata.dart';
 
-import 'package:ice_app_new/models/customers.dart';
-import 'package:ice_app_new/widgets/sale/sale_product_item.dart';
-import 'package:ice_app_new/providers/customer.dart';
+// import 'package:ice_app_new/models/customers.dart';
+// import 'package:ice_app_new/widgets/sale/sale_product_item.dart';
+// import 'package:ice_app_new/providers/customer.dart';
 import 'package:ice_app_new/providers/order.dart';
 
 import 'package:ice_app_new/models/addorder.dart';
 import 'package:ice_app_new/models/products.dart';
-import 'package:ice_app_new/models/issueitems.dart';
+//import 'package:ice_app_new/models/issueitems.dart';
 
 class CreateorderPage extends StatefulWidget {
   static const routeName = '/createorder';

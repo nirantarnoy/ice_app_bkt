@@ -1,19 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:ice_app_new/models/issueitems.dart';
-
-import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:connectivity/connectivity.dart';
-
 import 'package:provider/provider.dart';
 import 'package:ice_app_new/providers/transferout.dart';
 import 'package:ice_app_new/widgets/transferout/transferout_item.dart';
-import 'package:ice_app_new/widgets/error/err_api.dart';
-import 'package:ice_app_new/widgets/error/err_internet_con.dart';
-import '../pages/error.dart';
-
-import 'package:ice_app_new/helpers/activity_connection.dart';
 
 class TransferoutPage extends StatefulWidget {
   @override

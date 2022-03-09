@@ -1,3 +1,4 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:ice_app_new/models/orders_new.dart';
@@ -8,7 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../models/orders.dart';
 import '../../pages/orderdetail.dart';
-import '../../pages/createorder.dart';
+//import '../../pages/createorder.dart';
 
 class OrderItemNew extends StatefulWidget {
   @override
@@ -21,6 +22,12 @@ class _OrderItemNewState extends State<OrderItemNew> {
   String selectedValue;
   var _isInit = true;
   var _isLoading = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   void didChangeDependencies() {
     if (_isInit) {
@@ -42,6 +49,9 @@ class _OrderItemNewState extends State<OrderItemNew> {
       if (orders.length > 0) {
         // print("has list");
         orderCards = new ListView.builder(
+            // primary: false,
+            //  shrinkWrap: true,
+            //  physics: NeverScrollableScrollPhysics(),
             itemCount: orders.length,
             itemBuilder: (BuildContext context, int index) => Items(
                   orders[index].id,
@@ -216,7 +226,7 @@ class _OrderItemNewState extends State<OrderItemNew> {
                 ),
         ),
         SizedBox(
-          height: 10,
+          height: 0,
         ),
         Container(
           child: Row(
@@ -352,7 +362,7 @@ class _OrderItemNewState extends State<OrderItemNew> {
               ),
             ],
           ),
-        )
+        ),
       ],
     );
   }

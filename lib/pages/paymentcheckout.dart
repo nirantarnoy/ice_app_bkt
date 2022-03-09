@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+//import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ice_app_new/models/enum_paytype.dart';
 import 'package:ice_app_new/models/paymentselected.dart';
-import 'package:ice_app_new/pages/main_test.dart';
-import 'package:ice_app_new/pages/payment.dart';
+// import 'package:ice_app_new/pages/main_test.dart';
+// import 'package:ice_app_new/pages/payment.dart';
 import 'package:ice_app_new/pages/paymentsuccess.dart';
 import 'package:ice_app_new/providers/paymentreceive.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +22,15 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
   final DateFormat dateformatter = DateFormat('dd-MM-yyyy');
   Paytype _paytype = Paytype.Cash;
   DateTime _date = DateTime.now();
+
+  @override
+  initState() {
+    setState(() {
+      _formData['pay_date'] = dateformatter.format(_date).toString();
+    });
+
+    super.initState();
+  }
 
   Widget _buildList(List<Paymentselected> paymentlist) {
     Widget orderCards;
@@ -221,7 +230,28 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
     // }
 
     // _formKey.currentState.save();
-
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            height: 200,
+            child: new Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                new CircularProgressIndicator(),
+                SizedBox(
+                  width: 20,
+                ),
+                new Text("กำลังบันทึกข้อมูล"),
+              ],
+            ),
+          ),
+        );
+      },
+    );
     bool res = await Provider.of<PaymentreceiveData>(context, listen: false)
         .addPayment2(_formData['pay_type'], _formData['pay_date'], listitems);
 

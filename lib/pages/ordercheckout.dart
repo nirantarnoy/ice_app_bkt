@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+//import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ice_app_new/models/addorder.dart';
 import 'package:ice_app_new/models/enum_paytype.dart';
-import 'package:ice_app_new/models/paymentselected.dart';
-import 'package:ice_app_new/pages/main_test.dart';
+//import 'package:ice_app_new/models/paymentselected.dart';
+//import 'package:ice_app_new/pages/main_test.dart';
 import 'package:ice_app_new/pages/ordersuccess.dart';
-import 'package:ice_app_new/pages/payment.dart';
-import 'package:ice_app_new/pages/paymentsuccess.dart';
+//import 'package:ice_app_new/pages/payment.dart';
+//import 'package:ice_app_new/pages/paymentsuccess.dart';
 import 'package:ice_app_new/providers/order.dart';
-import 'package:ice_app_new/providers/paymentreceive.dart';
+import 'package:ice_app_new/providers/user.dart';
+//import 'package:ice_app_new/providers/paymentreceive.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -23,6 +24,7 @@ class _OrdercheckoutPageState extends State<OrdercheckoutPage> {
   var formatter = NumberFormat('#,##,##0');
   Paytype _paytype = Paytype.Cash;
   DateTime _date = DateTime.now();
+  int _discount_amt = 0;
 
   Widget _buildList(List<Addorder> itemlist) {
     Widget orderCards;
@@ -182,20 +184,146 @@ class _OrdercheckoutPageState extends State<OrdercheckoutPage> {
     }
   }
 
-  void _submitForm(
-      String _customer_id, List<Addorder> listitems, String pay_type) async {
-    Provider.of<OrderData>(context, listen: false)
-        .addOrderNew(_customer_id, listitems, pay_type)
-        .then(
-      (_) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => OrdersuccessPage(),
+  void _editBottomSheet(context) {
+    final double deviceWidth = MediaQuery.of(context).size.width;
+    final double targetWidth = deviceWidth > 550.0 ? 500.0 : deviceWidth * 0.75;
+
+    TextEditingController _discountAmtTextController = TextEditingController();
+    // _discountAmtTextController.text = '0';
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SingleChildScrollView(
+            child: Container(
+              //  height: MediaQuery.of(context).size.height * 0.9,
+              height: MediaQuery.of(context).size.height,
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        // Icon(
+                        //   Icons.check,
+                        //   color: Colors.green,
+                        // ),
+                        Text(
+                          "ระบุส่วนลด",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Spacer(),
+                        IconButton(
+                            icon: Icon(Icons.cancel,
+                                color: Colors.orange, size: 25),
+                            onPressed: () => Navigator.of(context).pop())
+                      ],
+                    ),
+
+                    SizedBox(height: 10),
+                    Row(
+                      children: <Widget>[
+                        Padding(padding: EdgeInsets.all(2.0)),
+                        Expanded(
+                            child: TextField(
+                          autofocus: true,
+                          controller: _discountAmtTextController,
+                          textAlign: TextAlign.center,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                              // border: InputBorder.none,
+                              hintText: "0",
+                              hintStyle: TextStyle(color: Colors.grey)),
+                          style: TextStyle(
+                              fontSize: 40, color: Colors.deepPurple[400]),
+                          onChanged: (String value) {
+                            // _discountAmtTextController.text = value;
+                          },
+                        )),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    // SizedBox(height: 90),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0.0, 45.0, 10.0, 0.0),
+                      child: SizedBox(
+                        height: 55.0,
+                        width: targetWidth,
+                        child: new RaisedButton(
+                            elevation: 5,
+                            splashColor: Colors.grey,
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(15.0)),
+                            color: Colors.blue[500],
+                            child: new Text('ตกลง',
+                                style: new TextStyle(
+                                    fontSize: 20.0, color: Colors.white)),
+                            onPressed: () {
+                              setState(() {
+                                _discount_amt =
+                                    int.parse(_discountAmtTextController.text);
+                              });
+                              Navigator.of(context).pop();
+                            }),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  void _submitForm(String _customer_id, List<Addorder> listitems,
+      String pay_type, String discount) async {
+    // Provider.of<OrderData>(context, listen: false)
+    //     .addOrderNew(_customer_id, listitems, pay_type)
+    //     .then(
+    //   (_) {
+    //     Navigator.push(
+    //       context,
+    //       MaterialPageRoute(
+    //         builder: (_) => OrdersuccessPage(),
+    //       ),
+    //     );
+    //   },
+    // );
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Container(
+            height: 200,
+            child: new Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                new CircularProgressIndicator(),
+                SizedBox(
+                  width: 20,
+                ),
+                new Text("กำลังบันทึกข้อมูล"),
+              ],
+            ),
           ),
         );
       },
     );
+    bool issave = await Provider.of<OrderData>(context, listen: false)
+        .addOrderNew(_customer_id, listitems, pay_type, discount);
+    if (issave == true) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => OrdersuccessPage(),
+        ),
+      );
+    }
   }
 
   // void _submitForm(List<PaymentreceiveData> transferdata, String car_id) {
@@ -310,6 +438,64 @@ class _OrdercheckoutPageState extends State<OrdercheckoutPage> {
                       : Center(
                           child: Text('no'),
                         )),
+              Consumer(
+                builder: (context, UserData users, _) {
+                  if (users.routeType == "2") {
+                    // is market route
+                    return GestureDetector(
+                      onTap: () => _editBottomSheet(context),
+                      child: Container(
+                        color: Colors.white,
+                        height: 50.0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Text('ส่วนลด',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.red,
+                                      )),
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  color: Colors.white,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 15.0),
+                                        child: Text(
+                                          '${formatter.format(_discount_amt)}',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Text("");
+                  }
+                },
+              ),
+              SizedBox(
+                height: 5,
+              ),
               Container(
                 color: Colors.grey[300],
                 child: Padding(
@@ -371,7 +557,8 @@ class _OrdercheckoutPageState extends State<OrdercheckoutPage> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(right: 15.0),
-                                child: Text('${formatter.format(total_amount)}',
+                                child: Text(
+                                    '${formatter.format(total_amount - _discount_amt)}',
                                     style: TextStyle(
                                         fontSize: 16,
                                         color: Colors.red,
@@ -386,7 +573,7 @@ class _OrdercheckoutPageState extends State<OrdercheckoutPage> {
                 ),
               ),
               Row(
-                children: [
+                children: <Widget>[
                   Expanded(
                     child: GestureDetector(
                       child: Container(
@@ -422,8 +609,11 @@ class _OrdercheckoutPageState extends State<OrdercheckoutPage> {
                                 FlatButton(
                                   onPressed: () {
                                     //Navigator.of(context).pop(true);
-                                    _submitForm(order_items[0].customer_id,
-                                        order_items, "1");
+                                    _submitForm(
+                                        order_items[0].customer_id,
+                                        order_items,
+                                        "1",
+                                        _discount_amt.toString());
                                   },
                                   child: Text('ยืนยัน'),
                                 ),
@@ -489,8 +679,11 @@ class _OrdercheckoutPageState extends State<OrdercheckoutPage> {
                                 FlatButton(
                                   onPressed: () {
                                     //Navigator.of(context).pop(true);
-                                    _submitForm(order_items[0].customer_id,
-                                        order_items, "2");
+                                    _submitForm(
+                                        order_items[0].customer_id,
+                                        order_items,
+                                        "2",
+                                        _discount_amt.toString());
                                   },
                                   child: Text('ยืนยัน'),
                                 ),
@@ -556,8 +749,11 @@ class _OrdercheckoutPageState extends State<OrdercheckoutPage> {
                                 FlatButton(
                                   onPressed: () {
                                     //Navigator.of(context).pop(true);
-                                    _submitForm(order_items[0].customer_id,
-                                        order_items, "3");
+                                    _submitForm(
+                                        order_items[0].customer_id,
+                                        order_items,
+                                        "3",
+                                        _discount_amt.toString());
                                   },
                                   child: Text('ยืนยัน'),
                                 ),

@@ -1,34 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:ice_app_new/models/delivery_route.dart';
+import 'package:ice_app_new/page_offline/customer_price.dart';
+import 'package:ice_app_new/page_offline/product_issue.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:ice_app_new/models/delivery_route.dart';
 import 'package:ice_app_new/pages/auth.dart';
 import 'package:ice_app_new/pages/blue_print.dart';
+import 'package:ice_app_new/pages/checkinpage.dart';
+import 'package:ice_app_new/pages/createorder_boot.dart';
 import 'package:ice_app_new/pages/customer_asset.dart';
 import 'package:ice_app_new/pages/home.dart';
-import 'package:ice_app_new/pages/issuesuccess.dart';
+// import 'package:ice_app_new/pages/issuesuccess.dart';
 import 'package:ice_app_new/pages/journalissue.dart';
 import 'package:ice_app_new/pages/offlinetest.dart';
+// import 'package:ice_app_new/pages/offlinetest.dart';
 import 'package:ice_app_new/pages/order_print.dart';
-import 'package:ice_app_new/pages/paymentsuccess.dart';
+// import 'package:ice_app_new/pages/paymentsuccess.dart';
 import 'package:ice_app_new/pages/plan.dart';
-import 'package:ice_app_new/pages/print_bluetooth.dart';
+// import 'package:ice_app_new/pages/print_bluetooth.dart';
 import 'package:ice_app_new/pages/qrscan.dart';
 import 'package:ice_app_new/pages/stepper.dart';
-import 'package:ice_app_new/pages/take_photo.dart';
-import 'package:ice_app_new/widgets/journalissue/journalissue_item.dart';
-import 'package:scoped_model/scoped_model.dart';
-import 'package:connectivity/connectivity.dart';
+// import 'package:ice_app_new/pages/take_photo.dart';
+// import 'package:ice_app_new/widgets/journalissue/journalissue_item.dart';
+// import 'package:scoped_model/scoped_model.dart';
+// import 'package:connectivity/connectivity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flushbar/flushbar_helper.dart';
 import 'package:flushbar/flushbar.dart';
 
 import 'package:provider/provider.dart';
 
-import '../models/user.dart';
+// import '../models/user.dart';
 import '../providers/user.dart';
 import '../pages/order.dart';
-import '../pages/products.dart';
+// import '../pages/products.dart';
 import '../pages/payment.dart';
-import '../pages/transfer.dart';
+// import '../pages/transfer.dart';
 
 class MainTest extends StatefulWidget {
   @override
@@ -126,7 +132,7 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
     if (successInformation['success']) {
       print('logout success');
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => AuthPage()));
+          context, MaterialPageRoute(builder: (context) => CheckinPage()));
       // Navigator.of(context).pop();
     }
   }
@@ -134,42 +140,108 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
   void _logout(UserData users) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            'ยืนยันการออกจากระบบ!',
-            style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.bold,
-            ),
+      barrierDismissible: false,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                height: 12,
+              ),
+              Icon(
+                Icons.privacy_tip_outlined,
+                size: 32,
+                color: Colors.lightGreen,
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              Text(
+                'ยืนยันการทำรายการ',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              Text(
+                'ต้องการออกจากระบบใช่หรือไม่',
+                style: TextStyle(fontWeight: FontWeight.normal),
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: MaterialButton(
+                      color: Colors.lightGreen,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50)),
+                      onPressed: () => _logoutaction(users.logout),
+                      child: Text('ใช่'),
+                    ),
+                  ),
+                  Spacer(),
+                  Expanded(
+                    child: MaterialButton(
+                      color: Colors.grey[400],
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50)),
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: Text('ไม่ใช่'),
+                    ),
+                  ),
+                ],
+              )
+            ],
           ),
-          content: Text(
-            "คุณต้องการออกจากระบบใช่หรือไม่",
-            style: TextStyle(color: Colors.red),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('ใช่',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  )),
-              onPressed: () => _logoutaction(users.logout),
-            ),
-            FlatButton(
-              child: Text('ไม่ใช่',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  )),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+        ),
+      ),
     );
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return AlertDialog(
+    //       title: Text(
+    //         'ยืนยันการออกจากระบบ!',
+    //         style: TextStyle(
+    //           fontSize: 20.0,
+    //           fontWeight: FontWeight.bold,
+    //         ),
+    //       ),
+    //       content: Text(
+    //         "คุณต้องการออกจากระบบใช่หรือไม่",
+    //         style: TextStyle(color: Colors.red),
+    //       ),
+    //       actions: <Widget>[
+    //         FlatButton(
+    //           child: Text('ใช่',
+    //               style: TextStyle(
+    //                 fontSize: 20.0,
+    //                 fontWeight: FontWeight.bold,
+    //               )),
+    //           onPressed: () => _logoutaction(users.logout),
+    //         ),
+    //         FlatButton(
+    //           child: Text('ไม่ใช่',
+    //               style: TextStyle(
+    //                 fontSize: 20.0,
+    //                 fontWeight: FontWeight.bold,
+    //               )),
+    //           onPressed: () {
+    //             Navigator.of(context).pop();
+    //           },
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
   }
 
   @override
@@ -194,68 +266,68 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
             style: TextStyle(color: Colors.white),
             //      style: TextStyle(fontFamily: 'Cloud-Bold', color: Colors.white),
           ),
-          actions: <Widget>[
-            // IconButton(
-            //   //color: Colors.white,
-            //   icon: Icon(
-            //     // Icons.keyboard_control_outlined,
-            //     Icons.more_vert,
-            //     color: Colors.white,
-            //   ),
-            //   onPressed: () {
-            //     //showInfoFlushbar(context);
-            //     show_Title_n_message_Flushbar(context);
-            //     // showSearch(context: context, delegate: DataSearch());
-            //   },
-            // ),
-            PopupMenuButton<String>(
-              onSelected: (String result) {
-                switch (result) {
-                  case 'option1':
-                    print('option 1 clicked');
-                    break;
-                  case 'option2':
-                    print('option 2 clicked');
-                    break;
-                  case 'delete':
-                    print('I want to delete');
-                    break;
-                  default:
-                }
-              },
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                const PopupMenuItem<String>(
-                  value: 'option1',
-                  child: Text('สายส่ง 1'),
-                ),
-                const PopupMenuItem<String>(
-                  value: 'option2',
-                  child: Text('สายส่ง 2'),
-                ),
-                const PopupMenuItem<String>(
-                  value: 'delete',
-                  child: Text('สายส่ง 3'),
-                ),
-              ],
-            )
-            // (_currentIndex == 3)
-            //     ? IconButton(
-            //         //color: Colors.white,
-            //         onPressed: () => {},
-            //         icon: Icon(
-            //           Icons.add_circle_outline,
-            //           color: Colors.white,
-            //         ),
-            //       )
-            //     : Container(),
-            // IconButton(
-            //     //color: Colors.white,
-            //     icon: Icon(Icons.shopping_cart, color: Colors.white),
-            //     onPressed: () {
-            //       // Navigator.push(context,
-            //       //     MaterialPageRoute(builder: (context) => CardPage()));
-            //     }),
-          ],
+          // actions: <Widget>[
+          //   // IconButton(
+          //   //   //color: Colors.white,
+          //   //   icon: Icon(
+          //   //     // Icons.keyboard_control_outlined,
+          //   //     Icons.more_vert,
+          //   //     color: Colors.white,
+          //   //   ),
+          //   //   onPressed: () {
+          //   //     //showInfoFlushbar(context);
+          //   //     show_Title_n_message_Flushbar(context);
+          //   //     // showSearch(context: context, delegate: DataSearch());
+          //   //   },
+          //   // ),
+          //   PopupMenuButton<String>(
+          //     onSelected: (String result) {
+          //       switch (result) {
+          //         case 'option1':
+          //           print('option 1 clicked');
+          //           break;
+          //         case 'option2':
+          //           print('option 2 clicked');
+          //           break;
+          //         case 'delete':
+          //           print('I want to delete');
+          //           break;
+          //         default:
+          //       }
+          //     },
+          //     itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+          //       const PopupMenuItem<String>(
+          //         value: 'option1',
+          //         child: Text('สายส่ง 1'),
+          //       ),
+          //       const PopupMenuItem<String>(
+          //         value: 'option2',
+          //         child: Text('สายส่ง 2'),
+          //       ),
+          //       const PopupMenuItem<String>(
+          //         value: 'delete',
+          //         child: Text('สายส่ง 3'),
+          //       ),
+          //     ],
+          //   )
+          //   // (_currentIndex == 3)
+          //   //     ? IconButton(
+          //   //         //color: Colors.white,
+          //   //         onPressed: () => {},
+          //   //         icon: Icon(
+          //   //           Icons.add_circle_outline,
+          //   //           color: Colors.white,
+          //   //         ),
+          //   //       )
+          //   //     : Container(),
+          //   // IconButton(
+          //   //     //color: Colors.white,
+          //   //     icon: Icon(Icons.shopping_cart, color: Colors.white),
+          //   //     onPressed: () {
+          //   //       // Navigator.push(context,
+          //   //       //     MaterialPageRoute(builder: (context) => CardPage()));
+          //   //     }),
+          // ],
         ),
         drawer: Drawer(
           child: ListView(
@@ -301,6 +373,18 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
                   );
                 },
               ),
+              // ListTile(
+              //   title: Text("ขายออกบูธ"),
+              //   trailing: Icon(Icons.shopping_bag_outlined),
+              //   onTap: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => CreateorderBootPage(),
+              //       ),
+              //     );
+              //   },
+              // ),
               ListTile(
                 title: Text("รับคำสั่งซื้อ"),
                 trailing: Icon(Icons.shopping_cart_outlined),
@@ -314,6 +398,20 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
                 },
               ),
 
+              // ListTile(
+              //   title: Text("บันทึกขายออฟไลน์"),
+              //   trailing: Icon(Icons.delivery_dining),
+              //   onTap: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) =>
+              //             ProductsPage(), // StepperPage(), //OfflinePage(),
+              //       ),
+              //     );
+              //   },
+              // ),
+
               ListTile(
                 title: Text("บันทึกขายออฟไลน์"),
                 trailing: Icon(Icons.delivery_dining),
@@ -321,7 +419,8 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => StepperPage(), //OfflinePage(),
+                      builder: (context) =>
+                          CustomerpricePage(), // StepperPage(), //OfflinePage(),
                     ),
                   );
                 },
@@ -349,14 +448,14 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
                   //             builder: (context) => TakePictureScreen(),),)
                 },
               ),
-              ListTile(
-                title: Text("QR Scan"),
-                trailing: Icon(Icons.qr_code_scanner_sharp),
-                onTap: () => {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => QrscanPage()))
-                },
-              ),
+              // ListTile(
+              //   title: Text("QR Scan"),
+              //   trailing: Icon(Icons.qr_code_scanner_sharp),
+              //   onTap: () => {
+              //     Navigator.push(context,
+              //         MaterialPageRoute(builder: (context) => QrscanPage()))
+              //   },
+              // ),
               // TakePictureScreen()
               // Divider(),
               // ListTile(

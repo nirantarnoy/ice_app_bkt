@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ice_app_new/providers/order.dart';
+//import 'package:ice_app_new/providers/order.dart';
 import 'package:ice_app_new/providers/product.dart';
 import 'package:provider/provider.dart';
-import 'package:scoped_model/scoped_model.dart';
+//import 'package:scoped_model/scoped_model.dart';
 
 import '../../models/products.dart';
 

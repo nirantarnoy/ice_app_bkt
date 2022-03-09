@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
+//import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:ice_app_new/models/plan.dart';
 import 'package:ice_app_new/pages/plandetail.dart';
-import 'package:ice_app_new/providers/customer.dart';
+//import 'package:ice_app_new/providers/customer.dart';
 import 'package:ice_app_new/providers/plan.dart';
 import 'package:intl/intl.dart';
-import 'package:ice_app_new/providers/order.dart';
+//import 'package:ice_app_new/providers/order.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/plan.dart';
-import '../../pages/orderdetail.dart';
+//import '../../pages/orderdetail.dart';
 
 class PlanItem extends StatefulWidget {
   @override
@@ -25,15 +25,15 @@ class _PlanItemState extends State<PlanItem> {
 
   void didChangeDependencies() {
     if (_isInit) {
-      Provider.of<CustomerData>(context, listen: false)
-          .fetCustomers()
-          .then((_) {
-        setState(() {
-          _isLoading = false;
+      // Provider.of<CustomerData>(context, listen: false)
+      //     .fetCustomers()
+      //     .then((_) {
+      //   setState(() {
+      //     _isLoading = false;
 
-          // print('issue id is ${selectedIssue}');
-        });
-      });
+      //     // print('issue id is ${selectedIssue}');
+      //   });
+      // });
     }
   }
 
@@ -81,104 +81,104 @@ class _PlanItemState extends State<PlanItem> {
     return Column(
       children: <Widget>[
         Column(children: <Widget>[
-          Card(
-            margin: EdgeInsets.all(8),
-            child: Padding(
-              padding: EdgeInsets.all(2),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                      child: Consumer<CustomerData>(
-                        builder: (context, _customer, _) => TypeAheadField(
-                          textFieldConfiguration: TextFieldConfiguration(
-                            controller: _typeAheadController,
-                            autofocus: false,
-                            style: DefaultTextStyle.of(context)
-                                .style
-                                .copyWith(fontStyle: FontStyle.normal),
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: 'ค้นหาลูกค้า'),
-                          ),
-                          // suggestionsCallback: (pattern) async {
-                          //   return await BackendService.getSuggestions(pattern);
-                          // },
-                          suggestionsCallback: (pattern) async {
-                            return await _customer.findCustomer(pattern);
-                          },
-                          itemBuilder: (context, suggestion) {
-                            return ListTile(
-                              // leading: Icon(Icons.shopping_cart),
-                              title: Text(suggestion.name),
-                              // subtitle: Text('\$${suggestion['price']}'),
-                            );
-                          },
+          // Card(
+          //   margin: EdgeInsets.all(8),
+          //   child: Padding(
+          //     padding: EdgeInsets.all(2),
+          //     child: Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: <Widget>[
+          //           Expanded(
+          //             child: Consumer<CustomerData>(
+          //               builder: (context, _customer, _) => TypeAheadField(
+          //                 textFieldConfiguration: TextFieldConfiguration(
+          //                   controller: _typeAheadController,
+          //                   autofocus: false,
+          //                   style: DefaultTextStyle.of(context)
+          //                       .style
+          //                       .copyWith(fontStyle: FontStyle.normal),
+          //                   decoration: InputDecoration(
+          //                       border: OutlineInputBorder(),
+          //                       hintText: 'ค้นหาลูกค้า'),
+          //                 ),
+          //                 // suggestionsCallback: (pattern) async {
+          //                 //   return await BackendService.getSuggestions(pattern);
+          //                 // },
+          //                 suggestionsCallback: (pattern) async {
+          //                   return await _customer.findCustomer(pattern);
+          //                 },
+          //                 itemBuilder: (context, suggestion) {
+          //                   return ListTile(
+          //                     // leading: Icon(Icons.shopping_cart),
+          //                     title: Text(suggestion.name),
+          //                     // subtitle: Text('\$${suggestion['price']}'),
+          //                   );
+          //                 },
 
-                          onSuggestionSelected: (items) {
-                            //print(items.id);
-                            if (_typeAheadController.value == '') {
-                              print('not selected');
-                            }
-                            setState(() {
-                              selectedValue = items.id;
-                              plans.searchBycustomer = selectedValue;
-                              PlanData getneworder =
-                                  Provider.of<PlanData>(context, listen: false);
-                              getneworder.fetPlan();
-                              this._typeAheadController.text = items.name;
-                            });
-                          },
-                          noItemsFoundBuilder: (context) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    'ไม่พบข้อมูล',
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.red),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    FlatButton(
-                        color: Colors.grey[100],
-                        height: 30,
-                        onPressed: () {
-                          selectedValue = '';
-                          plans.searchBycustomer = selectedValue;
-                          PlanData getneworder =
-                              Provider.of<PlanData>(context, listen: false);
-                          getneworder.fetPlan();
-                          this._typeAheadController.text = '';
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.refresh_rounded,
-                            size: 45,
-                            color: Colors.grey[500],
-                          ),
-                        )),
-                    // FloatingActionButton(
-                    //     backgroundColor: Colors.green[500],
-                    //     onPressed: () => Navigator.of(context)
-                    //         .pushNamed(CreateorderPage.routeName),
-                    //     child: Icon(Icons.add, color: Colors.white)
-                    //     //   FlatButton(onPressed: () {}, child: Text("เพิ่มรายการขาย")),
-                    //     ),
-                  ]),
-            ),
-          ),
+          //                 onSuggestionSelected: (items) {
+          //                   //print(items.id);
+          //                   if (_typeAheadController.value == '') {
+          //                     print('not selected');
+          //                   }
+          //                   setState(() {
+          //                     selectedValue = items.id;
+          //                     plans.searchBycustomer = selectedValue;
+          //                     PlanData getneworder =
+          //                         Provider.of<PlanData>(context, listen: false);
+          //                     getneworder.fetPlan();
+          //                     this._typeAheadController.text = items.name;
+          //                   });
+          //                 },
+          //                 noItemsFoundBuilder: (context) {
+          //                   return Padding(
+          //                     padding: const EdgeInsets.all(8.0),
+          //                     child: Row(
+          //                       mainAxisAlignment: MainAxisAlignment.center,
+          //                       children: <Widget>[
+          //                         Text(
+          //                           'ไม่พบข้อมูล',
+          //                           style: TextStyle(
+          //                               fontSize: 16, color: Colors.red),
+          //                         ),
+          //                       ],
+          //                     ),
+          //                   );
+          //                 },
+          //               ),
+          //             ),
+          //           ),
+          //           SizedBox(
+          //             width: 5,
+          //           ),
+          //           FlatButton(
+          //               color: Colors.grey[100],
+          //               height: 30,
+          //               onPressed: () {
+          //                 selectedValue = '';
+          //                 plans.searchBycustomer = selectedValue;
+          //                 PlanData getneworder =
+          //                     Provider.of<PlanData>(context, listen: false);
+          //                 getneworder.fetPlan();
+          //                 this._typeAheadController.text = '';
+          //               },
+          //               child: Padding(
+          //                 padding: const EdgeInsets.all(8.0),
+          //                 child: Icon(
+          //                   Icons.refresh_rounded,
+          //                   size: 45,
+          //                   color: Colors.grey[500],
+          //                 ),
+          //               )),
+          //           // FloatingActionButton(
+          //           //     backgroundColor: Colors.green[500],
+          //           //     onPressed: () => Navigator.of(context)
+          //           //         .pushNamed(CreateorderPage.routeName),
+          //           //     child: Icon(Icons.add, color: Colors.white)
+          //           //     //   FlatButton(onPressed: () {}, child: Text("เพิ่มรายการขาย")),
+          //           //     ),
+          //         ]),
+          //   ),
+          // ),
         ]),
         SizedBox(height: 5),
         Expanded(
@@ -309,8 +309,11 @@ class _ItemsState extends State<Items> {
           children: <Widget>[
             ListTile(
               title: Text(
-                "${widget._customer_name}",
-                style: TextStyle(fontSize: 14, color: Colors.black),
+                "${widget._plan_no}",
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87),
               ),
               subtitle: Text(
                 "${widget._trans_date}",

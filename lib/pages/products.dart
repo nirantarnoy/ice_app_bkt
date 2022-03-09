@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:rflutter_alert/rflutter_alert.dart';
+//import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:connectivity/connectivity.dart';
 
-import 'package:provider/provider.dart';
-import 'package:ice_app_new/providers/product.dart';
-import 'package:ice_app_new/widgets/product/product_item.dart';
+// import 'package:provider/provider.dart';
+// import 'package:ice_app_new/providers/product.dart';
+// import 'package:ice_app_new/widgets/product/product_item.dart';
 
 class ProductPage extends StatefulWidget {
   @override

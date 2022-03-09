@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ice_app_new/pages/createorder_new.dart';
 import 'package:ice_app_new/pages/main_test.dart';
-import 'package:ice_app_new/pages/order.dart';
 
 class OrdersuccessPage extends StatefulWidget {
   @override
@@ -49,7 +49,7 @@ class _OrdersuccessPageState extends State<OrdersuccessPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => OrderPage(),
+                              builder: (_) => CreateorderNewPage(),
                             ),
                           );
                           // Navigator.pushAndRemoveUntil(

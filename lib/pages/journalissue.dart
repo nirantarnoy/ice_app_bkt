@@ -1,30 +1,34 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:ice_app_new/pages/home.dart';
+import 'package:ice_app_new/models/issueitems.dart';
+// import 'package:ice_app_new/pages/home.dart';
 import 'package:ice_app_new/pages/main_test.dart';
-import 'package:ice_app_new/pages/transfer.dart';
-import 'package:ice_app_new/pages/transferin.dart';
+// import 'package:ice_app_new/pages/transfer.dart';
+// import 'package:ice_app_new/pages/transferin.dart';
 import 'package:ice_app_new/pages/transferinpage.dart';
-import 'package:ice_app_new/pages/transferout.dart';
+// import 'package:ice_app_new/pages/transferout.dart';
 import 'package:ice_app_new/providers/transferin.dart';
 import 'package:ice_app_new/providers/transferout.dart';
-import 'package:ice_app_new/widgets/transferin/transferin_item.dart';
+import 'package:ice_app_new/sqlite/models/product.dart';
+import 'package:ice_app_new/sqlite/providers/customer_price.dart';
+import 'package:ice_app_new/sqlite/providers/db_provider.dart';
+// import 'package:ice_app_new/widgets/transferin/transferin_item.dart';
 import 'package:ice_app_new/widgets/transferout/transferout_item.dart';
 import 'package:intl/intl.dart';
-import 'package:ice_app_new/models/issueitems.dart';
+// import 'package:ice_app_new/models/issueitems.dart';
 
-import 'package:rflutter_alert/rflutter_alert.dart';
+// import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:connectivity/connectivity.dart';
 
 import 'package:provider/provider.dart';
 import 'package:ice_app_new/providers/issuedata.dart';
 import 'package:ice_app_new/widgets/journalissue/journalissue_item.dart';
-import 'package:ice_app_new/widgets/error/err_api.dart';
-import 'package:ice_app_new/widgets/error/err_internet_con.dart';
-import '../pages/error.dart';
+// import 'package:ice_app_new/widgets/error/err_api.dart';
+// import 'package:ice_app_new/widgets/error/err_internet_con.dart';
+// import '../pages/error.dart';
 
-import 'package:ice_app_new/helpers/activity_connection.dart';
+// import 'package:ice_app_new/helpers/activity_connection.dart';
 
 class JournalissuePage extends StatefulWidget {
   static const routeName = '/journalissue';
@@ -41,6 +45,7 @@ class _JournalissuePageState extends State<JournalissuePage> {
   Future _issueFuture;
   Future _transferoutFuture;
   Future _transferinFuture;
+  Future _oldstockroutefuture;
 
   // Future _obtainHasopenFuture() {
   //   return Provider.of<IssueData>(context, listen: false).fetIssueitemopen();
@@ -64,6 +69,10 @@ class _JournalissuePageState extends State<JournalissuePage> {
         .fetTransferincheck();
   }
 
+  Future _obtainoldstockrouteFuture() {
+    return Provider.of<IssueData>(context, listen: false).fetoldstockroute();
+  }
+
   @override
   initState() {
     _checkinternet();
@@ -72,6 +81,10 @@ class _JournalissuePageState extends State<JournalissuePage> {
     _issueFuture = _obtainIssueFuture();
     _transferoutFuture = _obtaintransferoutFuture();
     _transferinFuture = _obtaintransferinFuture();
+
+    //  _oldstockroutefuture = _obtainoldstockrouteFuture();
+
+    //_callDb();
     //_checkinternet();
     // try {
     //   widget.model.fetchOrders();
@@ -94,6 +107,41 @@ class _JournalissuePageState extends State<JournalissuePage> {
       //_showdialog('Intenet access', 'You are connect wifi');
     }
   }
+
+  // Future _callDb() async {
+  //   int chk_db = await DbHelper.instance.checkDB();
+  //   print(chk_db);
+  // }
+
+  // Future deleteData() async {
+  //   await DbHelper.instance.deleteProductAll();
+  // }
+
+  // Future callapidata() async {
+  //   await Provider.of<CustomerpriceData>(context, listen: false)
+  //       .fetpriceonline();
+  //   // List<Issueitems> issue_daily =
+  //   //     await Provider.of<IssueData>(context, listen: false).listissue;
+  //   // print('issue daily is ${issue_daily.length}');
+  //   // if (issue_daily != null) {
+  //   //   issue_daily.forEach((element) async {
+  //   //     final Product product_data = Product(
+  //   //       id: element.product_id,
+  //   //       code: element.product_name,
+  //   //       name: element.product_name,
+  //   //       qty: element.avl_qty,
+  //   //       issue_id: int.parse(element.issue_id),
+  //   //       createdTime: DateTime.now(),
+  //   //       price_group_id: 0,
+  //   //       route_id: 0,
+  //   //     );
+
+  //   //     if (product_data != null) {
+  //   //       await DbHelper.instance.createProduct(product_data);
+  //   //     }
+  //   //   });
+  //   // }
+  // }
 
   _showdialog(title, text) {
     showDialog(

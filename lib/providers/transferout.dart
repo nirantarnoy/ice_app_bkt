@@ -208,11 +208,13 @@ class TransferoutData with ChangeNotifier {
     String _route_id = '';
     String _company_id = "";
     String _branch_id = "";
+    String _user_id = "";
     if (prefs.getString('user_id') != null) {
       _from_car_id = prefs.getString('emp_car_id');
       _route_id = prefs.getString('emp_route_id');
       _company_id = prefs.getString('company_id');
       _branch_id = prefs.getString('branch_id');
+      _user_id = prefs.getString('user_id');
     }
 
     var jsonx = transferdata
@@ -220,7 +222,7 @@ class TransferoutData with ChangeNotifier {
               'product_id': e.id,
               'qty': e.qty,
               'price': e.sale_price,
-              'issue_id': e.issue_ref_id
+              'issue_id': e.issue_ref_id,
             })
         .toList();
 
@@ -234,6 +236,7 @@ class TransferoutData with ChangeNotifier {
       'data': jsonx,
       'company_id': _company_id,
       'branch_id': _branch_id,
+      'user_id': _user_id,
     };
     print('data will save is ${dataAdd}');
     try {

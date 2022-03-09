@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:connectivity/connectivity.dart';
+// import 'package:connectivity/connectivity.dart';
 
 // class CheckCon extends StatelessWidget {
 //   Future<void> _checkinternet() async {

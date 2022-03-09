@@ -5,11 +5,11 @@ import 'package:ice_app_new/providers/customer.dart';
 import 'package:ice_app_new/providers/order.dart';
 import 'package:ice_app_new/providers/transferin.dart';
 import 'package:intl/intl.dart';
-import 'package:ice_app_new/pages/createtransfer.dart';
-import 'package:ice_app_new/providers/transferout.dart';
+// import 'package:ice_app_new/pages/createtransfer.dart';
+// import 'package:ice_app_new/providers/transferout.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/transferout.dart';
+// import '../../models/transferout.dart';
 
 class Transferinitem extends StatelessWidget {
   // List<Transferout> _orders = [];

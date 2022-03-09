@@ -1,25 +1,26 @@
 import 'dart:async';
-import 'dart:math';
+//import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+//import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ice_app_new/models/paymentselected.dart';
 import 'package:ice_app_new/pages/main_test.dart';
 import 'package:ice_app_new/pages/paymentcheckout.dart';
+import 'package:ice_app_new/pages/paymenthistory.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:ice_app_new/widgets/payment/payment_item.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+//import 'package:ice_app_new/widgets/payment/payment_item.dart';
+//import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:connectivity/connectivity.dart';
 
-import 'package:ice_app_new/helpers/activity_connection.dart';
+//import 'package:ice_app_new/helpers/activity_connection.dart';
 import 'package:provider/provider.dart';
 
 import 'package:ice_app_new/providers/paymentreceive.dart';
 import 'package:ice_app_new/providers/customer.dart';
 import 'package:ice_app_new/models/paymentreceive.dart';
 import 'package:ice_app_new/models/enum_paytype.dart';
-import 'package:ice_app_new/widgets/error/err_api.dart';
+//import 'package:ice_app_new/widgets/error/err_api.dart';
 
 class PaymentPage extends StatefulWidget {
   static const routeName = '/payment';
@@ -570,6 +571,16 @@ class _PaymentPageState extends State<PaymentPage> {
                 Navigator.of(context).pop(MainTest());
               },
             ),
+            actions: [
+              IconButton(
+                icon: Icon(
+                  Icons.alarm,
+                  color: Colors.white,
+                ),
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => PaymenthistoryPage())),
+              ),
+            ],
           ),
           body: Padding(
             padding: const EdgeInsets.all(8.0),

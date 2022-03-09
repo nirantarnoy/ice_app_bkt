@@ -152,7 +152,7 @@ class PlanData with ChangeNotifier {
           idPlan = int.parse(res['data'][i]['id'].toString());
           final Plan orderresult = Plan(
             id: res['data'][i]['id'].toString(),
-            code: res['data'][i]['trans_no'].toString(),
+            code: res['data'][i]['tran_no'].toString(),
             route_id: res['data'][i]['route_id'].toString(),
             route_name: res['data'][i]['route_name'].toString(),
             trans_date: res['data'][i]['trans_date'].toString(),

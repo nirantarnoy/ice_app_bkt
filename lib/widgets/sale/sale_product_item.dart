@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
+//import 'package:path/path.dart';
 import 'package:provider/provider.dart';
-import 'package:numberpicker/numberpicker.dart';
+//import 'package:numberpicker/numberpicker.dart';
 
 import 'package:ice_app_new/providers/product.dart';
-import 'package:ice_app_new/providers/order.dart';
+//import 'package:ice_app_new/providers/order.dart';
 import 'package:ice_app_new/models/addorder.dart';
 import 'package:ice_app_new/models/products.dart';
-import 'package:ice_app_new/providers/customer.dart';
+//import 'package:ice_app_new/providers/customer.dart';
 
 class SaleProductItem extends StatelessWidget {
   static String selectedCustomer;
