@@ -503,14 +503,14 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
               onTap: _onTaped,
               items: [
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.home), title: Text('หน้าหลัก')),
+                    icon: Icon(Icons.home), label: 'หน้าหลัก'),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.transform_sharp), title: Text('สินค้า')),
+                    icon: Icon(Icons.transform_sharp), label: 'สินค้า'),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.shopping_cart), title: Text('ขายสินค้า')),
+                    icon: Icon(Icons.shopping_cart), label: 'ขายสินค้า'),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.beenhere),
-                  title: Text('รับชำระเงิน'),
+                  label: 'รับชำระเงิน',
                 ),
               ],
             ),

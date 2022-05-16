@@ -35,6 +35,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       ScreenshotController(); // screenshot capture
   File screenshot;
   SingingCharacter _character = SingingCharacter.reason1;
+  double order_discount = 0;
   final Map<String, dynamic> _formData = {
     'cancel_reason': '',
   };
@@ -258,6 +259,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       orderCards = new ListView.builder(
         itemCount: orders.length,
         itemBuilder: (BuildContext context, int index) {
+          // setState(() {
+          order_discount = double.parse(orders[0].discount_amount);
+          // });
           return Dismissible(
             key: ValueKey(orders[index]),
             background: Container(
@@ -815,11 +819,46 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                           child: Consumer<OrderData>(
                             builder: (context, orderdetails, _) =>
                                 _buildordersList(
-                                    orderdetails.listorder_detail,
-                                    loadCustomerorder.customer_id,
-                                    loadCustomerorder.customer_code,
-                                    loadCustomerorder.order_date,
-                                    loadCustomerorder.order_no),
+                              orderdetails.listorder_detail,
+                              loadCustomerorder.customer_id,
+                              loadCustomerorder.customer_code,
+                              loadCustomerorder.order_date,
+                              loadCustomerorder.order_no,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'ส่วนลด',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      '${order_discount}',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Container(

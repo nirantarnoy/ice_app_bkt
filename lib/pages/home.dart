@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   Future _orderFuture;
   Future _paymentdailyFuture;
+  Future _orderDiscount;
 
   Future _obtainOrderFuture() {
     Provider.of<OrderData>(context, listen: false).searchBycustomer = '';
@@ -36,11 +37,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         .fetPaymentdaily();
   }
 
+  Future _obtainOrderDiscountFuture() {
+    return Provider.of<OrderData>(context, listen: false).fetOrderDiscount();
+  }
+
   @override
   void initState() {
     _checkinternet();
     _orderFuture = _obtainOrderFuture();
     _paymentdailyFuture = _obtainPaymentdailyFuture();
+    _orderDiscount = _obtainOrderDiscountFuture();
     super.initState();
 
     _scrollController = ScrollController()
@@ -695,6 +701,74 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                 Text('รวมเงิน'),
                                                 Text(
                                                   '${formatter.format(_paymentdaily.orderStatus > 0 ? 0 : _paymentdaily.totalPayment)}',
+                                                  style: TextStyle(
+                                                      color: Colors.black54,
+                                                      fontSize: 30,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 15),
+                                  ]),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 15),
+                        Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Card(
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            shadowColor: Colors.black,
+                            color: Colors.lightBlue[200],
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Column(children: <Widget>[
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      'ส่วนลด',
+                                      style: TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    //Divider(),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: DottedLine(
+                                        direction: Axis.horizontal,
+                                        lineLength: double.infinity,
+                                        lineThickness: 1.0,
+                                        dashLength: 4.0,
+                                        dashColor: Colors.grey,
+                                        dashRadius: 0.0,
+                                        dashGapLength: 4.0,
+                                        dashGapColor: Colors.transparent,
+                                        dashGapRadius: 0.0,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Consumer<OrderData>(
+                                            builder:
+                                                (context, _order_discount, _) =>
+                                                    Column(
+                                              children: [
+                                                Text('รวมเงิน'),
+                                                Text(
+                                                  '${formatter.format((_order_discount.sumcashdiscount + _order_discount.sumcreditdiscount))}',
                                                   style: TextStyle(
                                                       color: Colors.black54,
                                                       fontSize: 30,

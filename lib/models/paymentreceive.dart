@@ -8,13 +8,16 @@ class Paymentreceive {
   final String customer_code;
   final String line_total;
   final String remain_amount;
+  bool value;
 
-  Paymentreceive(
-      {this.order_id,
-      this.order_no,
-      this.order_date,
-      this.customer_id,
-      this.customer_code,
-      this.line_total,
-      this.remain_amount});
+  Paymentreceive({
+    this.order_id,
+    this.order_no,
+    this.order_date,
+    this.customer_id,
+    this.customer_code,
+    this.line_total,
+    this.remain_amount,
+    this.value,
+  });
 }

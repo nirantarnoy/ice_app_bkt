@@ -15,6 +15,7 @@ class OrderDetail {
   final String price;
   final String price_group_id;
   final String order_line_status;
+  final String discount_amount;
 
   OrderDetail({
     @required this.order_id,
@@ -31,5 +32,6 @@ class OrderDetail {
     @required this.price_group_id,
     @required this.product_name,
     @required this.order_line_status,
+    this.discount_amount,
   });
 }

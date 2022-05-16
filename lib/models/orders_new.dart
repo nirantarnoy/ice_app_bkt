@@ -17,6 +17,7 @@ class OrdersNew {
   final String order_line_id;
   final String order_line_date;
   final String order_line_status;
+  final String discount_amount;
 
   OrdersNew({
     @required this.id,
@@ -35,5 +36,6 @@ class OrdersNew {
     @required this.order_line_id,
     @required this.order_line_date,
     @required this.order_line_status,
+    this.discount_amount,
   });
 }

@@ -13,9 +13,9 @@ class PaymentreceiveData with ChangeNotifier {
       //   "http://192.168.1.120/icesystem/frontend/web/api/paymentreceive/list";
       "http://103.253.73.108/icesystem/frontend/web/api/paymentreceive/list";
   // "http://103.253.73.108/icesystem/frontend/web/api/product/list";
-  final String url_to_add_payment =
-      //    "http://192.168.1.120/icesystem/frontend/web/api/paymentreceive/addpay";
-      "http://103.253.73.108/icesystem/frontend/web/api/paymentreceive/addpay";
+  // final String url_to_add_payment =
+  //     //    "http://192.168.1.120/icesystem/frontend/web/api/paymentreceive/addpay";
+  //     "http://103.253.73.108/icesystem/frontend/web/api/paymentreceive/addpay";
   final String url_to_add_payment2 =
       //    "http://192.168.1.120/icesystem/frontend/web/api/paymentreceive/addpay";
       "http://103.253.73.108/icesystem/frontend/web/api/paymentreceive/addpay2";
@@ -184,47 +184,47 @@ class PaymentreceiveData with ChangeNotifier {
     }
   }
 
-  Future<bool> addPayment(String order_id, String customer_id,
-      String pay_channel_id, String pay_amount, String pay_date) async {
-    String _company_id = "";
-    String _branch_id = "";
-    String _user_id = "";
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getString('user_id') != null) {
-      _company_id = prefs.getString('company_id');
-      _branch_id = prefs.getString('branch_id');
-      _user_id = prefs.getString('user_id');
-    }
-    final Map<String, dynamic> payData = {
-      'order_id': order_id,
-      'payment_channel_id': pay_channel_id,
-      'customer_id': customer_id,
-      'pay_amount': pay_amount,
-      'pay_date': pay_date,
-      'company_id': _company_id,
-      'branch_id': _branch_id,
-      'user_id': _user_id
-    };
+  // Future<bool> addPayment(String order_id, String customer_id,
+  //     String pay_channel_id, String pay_amount, String pay_date) async {
+  //   String _company_id = "";
+  //   String _branch_id = "";
+  //   String _user_id = "";
+  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   if (prefs.getString('user_id') != null) {
+  //     _company_id = prefs.getString('company_id');
+  //     _branch_id = prefs.getString('branch_id');
+  //     _user_id = prefs.getString('user_id');
+  //   }
+  //   final Map<String, dynamic> payData = {
+  //     'order_id': order_id,
+  //     'payment_channel_id': pay_channel_id,
+  //     'customer_id': customer_id,
+  //     'pay_amount': pay_amount,
+  //     'pay_date': pay_date,
+  //     'company_id': _company_id,
+  //     'branch_id': _branch_id,
+  //     'user_id': _user_id
+  //   };
 
-    print('save payment is $payData');
+  //   print('save payment is $payData');
 
-    try {
-      http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_add_payment),
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode(payData));
-      if (response.statusCode == 200) {
-        Map<String, dynamic> res = json.decode(response.body);
-        print('data add order is  ${res["data"]}');
-      }
-    } catch (_) {}
-  }
+  //   try {
+  //     http.Response response;
+  //     response = await http.post(Uri.encodeFull(url_to_add_payment),
+  //         headers: {'Content-Type': 'application/json'},
+  //         body: json.encode(payData));
+  //     if (response.statusCode == 200) {
+  //       Map<String, dynamic> res = json.decode(response.body);
+  //       print('data add order is  ${res["data"]}');
+  //     }
+  //   } catch (_) {}
+  // }
 
   Future<bool> addPayment2(String pay_channel_id, String pay_date,
       List<Paymentselected> paymentlist) async {
     String _company_id = "";
     String _branch_id = "";
-    String _user_id = "";
+    String _user_id = "1";
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('user_id') != null) {
       _company_id = prefs.getString('company_id');

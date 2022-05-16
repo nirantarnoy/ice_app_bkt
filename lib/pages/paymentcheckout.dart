@@ -485,7 +485,7 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
                   ),
                   Expanded(
                     child: Column(
-                      children: [
+                      children: <Widget>[
                         ListTile(
                           title: Text("โอนธนาคาร"),
                           leading: Radio<Paytype>(

@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/services.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:screenshot/screenshot.dart';
 
 class BluePrintPage extends StatefulWidget {
   @override
@@ -16,6 +18,8 @@ class BluePrintPage extends StatefulWidget {
 class _BluePrintState extends State<BluePrintPage> {
   BlueThermalPrinter bluetooth = BlueThermalPrinter.instance;
   final DateFormat dateformatter = DateFormat('dd-MM-yyyy');
+  final ScreenshotController screenshotController = ScreenshotController();
+
   List<BluetoothDevice> _devices = [];
   BluetoothDevice _device;
   bool _connected = false;
@@ -82,93 +86,211 @@ class _BluePrintState extends State<BluePrintPage> {
     }
   }
 
+  Widget slip() {
+    return Container(
+      height: 200,
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'ใบเสร็จรับเงิน',
+                style: TextStyle(fontSize: 10),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: <Widget>[
+              Expanded(
+                  child: Text(
+                'เลขที่ AZ210001',
+                style: TextStyle(fontSize: 8),
+              )),
+              Expanded(
+                  child: Text(
+                'วันที่ 23/06/2021 16:11',
+                style: TextStyle(fontSize: 8),
+              ))
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: <Widget>[
+              Expanded(
+                  child: Text(
+                'ลูกค้า AZ001 อเมซอน',
+                style: TextStyle(fontSize: 8),
+              ))
+            ],
+          ),
+          Divider(),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  'รายการ',
+                  style: TextStyle(fontSize: 8),
+                ),
+              ),
+              Expanded(
+                  child: Text(
+                'จำนวน',
+                style: TextStyle(fontSize: 8),
+              )),
+              Expanded(
+                  child: Text(
+                'ราคา',
+                style: TextStyle(fontSize: 8),
+              )),
+              Expanded(
+                  child: Text(
+                'รวม',
+                style: TextStyle(fontSize: 8),
+              ))
+            ],
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  'PB หลอดใหญ่',
+                  style: TextStyle(fontSize: 8),
+                ),
+              ),
+              Expanded(
+                  child: Text(
+                '20',
+                style: TextStyle(fontSize: 8),
+              )),
+              Expanded(
+                  child: Text(
+                '5',
+                style: TextStyle(fontSize: 8),
+              )),
+              Expanded(
+                  child: Text(
+                '100',
+                style: TextStyle(fontSize: 8),
+              ))
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text('ตั้งค่าเครื่องพิมพ์'),
-          ),
-          body: Container(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView(
-                children: <Widget>[
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        'Printer:',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
+        child: Screenshot(
+          controller: screenshotController,
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text('ตั้งค่าเครื่องพิมพ์'),
+            ),
+            body: Container(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView(
+                  children: <Widget>[
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          width: 10,
                         ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: DropdownButton(
-                          items: _getDeviceItems(),
-                          onChanged: (value) {
-                            print('printer value is ${value}');
-                            setState(() {
-                              _device = value;
-                            });
-                          },
-                          value: _device,
+                        Text(
+                          'Printer:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      RaisedButton(
-                        color: Colors.blue,
-                        onPressed: () {
-                          initPlatformState();
-                        },
-                        child: Text(
-                          'Refresh',
-                          style: TextStyle(color: Colors.white),
+                        SizedBox(
+                          width: 10,
                         ),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      RaisedButton(
-                        color: _connected ? Colors.red : Colors.green,
-                        onPressed: _connected ? _disconnect : _connect,
-                        child: Text(
-                          _connected ? 'Disconnect' : 'Connect',
-                          style: TextStyle(color: Colors.white),
+                        Expanded(
+                          child: DropdownButton(
+                            items: _getDeviceItems(),
+                            onChanged: (value) {
+                              print('printer value is ${value}');
+                              setState(() {
+                                _device = value;
+                              });
+                            },
+                            value: _device,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 10.0, right: 10.0, top: 50),
-                    child: RaisedButton(
-                      color: Colors.blue[700],
-                      onPressed: () {
-                        // testPrint.sample(pathImage);
-                        _connected ? _testPrint() : print('not connect');
-                      },
-                      child: Text('PRINT TEST',
-                          style: TextStyle(color: Colors.white)),
+                      ],
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        RaisedButton(
+                          color: Colors.blue,
+                          onPressed: () {
+                            initPlatformState();
+                          },
+                          child: Text(
+                            'Refresh',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        RaisedButton(
+                          color: _connected ? Colors.red : Colors.green,
+                          onPressed: _connected ? _disconnect : _connect,
+                          child: Text(
+                            _connected ? 'Disconnect' : 'Connect',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 10.0, right: 10.0, top: 50),
+                      child: RaisedButton(
+                        color: Colors.blue[700],
+                        onPressed: () {
+                          // testPrint.sample(pathImage);
+                          _connected ? _testPrint() : print('not connect');
+                        },
+                        child: Text('PRINT TEST',
+                            style: TextStyle(color: Colors.white)),
+                      ),
+                    ),
+                    RaisedButton(
+                      child: Text('Print Screensort'),
+                      onPressed: () async {
+                        final image = await screenshotController
+                            .captureFromWidget(slip());
+                        if (image == null) {
+                          print('no screenshort');
+                        } else {
+                          print('have screenshort');
+                          await printImage(image);
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -273,6 +395,41 @@ class _BluePrintState extends State<BluePrintPage> {
     //     bluetooth.paperCut();
     //   }
     // });
+  }
+
+  Future<String> saveImage(Uint8List bytes) async {
+    //await [];
+    final time = DateTime.now()
+        .toIso8601String()
+        .replaceAll('.', '-')
+        .replaceAll(':', '-');
+    final name = 'screenshot_$time';
+    final result = await ImageGallerySaver.saveImage(bytes, name: name);
+    return result;
+  }
+
+  Future printImage(Uint8List image) async {
+    // String dir = (await getApplicationDocumentsDirectory()).path;
+    // final time = DateTime.now()
+    //     .toIso8601String()
+    //     .replaceAll('.', '-')
+    //     .replaceAll(':', '-');
+    // final name = 'screenshot_$time';
+    // String fullPath = '$dir/$name';
+    // File file = File(fullPath);
+    // await file.writeAsBytes(image);
+    // setState(() {
+    //   pathImage = fullPath;
+    //   print('file is ${pathImage}');
+    // });
+    bluetooth.isConnected.then((isConnected) {
+      if (isConnected) {
+        bluetooth.printImageBytes(image);
+        // bluetooth.printImage(pathImage);
+        //bluetooth.printNewLine();
+        bluetooth.paperCut();
+      }
+    });
   }
 
 //write to app path

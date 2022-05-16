@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:ice_app_new/models/addorder.dart';
+import 'package:ice_app_new/models/order_discount.dart';
 
 import 'package:ice_app_new/models/orders.dart';
 import 'package:ice_app_new/models/order_detail.dart';
@@ -17,6 +18,9 @@ class OrderData with ChangeNotifier {
   final String url_to_order_detail =
       //   "http://192.168.1.120/icesystem/frontend/web/api/order/listbycustomer";
       "http://103.253.73.108/icesystem/frontend/web/api/order/listbycustomer";
+  final String url_to_order_discount =
+      //   "http://192.168.1.120/icesystem/frontend/web/api/order/listbycustomer";
+      "http://103.253.73.108/icesystem/frontend/web/api/order/orderdiscount";
   final String url_to_add_order =
       "http://103.253.73.108/icesystem/frontend/web/api/order/addorder";
   final String url_to_add_order_new =
@@ -56,6 +60,9 @@ class OrderData with ChangeNotifier {
   List<OrdersNew> _order;
   List<OrdersNew> get listorder => _order;
 
+  List<OrderDiscount> _order_discount;
+  List<OrderDiscount> get listorder_discount => _order_discount;
+
   int get idOrder => _id;
 
   set idOrder(int val) {
@@ -78,6 +85,11 @@ class OrderData with ChangeNotifier {
 
   set listorder(List<OrdersNew> val) {
     _order = val;
+    notifyListeners();
+  }
+
+  set listorder_discount(List<OrderDiscount> val) {
+    _order_discount = val;
     notifyListeners();
   }
 
@@ -129,7 +141,7 @@ class OrderData with ChangeNotifier {
         }
       });
     }
-    return total;
+    return (total - sumcashdiscount);
   }
 
   double get creditTotalAmount {
@@ -143,7 +155,7 @@ class OrderData with ChangeNotifier {
         }
       });
     }
-    return total;
+    return (total - sumcreditdiscount);
   }
 
   double get cashTotalQty {
@@ -190,6 +202,22 @@ class OrderData with ChangeNotifier {
       if (detailitem.order_line_status != '500') {
         total += double.parse(detailitem.price) * double.parse(detailitem.qty);
       }
+    });
+    return total;
+  }
+
+  double get sumcashdiscount {
+    double total = 0;
+    listorder_discount.forEach((discount) {
+      total = double.parse(discount.discount_cash_amount);
+    });
+    return total;
+  }
+
+  double get sumcreditdiscount {
+    double total = 0;
+    listorder_discount.forEach((discount) {
+      total = double.parse(discount.discount_credit_amount);
     });
     return total;
   }
@@ -252,6 +280,7 @@ class OrderData with ChangeNotifier {
             order_line_id: res['data'][i]['order_line_id'].toString(),
             order_line_date: res['data'][i]['order_line_date'].toString(),
             order_line_status: res['data'][i]['order_line_status'].toString(),
+            // discount_amount: res['data'][i]['discount_amount'].toString(),
           );
 
           data.add(orderresult);
@@ -262,6 +291,59 @@ class OrderData with ChangeNotifier {
         _isApicon = true;
         notifyListeners();
         return listorder;
+      }
+    } catch (_) {
+      _isApicon = false;
+      print('order cannot fetch data');
+    }
+  }
+
+  Future<dynamic> fetOrderDiscount() async {
+    String _route_id;
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('user_id') != null) {
+      _route_id = prefs.getString('emp_route_id');
+    }
+    final Map<String, dynamic> filterData = {
+      'route_id': _route_id,
+    };
+    print('data fetch order discount is ${filterData}');
+    _isLoading = true;
+    notifyListeners();
+    try {
+      http.Response response;
+      response = await http.post(Uri.encodeFull(url_to_order_discount),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(filterData));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> res = json.decode(response.body);
+        List<OrderDiscount> data = [];
+        print('data discount length is ${res["data"].length}');
+        //  print('data is ${res["data"]}');
+
+        if (res == null) {
+          _isLoading = false;
+          notifyListeners();
+          return;
+        }
+
+        for (var i = 0; i < res['data'].length; i++) {
+          final OrderDiscount orderresult = OrderDiscount(
+            discount_cash_amount:
+                res['data'][i]['discount_cash_amount'].toString(),
+            discount_credit_amount:
+                res['data'][i]['discount_credit_amount'].toString(),
+          );
+
+          data.add(orderresult);
+        }
+
+        listorder_discount = data;
+        _isLoading = false;
+        notifyListeners();
+        return listorder_discount;
       }
     } catch (_) {
       _isApicon = false;
@@ -541,6 +623,7 @@ class OrderData with ChangeNotifier {
             price: res['data'][i]['price'].toString(),
             price_group_id: res['data'][i]['price_group_id'].toString(),
             order_line_status: res['data'][i]['order_line_status'].toString(),
+            discount_amount: res['data'][i]['order_discount_amt'].toString(),
           );
 
           data.add(orderlineresult);
