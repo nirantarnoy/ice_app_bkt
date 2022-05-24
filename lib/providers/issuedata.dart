@@ -137,7 +137,7 @@ class IssueData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_issue_list_open),
+        Uri.parse(url_to_issue_list_open),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );
@@ -224,7 +224,7 @@ class IssueData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_issue_list),
+        Uri.parse(url_to_issue_list),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );
@@ -314,7 +314,7 @@ class IssueData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_user_confirm),
+        Uri.parse(url_to_user_confirm),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(updateData),
       );
@@ -383,7 +383,7 @@ class IssueData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_user_confirm_cancel),
+        Uri.parse(url_to_user_confirm_cancel),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(updateData),
       );
@@ -442,7 +442,7 @@ class IssueData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_issue_list),
+        Uri.parse(url_to_issue_list),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );
@@ -531,7 +531,7 @@ class IssueData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_oldstockroute_list),
+        Uri.parse(url_to_oldstockroute_list),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );

@@ -117,7 +117,7 @@ class _PrintBluetoothPageState extends State<PrintBluetoothPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          OutlineButton(
+                          OutlinedButton(
                             child: Text('connect'),
                             onPressed: _connected
                                 ? null
@@ -134,7 +134,7 @@ class _PrintBluetoothPageState extends State<PrintBluetoothPage> {
                                   },
                           ),
                           SizedBox(width: 10.0),
-                          OutlineButton(
+                          OutlinedButton(
                             child: Text('disconnect'),
                             onPressed: _connected
                                 ? () async {
@@ -144,7 +144,7 @@ class _PrintBluetoothPageState extends State<PrintBluetoothPage> {
                           ),
                         ],
                       ),
-                      OutlineButton(
+                      OutlinedButton(
                         child: Text('print receipt(esc)'),
                         onPressed: _connected
                             ? () async {
@@ -248,7 +248,7 @@ class _PrintBluetoothPageState extends State<PrintBluetoothPage> {
                               }
                             : null,
                       ),
-                      OutlineButton(
+                      OutlinedButton(
                         child: Text('print selftest'),
                         onPressed: _connected
                             ? () async {

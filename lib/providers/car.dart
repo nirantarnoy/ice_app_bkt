@@ -56,7 +56,7 @@ class CarData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_car_list),
+        Uri.parse(url_to_car_list),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );

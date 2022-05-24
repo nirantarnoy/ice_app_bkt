@@ -129,7 +129,7 @@ class PaymentreceiveData with ChangeNotifier {
     notifyListeners();
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_payment_list),
+      response = await http.post(Uri.parse(url_to_payment_list),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(filterData));
 
@@ -210,7 +210,7 @@ class PaymentreceiveData with ChangeNotifier {
 
   //   try {
   //     http.Response response;
-  //     response = await http.post(Uri.encodeFull(url_to_add_payment),
+  //     response = await http.post(Uri.parse(url_to_add_payment),
   //         headers: {'Content-Type': 'application/json'},
   //         body: json.encode(payData));
   //     if (response.statusCode == 200) {
@@ -251,7 +251,7 @@ class PaymentreceiveData with ChangeNotifier {
 
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_add_payment2),
+      response = await http.post(Uri.parse(url_to_add_payment2),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(payData));
       if (response.statusCode == 200) {
@@ -271,7 +271,7 @@ class PaymentreceiveData with ChangeNotifier {
 
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_delete_payment_line),
+      response = await http.post(Uri.parse(url_to_delete_payment_line),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(delete_id));
 
@@ -298,7 +298,7 @@ class PaymentreceiveData with ChangeNotifier {
     notifyListeners();
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_payment_daily),
+      response = await http.post(Uri.parse(url_to_payment_daily),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(payData));
 
@@ -360,7 +360,7 @@ class PaymentreceiveData with ChangeNotifier {
     notifyListeners();
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_payment_history),
+      response = await http.post(Uri.parse(url_to_payment_history),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(filterData));
 
@@ -429,7 +429,7 @@ class PaymentreceiveData with ChangeNotifier {
     //  return false;
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_payment_history_cancel),
+      response = await http.post(Uri.parse(url_to_payment_history_cancel),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(filterdata));
 

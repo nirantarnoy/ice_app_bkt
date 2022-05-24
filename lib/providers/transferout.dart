@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:ffi';
+// import 'dart:ffi';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
@@ -89,7 +89,7 @@ class TransferoutData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_out_list),
+        Uri.parse(url_to_out_list),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );
@@ -147,7 +147,7 @@ class TransferoutData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_in_list),
+        Uri.parse(url_to_in_list),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );
@@ -241,7 +241,7 @@ class TransferoutData with ChangeNotifier {
     print('data will save is ${dataAdd}');
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_add_transfer),
+      response = await http.post(Uri.parse(url_to_add_transfer),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(dataAdd));
 

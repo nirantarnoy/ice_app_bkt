@@ -244,7 +244,7 @@ class OrderData with ChangeNotifier {
     notifyListeners();
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_order),
+      response = await http.post(Uri.parse(url_to_order),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(filterData));
 
@@ -313,7 +313,7 @@ class OrderData with ChangeNotifier {
     notifyListeners();
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_order_discount),
+      response = await http.post(Uri.parse(url_to_order_discount),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(filterData));
 
@@ -365,7 +365,7 @@ class OrderData with ChangeNotifier {
   //   notifyListeners();
   //   try {
   //     http.Response response;
-  //     response = await http.post(Uri.encodeFull(url_to_order),
+  //     response = await http.post(Uri.parse(url_to_order),
   //         headers: {'Content-Type': 'application/json'},
   //         body: json.encode(filterData));
 
@@ -455,7 +455,7 @@ class OrderData with ChangeNotifier {
     //  print('data will save is ${orderData}');
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_add_order),
+      response = await http.post(Uri.parse(url_to_add_order),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(orderData));
 
@@ -519,7 +519,7 @@ class OrderData with ChangeNotifier {
     print('data will save order new is ${orderData}');
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_add_order_new),
+      response = await http.post(Uri.parse(url_to_add_order_new),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(orderData));
 
@@ -570,7 +570,7 @@ class OrderData with ChangeNotifier {
     print(orderData);
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_add_order_transfer),
+      response = await http.post(Uri.parse(url_to_add_order_transfer),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(orderData));
 
@@ -594,7 +594,7 @@ class OrderData with ChangeNotifier {
     print('order customer data ${filterData}');
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_order_detail),
+      response = await http.post(Uri.parse(url_to_order_detail),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(filterData));
 
@@ -649,7 +649,7 @@ class OrderData with ChangeNotifier {
 
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_delete_order_customer),
+      response = await http.post(Uri.parse(url_to_delete_order_customer),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(delete_id));
 
@@ -669,7 +669,7 @@ class OrderData with ChangeNotifier {
 
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_delete_order_detail),
+      response = await http.post(Uri.parse(url_to_delete_order_detail),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(delete_id));
 
@@ -708,7 +708,7 @@ class OrderData with ChangeNotifier {
     print('data will save close order is ${orderData}');
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_close_order),
+      response = await http.post(Uri.parse(url_to_close_order),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(orderData));
 
@@ -756,7 +756,7 @@ class OrderData with ChangeNotifier {
     print('data will cancel order is ${orderData}');
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_cancel_order),
+      response = await http.post(Uri.parse(url_to_cancel_order),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(orderData));
 

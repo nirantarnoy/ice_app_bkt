@@ -132,7 +132,7 @@ class PlanData with ChangeNotifier {
     notifyListeners();
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_plan),
+      response = await http.post(Uri.parse(url_to_plan),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(filterData));
 
@@ -219,7 +219,7 @@ class PlanData with ChangeNotifier {
     print('data will save order new is ${orderData}');
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_add_plan),
+      response = await http.post(Uri.parse(url_to_add_plan),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(orderData));
 
@@ -246,7 +246,7 @@ class PlanData with ChangeNotifier {
     print('plan customer data ${filterData}');
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_plan_by_customer),
+      response = await http.post(Uri.parse(url_to_plan_by_customer),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(filterData));
 
@@ -305,7 +305,7 @@ class PlanData with ChangeNotifier {
     // print('data will save close order is ${orderData}');
     // try {
     //   http.Response response;
-    //   response = await http.post(Uri.encodeFull(url_to_cancel_plan),
+    //   response = await http.post(Uri.parse(url_to_cancel_plan),
     //       headers: {'Content-Type': 'application/json'},
     //       body: json.encode(orderData));
 
@@ -333,7 +333,7 @@ class PlanData with ChangeNotifier {
 
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_delete_plan),
+      response = await http.post(Uri.parse(url_to_delete_plan),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(delete_id));
 
@@ -353,7 +353,7 @@ class PlanData with ChangeNotifier {
 
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_delete_plan_line),
+      response = await http.post(Uri.parse(url_to_delete_plan_line),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(delete_id));
 

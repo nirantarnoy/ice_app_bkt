@@ -58,7 +58,7 @@ class ProductData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_product_issue_list),
+        Uri.parse(url_to_product_issue_list),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );
@@ -121,7 +121,7 @@ class ProductData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_product_list),
+        Uri.parse(url_to_product_list),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );
@@ -179,7 +179,7 @@ class ProductData with ChangeNotifier {
   //   };
   //   try {
   //     http.Response response;
-  //     response = await http.post(Uri.encodeFull(url_to_product),
+  //     response = await http.post(Uri.parse(url_to_product),
   //         headers: {'Content-Type': 'application/json'},
   //         body: json.encode(orderData));
 
@@ -190,7 +190,7 @@ class ProductData with ChangeNotifier {
   // Future<Orders> getDetails() async {
   //   try {
   //     http.Response response;
-  //     response = await http.get(Uri.encodeFull(url_to_product),
+  //     response = await http.get(Uri.parse(url_to_product),
   //         headers: {'Content-Type': 'application/json'});
 
   //     if (response.statusCode == 200) {

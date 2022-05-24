@@ -78,7 +78,7 @@ class TransferinData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_find_transfer),
+        Uri.parse(url_to_find_transfer),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );
@@ -137,7 +137,7 @@ class TransferinData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_in_list),
+        Uri.parse(url_to_in_list),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );
@@ -210,7 +210,7 @@ class TransferinData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_accept_transfer),
+        Uri.parse(url_to_accept_transfer),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );
@@ -253,7 +253,7 @@ class TransferinData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_in_list),
+        Uri.parse(url_to_in_list),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );

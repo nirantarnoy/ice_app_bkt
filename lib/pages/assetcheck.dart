@@ -30,7 +30,7 @@ class _AssetcheckPageState extends State<AssetcheckPage> {
   String selectedValue;
   int isuserconfirm = 0;
 
-  Future<File> file;
+  Future<XFile> file;
   String base64Image;
   File tmpFile;
   File uploadImage;
@@ -83,7 +83,7 @@ class _AssetcheckPageState extends State<AssetcheckPage> {
   }
 
   chooseImage() {
-    file = ImagePicker.pickImage(source: ImageSource.camera);
+    file = ImagePicker().pickImage(source: ImageSource.camera);
   }
   // Future<void> chooseImage() async {
   //   var choosedimage = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -107,30 +107,30 @@ class _AssetcheckPageState extends State<AssetcheckPage> {
   }
 
   showImage() {
-    return FutureBuilder<File>(
-      future: file,
-      builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            null != snapshot.data) {
-          tmpFile = snapshot.data;
-          final bytes = snapshot.data.readAsBytesSync();
-          base64Image = base64Encode(bytes);
-          return Flexible(
-            child: Image.file(
-              snapshot.data,
-              fit: BoxFit.fill,
-            ),
-          );
-        } else if (null != snapshot.error) {
-          return const Text(
-            'Error Picking image',
-            textAlign: TextAlign.center,
-          );
-        } else {
-          return const Text('No Image Selected');
-        }
-      },
-    );
+    // return FutureBuilder<File>(
+    //   future: file,
+    //   builder: (BuildContext context, AsyncSnapshot<File> snapshot) {
+    //     if (snapshot.connectionState == ConnectionState.done &&
+    //         null != snapshot.data) {
+    //       tmpFile = snapshot.data;
+    //       final bytes = snapshot.data.readAsBytesSync();
+    //       base64Image = base64Encode(bytes);
+    //       return Flexible(
+    //         child: Image.file(
+    //           snapshot.data,
+    //           fit: BoxFit.fill,
+    //         ),
+    //       );
+    //     } else if (null != snapshot.error) {
+    //       return const Text(
+    //         'Error Picking image',
+    //         textAlign: TextAlign.center,
+    //       );
+    //     } else {
+    //       return const Text('No Image Selected');
+    //     }
+    //   },
+    // );
   }
 
   setUploadStatus(String message) {
@@ -289,12 +289,12 @@ class _AssetcheckPageState extends State<AssetcheckPage> {
                   child: SizedBox(
                     height: 45.0,
                     width: targetWidth,
-                    child: new OutlineButton(
+                    child: new OutlinedButton(
                       // elevation: 0,
-                      splashColor: Colors.grey,
-                      shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(30.0)),
-                      color: Colors.orange[300],
+                      // splashColor: Colors.grey,
+                      // shape: new RoundedRectangleBorder(
+                      //     borderRadius: new BorderRadius.circular(30.0)),
+                      // color: Colors.orange[300],
                       child: new Text('ถ่ายรูป',
                           style: new TextStyle(
                               fontSize: 18.0, color: Colors.black)),

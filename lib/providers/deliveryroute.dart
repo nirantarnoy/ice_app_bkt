@@ -48,7 +48,7 @@ class DeliveryRouteData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_DeliveryRoute_list),
+        Uri.parse(url_to_DeliveryRoute_list),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );

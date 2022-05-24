@@ -76,7 +76,7 @@ class UserData with ChangeNotifier {
     //   print(username);
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_user_login),
+      response = await http.post(Uri.parse(url_to_user_login),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(loginData));
 
@@ -156,7 +156,7 @@ class UserData with ChangeNotifier {
     print(loginData);
     try {
       http.Response response;
-      response = await http.post(Uri.encodeFull(url_to_user_login_qrcode),
+      response = await http.post(Uri.parse(url_to_user_login_qrcode),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(loginData));
 
@@ -311,7 +311,7 @@ class UserData with ChangeNotifier {
   //   try {
   //     http.Response response;
   //     response = await http.post(
-  //       Uri.encodeFull(url_to_user_list),
+  //       Uri.parse(url_to_user_list),
   //       headers: {'Content-Type': 'application/json'},
   //       body: json.encode(filterData),
   //     );
@@ -354,7 +354,7 @@ class UserData with ChangeNotifier {
   // Future<Orders> getDetails() async {
   //   try {
   //     http.Response response;
-  //     response = await http.get(Uri.encodeFull(url_to_user),
+  //     response = await http.get(Uri.parse(url_to_user),
   //         headers: {'Content-Type': 'application/json'});
 
   //     if (response.statusCode == 200) {

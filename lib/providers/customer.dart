@@ -102,7 +102,7 @@ class CustomerData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_customer_list),
+        Uri.parse(url_to_customer_list),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );
@@ -177,7 +177,7 @@ class CustomerData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_customer_asset),
+        Uri.parse(url_to_customer_asset),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );
@@ -239,7 +239,7 @@ class CustomerData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_customer_boot_list),
+        Uri.parse(url_to_customer_boot_list),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );
@@ -337,7 +337,7 @@ class CustomerData with ChangeNotifier {
 
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_asset_checklist_save),
+        Uri.parse(url_to_asset_checklist_save),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );
@@ -382,7 +382,7 @@ class CustomerData with ChangeNotifier {
     try {
       http.Response response;
       response = await http.post(
-        Uri.encodeFull(url_to_asset_checklist),
+        Uri.parse(url_to_asset_checklist),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(filterData),
       );
