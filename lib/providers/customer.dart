@@ -316,7 +316,7 @@ class CustomerData with ChangeNotifier {
       'datalist': jsonx
     };
     // _isLoading = true;
-    print('data to save checklist is ${filterData['datalist']}');
+    print('data to save checklist is ${filterData}');
     //  notifyListeners();
     //print('image path is ${imagefile.path}');
     try {
@@ -351,13 +351,15 @@ class CustomerData with ChangeNotifier {
         if (res == null) {
           _isLoading = false;
           notifyListeners();
-          return;
+          return false;
         }
         _isLoading = false;
         notifyListeners();
-        return listcustomerasset;
+        return true;
       }
-    } catch (_) {}
+    } catch (_) {
+      return false;
+    }
   }
 
   Future<dynamic> fetChecklist() async {

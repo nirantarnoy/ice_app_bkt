@@ -121,7 +121,8 @@ class _CustomerAssetPageState extends State<CustomerAssetPage> {
                   Navigator.of(context)
                       .pushNamed(AssetcheckPage.routeName, arguments: {
                     'customer_id': selectedValue,
-                    'product_id': assets[index].product_id,
+                    'product_id': assets[index].id,
+                    'product_code': assets[index].code,
                     'product_name': assets[index].name,
                   });
                 }, // Navigator.of(context).pushNamed(OrderDetailPage.routeName),
@@ -129,7 +130,7 @@ class _CustomerAssetPageState extends State<CustomerAssetPage> {
                   children: <Widget>[
                     ListTile(
                       title: Text(
-                        "${assets[index].name}",
+                        "${assets[index].code} ${assets[index].name}",
                         style: TextStyle(fontSize: 18, color: Colors.black),
                       ),
                       // subtitle: Text(
@@ -289,10 +290,10 @@ class _CustomerAssetPageState extends State<CustomerAssetPage> {
               SizedBox(
                 height: 10,
               ),
-              Text(
-                "รายการอุปกรณ์",
-                style: TextStyle(color: Colors.grey[600], fontSize: 18),
-              ),
+              // Text(
+              //   "รายการอุปกรณ์",
+              //   style: TextStyle(color: Colors.grey[600], fontSize: 18),
+              // ),
               SizedBox(
                 height: 10,
               ),
