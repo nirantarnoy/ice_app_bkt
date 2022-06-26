@@ -112,6 +112,32 @@ class _CheckinPageState extends State<CheckinPage> {
     if (car_data == '' && driver_data == '') {
       return;
     }
+    // print('car is ${car_data.substring(0, 3)}');
+    if (car_data.substring(0, 3) != "CAR" ||
+        car_data.substring(0, 3) != "BTC") {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('พบข้อผิดพลาด!',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
+            content: Text('กรุณาสแกนรหัสรถใหม่ที่ขึ้นต้นด้วย CAR หรือ BTC'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('ตกลง',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.red)),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        },
+      );
+      return;
+    }
 
     List<User> successInformation;
     successInformation = await loginqrcode(car_data, driver_data, member_data);
@@ -127,7 +153,7 @@ class _CheckinPageState extends State<CheckinPage> {
             title: Text('พบข้อผิดพลาด!',
                 style:
                     TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
-            content: Text('ข้อมูลไม่ครบถ้วน'),
+            content: Text('ข้อมูลไม่ครบถ้วนหรือไม่ถูกต้อง'),
             actions: <Widget>[
               FlatButton(
                 child: Text('ตกลง',
@@ -394,11 +420,11 @@ class _CheckinPageState extends State<CheckinPage> {
                       SizedBox(height: 5),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[Text('version 2.0')],
+                        children: <Widget>[Text('version 2.1')],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[Text('update 08-04-2022')],
+                        children: <Widget>[Text('update 21-06-2022')],
                       )
                     ],
                   ),
