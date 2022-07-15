@@ -121,7 +121,7 @@ class _CustomerAssetPageState extends State<CustomerAssetPage> {
                   Navigator.of(context)
                       .pushNamed(AssetcheckPage.routeName, arguments: {
                     'customer_id': selectedValue,
-                    'product_id': assets[index].id,
+                    'product_id': assets[index].product_id,
                     'product_code': assets[index].code,
                     'product_name': assets[index].name,
                   });

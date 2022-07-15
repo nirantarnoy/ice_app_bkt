@@ -29,6 +29,9 @@ class CustomerData with ChangeNotifier {
   final String url_to_customer_asset =
       // "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
       "http://103.253.73.108/icesystem/frontend/web/api/customer/assetlist";
+  final String url_to_asset_change_photo =
+      // "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
+      "http://103.253.73.108/icesystem/frontend/web/api/customer/updatephoto";
   final String url_to_asset_checklist_save =
       // "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
       "http://103.253.73.108/icesystem/frontend/web/api/customer/assetchecklist";
