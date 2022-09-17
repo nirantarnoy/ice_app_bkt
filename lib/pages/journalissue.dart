@@ -40,6 +40,8 @@ class _JournalissuePageState extends State<JournalissuePage> {
   var _isInit = true;
   var _isLoading = false;
 
+  bool _networkisok = false;
+
   // Future _hasopenFuture;
   Future _ishasissue;
   Future _issueFuture;
@@ -82,29 +84,66 @@ class _JournalissuePageState extends State<JournalissuePage> {
     _transferoutFuture = _obtaintransferoutFuture();
     _transferinFuture = _obtaintransferinFuture();
 
+    _callapiissuedata(); //call for offline stock
+
     //  _oldstockroutefuture = _obtainoldstockrouteFuture();
 
     //_callDb();
-    //_checkinternet();
-    // try {
-    //   widget.model.fetchOrders();
-    // } on TimeoutException catch (_) {
-    //   _showdialog('Noity', 'Connection time out!');
-    // }
 
     super.initState();
+  }
+
+  Future _callapiissuedata() async {
+    print("hello niran");
+    List<Issueitems> issue_daily =
+        await Provider.of<IssueData>(context, listen: false).listissue;
+    print('issue daily is ${issue_daily.length}');
+    if (issue_daily != null) {
+      issue_daily.forEach((element) async {
+        int checkhasitem = await DbHelper.instance.checkhasproductinissuedata(
+            element.product_id); // check already product in sqlite
+        if (checkhasitem <= 0) {
+          final Product product_data = Product(
+            id: element.product_id,
+            code: element.product_name,
+            name: element.product_name,
+            qty: element.avl_qty,
+            issue_id: int.parse(element.issue_id),
+            createdTime: DateTime.now(),
+            price_group_id: 0,
+            route_id: 0,
+          );
+          if (product_data != null) {
+            print("data will save for offline");
+            await DbHelper.instance.createProduct(product_data);
+          }
+        } else {
+          await DbHelper.instance.upateProductStock(element.product_id, "10");
+          print("has already product offlne");
+        }
+      });
+    } else {
+      print("no data in product offline");
+    }
   }
 
   Future<void> _checkinternet() async {
     var result = await Connectivity().checkConnectivity();
 
     if (result == ConnectivityResult.none) {
-      _showdialog('พบปัญหา', 'ไม่สามารถเชื่อมต่ออินเตอร์เน็ตได้');
+      setState(() {
+        _networkisok = false;
+      });
+      _showdialog('พบปัญหา', 'กรุณาตรวจสอบการเชื่อมต่อ หรือ ใช้งานโหมดออฟไลน์');
     } else if (result == ConnectivityResult.mobile) {
       //_showdialog('Intenet access', 'You are connect mobile data');
+      setState(() {
+        _networkisok = true;
+      });
     }
     if (result == ConnectivityResult.wifi) {
       //_showdialog('Intenet access', 'You are connect wifi');
+      _networkisok = true;
     }
   }
 
@@ -350,32 +389,49 @@ class _JournalissuePageState extends State<JournalissuePage> {
               ],
             ),
           ),
-          body: TabBarView(children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: Column(
-                children: <Widget>[
-                  Expanded(child: _buildProductList()),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: <Widget>[
-                  Expanded(child: _buildProductinList()),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: <Widget>[
-                  Expanded(child: _buildProductoutList()),
-                ],
-              ),
-            ),
-          ]),
+          body: _networkisok == true
+              ? TabBarView(children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(child: _buildProductList()),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(child: _buildProductinList()),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(child: _buildProductoutList()),
+                      ],
+                    ),
+                  ),
+                ])
+              : Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 150,
+                    ),
+                    Icon(
+                      Icons.wifi_off_outlined,
+                      size: 100,
+                      color: Colors.orange,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Center(child: Text('ไม่พบสัญญาณอินเตอร์เน็ต'))
+                  ],
+                ),
         ),
       ),
     );

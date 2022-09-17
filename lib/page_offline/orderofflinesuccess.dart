@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:ice_app_new/pages/assetcheck.dart';
 import 'package:ice_app_new/pages/createorder_new.dart';
-import 'package:ice_app_new/pages/customer_asset.dart';
 import 'package:ice_app_new/pages/main_test.dart';
 
-class AssetchecksuccessPage extends StatefulWidget {
-  const AssetchecksuccessPage({Key key, this.customer_selected})
-      : super(key: key);
-  final String customer_selected;
+class OrderofflinesuccessPage extends StatefulWidget {
   @override
-  _AssetchecksuccessPageState createState() => _AssetchecksuccessPageState();
+  _OrderoffsuccessPageState createState() => _OrderoffsuccessPageState();
 }
 
-class _AssetchecksuccessPageState extends State<AssetchecksuccessPage> {
+class _OrderoffsuccessPageState extends State<OrderofflinesuccessPage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -32,7 +27,7 @@ class _AssetchecksuccessPageState extends State<AssetchecksuccessPage> {
                   size: 50.0,
                 ),
                 Text(
-                  'บันทึกตรวจสอบเรียบร้อย',
+                  'บันทึกขายเรียบร้อย',
                   style: TextStyle(fontSize: 18),
                 ),
                 SizedBox(
@@ -47,15 +42,14 @@ class _AssetchecksuccessPageState extends State<AssetchecksuccessPage> {
                       child: FlatButton(
                         color: Colors.green[600],
                         child: Text(
-                          'ตรวจสอบต่อ',
+                          'ขายสินค้าต่อ',
                           style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
                         onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => CustomerAssetPage(
-                                  customer_selected: widget.customer_selected),
+                              builder: (_) => CreateorderNewPage(),
                             ),
                           );
                           // Navigator.pushAndRemoveUntil(

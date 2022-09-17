@@ -281,8 +281,8 @@ class CustomerData with ChangeNotifier {
     } catch (_) {}
   }
 
-  Future<dynamic> addChecklist(String image, List<Addchecklist> listcheck,
-      String _customer_id, String _product_id) async {
+  Future<dynamic> addChecklist(List<String> image, List<Addchecklist> listcheck,
+      String _customer_id, String _product_id, String _location) async {
     String _company_id = "";
     String _branch_id = "";
     String _route_id = "";
@@ -307,6 +307,10 @@ class CustomerData with ChangeNotifier {
             })
         .toList();
 
+    // var imagelist = image.map((e) => {
+
+    // }).toList();
+
     final Map<String, dynamic> filterData = {
       'company_id': _company_id,
       'branch_id': _branch_id,
@@ -316,28 +320,14 @@ class CustomerData with ChangeNotifier {
       'name': '',
       'route_id': _route_id,
       'user_id': _user_id,
-      'datalist': jsonx
+      'datalist': jsonx,
+      'location': _location,
     };
     // _isLoading = true;
-    print('data to save checklist is ${filterData}');
+    print('data to save checklist is ${image.length}');
     //  notifyListeners();
     //print('image path is ${imagefile.path}');
     try {
-      // var uri = Uri.parse(url_to_asset_checklist_save);
-      // var request = new http.MultipartRequest("POST", uri);
-      // var multipartFile =
-      //     await http.MultipartFile.fromPath("image", imagefile.path);
-
-      // print('file add is ${multipartFile}');
-      // request.files.add(multipartFile);
-      // request.fields['name'] = name;
-      // var respond = await request.send();
-      // if (respond.statusCode == 200) {
-      //   print("Image Uploaded");
-      // } else {
-      //   print("Upload Failed server status is ${respond.statusCode}");
-      // }
-
       http.Response response;
       response = await http.post(
         Uri.parse(url_to_asset_checklist_save),

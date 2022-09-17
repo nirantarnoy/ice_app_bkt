@@ -1,5 +1,7 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:ice_app_new/page_offline/customer_price.dart';
+import 'package:ice_app_new/page_offline/orderoffline.dart';
 import 'package:ice_app_new/page_offline/product_issue.dart';
 // import 'package:fluttertoast/fluttertoast.dart';
 // import 'package:ice_app_new/models/delivery_route.dart';
@@ -9,6 +11,7 @@ import 'package:ice_app_new/pages/checkinpage.dart';
 import 'package:ice_app_new/pages/createorder_boot.dart';
 import 'package:ice_app_new/pages/customer_asset.dart';
 import 'package:ice_app_new/pages/home.dart';
+import 'package:ice_app_new/pages/home_offline.dart';
 // import 'package:ice_app_new/pages/issuesuccess.dart';
 import 'package:ice_app_new/pages/journalissue.dart';
 import 'package:ice_app_new/pages/offlinetest.dart';
@@ -53,11 +56,35 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
   String user_route_code = '';
   String user_car_name = '';
 
+  bool _networkisok = false;
+
   @override
   void initState() {
+    _checkinternet();
     _getUserPrefer();
     super.initState();
     _tabController = new TabController(length: 4, vsync: this);
+  }
+
+  Future<void> _checkinternet() async {
+    var result = await Connectivity().checkConnectivity();
+    if (result == ConnectivityResult.none) {
+      Theme.of(context).accentColor;
+      setState(() {
+        _networkisok = false;
+      });
+    } else if (result == ConnectivityResult.mobile) {
+      //_showdialog('Intenet access', 'You are connect mobile data');
+      setState(() {
+        _networkisok = true;
+      });
+    }
+    if (result == ConnectivityResult.wifi) {
+      //_showdialog('Intenet access', 'You are connect wifi');
+      setState(() {
+        _networkisok = true;
+      });
+    }
   }
 
   void _getUserPrefer() async {
@@ -248,7 +275,7 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     List<Widget> tabs = [
       //JournalissuePage(),
-      HomePage(),
+      _networkisok == true ? HomePage() : HomeOfflinePage(),
       null,
       null,
       null
@@ -420,7 +447,7 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          CustomerpricePage(), // StepperPage(), //OfflinePage(),
+                          CustomerpricePage(), // StepperPage(), //OfflinePage(),OrderofflinePage()
                     ),
                   );
                 },

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ice_app_new/page_offline/createorder_new_offline.dart';
+import 'package:ice_app_new/page_offline/orderoffline.dart';
 import 'package:ice_app_new/page_offline/product_issue.dart';
 import 'package:ice_app_new/sqlite/models/customer_price.dart';
 import 'package:ice_app_new/sqlite/providers/customer_price.dart';
@@ -42,6 +43,13 @@ class _CustomerpriceState extends State<CustomerpricePage> {
   Future deleteData() async {
     setState(() => isLoading = true);
     await DbHelper.instance.deleteCustpriceAll();
+    refreshData();
+    setState(() => isLoading = false);
+  }
+
+  Future deleteOrder() async {
+    setState(() => isLoading = true);
+    await DbHelper.instance.deleteOrderAll();
     refreshData();
     setState(() => isLoading = false);
   }
@@ -95,8 +103,16 @@ class _CustomerpriceState extends State<CustomerpricePage> {
                   onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => CreateorderNewOfflinePage())),
+                          builder: (context) => OrderofflinePage())),
                   child: Text('new order'),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                RaisedButton(
+                  onPressed: () => deleteOrder(),
+                  child: Text('delete all order'),
                 ),
               ],
             ),

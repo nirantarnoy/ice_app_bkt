@@ -5,6 +5,8 @@ import 'package:ice_app_new/page_offline/createorder_new_offline.dart';
 //import 'package:ice_app_new/pages/createorder.dart';
 import 'package:ice_app_new/pages/createorder_new.dart';
 import 'package:ice_app_new/pages/main_test.dart';
+import 'package:ice_app_new/sqlite/providers/db_provider.dart';
+import 'package:ice_app_new/sqlite/widgets/orders/order_item_offline_new.dart';
 //import 'package:ice_app_new/widgets/order/order_item.dart';
 import 'package:ice_app_new/widgets/order/order_item_new.dart';
 //import 'package:scoped_model/scoped_model.dart';
@@ -17,13 +19,14 @@ import 'package:provider/provider.dart';
 import 'package:ice_app_new/providers/order.dart';
 //import 'package:ice_app_new/widgets/error/err_api.dart';
 
-class OrderPage extends StatefulWidget {
-  static const routeName = '/order';
+class OrderofflinePage extends StatefulWidget {
+  static const routeName = '/orderoffline';
   @override
-  _OrderPageState createState() => _OrderPageState();
+  _OrderofflinePageState createState() => _OrderofflinePageState();
 }
 
-class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
+class _OrderofflinePageState extends State<OrderofflinePage>
+    with TickerProviderStateMixin {
   var _isInit = true;
   var _isLoading = false;
 
@@ -41,8 +44,8 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
 
   @override
   initState() {
-    _checkinternet();
-
+    // _checkinternet();
+    showalltable();
     _orderFuture = _obtainOrderFuture();
     _scrollController = ScrollController()
       ..addListener(() {
@@ -75,6 +78,12 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
     // }
     // Provider.of<OrderData>(context).fetOrders();
     super.initState();
+  }
+
+  Future showalltable() async {
+    List<String> tables = await DbHelper.instance.getAllTableNames();
+
+    print('table all are ${tables}');
   }
 
   @override
@@ -202,7 +211,7 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
           if (dataSnapshort.error != null) {
             return Center(child: CircularProgressIndicator());
           } else {
-            return Container(child: OrderItemNew());
+            return Container(child: OrderOfflineItemNew());
           }
         }
       },
@@ -219,63 +228,40 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
     // print('build context created');
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: Text(
-            'รายการขายสินค้า',
-            style: TextStyle(color: Colors.white),
-          ),
-          leading: new IconButton(
-            icon: new Icon(
-              Icons.arrow_back,
-              color: Colors.white,
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            title: Text(
+              'รายการขายสินค้า [OFFLINE]',
+              style: TextStyle(color: Colors.white),
             ),
-            onPressed: () {
-              Navigator.of(context).pop(MainTest());
-            },
-          ),
-          actions: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  //  Navigator.of(context).pushNamed(CreateorderNewOfflinePage.routeName);
-                  Navigator.of(context).pushNamed(CreateorderNewPage.routeName);
-                },
-                child: Icon(
-                  Icons.add_circle_outline,
-                  size: 30.0,
-                  color: Colors.white,
+            leading: new IconButton(
+              icon: new Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(MainTest());
+              },
+            ),
+            actions: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () {
+                    //  Navigator.of(context).pushNamed(CreateorderNewOfflinePage.routeName);
+                    Navigator.of(context)
+                        .pushNamed(CreateorderNewOfflinePage.routeName);
+                  },
+                  child: Icon(
+                    Icons.add_circle_outline,
+                    size: 30.0,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-        body: _networkisok == true
-            ? _buidorderlist()
-            : Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 150,
-                  ),
-                  Icon(
-                    Icons.wifi_off_outlined,
-                    size: 100,
-                    color: Colors.orange,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Center(child: Text('ไม่พบสัญญาณอินเตอร์เน็ต'))
-                ],
-              ),
-        floatingActionButton: _showBackToTopButton == false
-            ? null
-            : FloatingActionButton(
-                onPressed: _scrollToTop,
-                child: Icon(Icons.arrow_upward),
-              ),
-      ),
+            ],
+          ),
+          body: _buidorderlist()),
     );
   }
 }

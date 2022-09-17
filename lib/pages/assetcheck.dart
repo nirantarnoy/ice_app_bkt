@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:ice_app_new/models/addchecklist.dart';
 import 'package:ice_app_new/models/checklist.dart';
 import 'package:ice_app_new/pages/assetchecksuccess.dart';
@@ -32,9 +33,12 @@ class _AssetcheckPageState extends State<AssetcheckPage> {
   final TextEditingController _typeAheadController = TextEditingController();
   String selectedValue;
   int isuserconfirm = 0;
+  String current_location = "";
+  List<int> _deleteimage_selected = [];
 
   Future<XFile> file;
   String base64Image;
+  List<String> base64Image2 = [];
   XFile tmpFile;
   // XFile uploadImage;
   String upload_status = '';
@@ -47,6 +51,7 @@ class _AssetcheckPageState extends State<AssetcheckPage> {
 
   ///
   File image;
+  List<File> image2 = [];
 
   List<bool> isSwitched;
   List<Addchecklist> addCheckList = [];
@@ -105,9 +110,14 @@ class _AssetcheckPageState extends State<AssetcheckPage> {
       final imageTemp = File(image.path);
       List<int> imageBytes = imageTemp.readAsBytesSync();
 
-      setState(() {
+      setState(() async {
         this.image = imageTemp;
+        this.image2.add(imageTemp);
         base64Image = base64Encode(imageBytes);
+        base64Image2.add(base64Encode(imageBytes));
+        current_location = await _currentlocation();
+
+        print("this is my location ${current_location}");
       });
       // print('image is ${base64Image}');
     } catch (err) {
@@ -126,7 +136,7 @@ class _AssetcheckPageState extends State<AssetcheckPage> {
   //   });
   // }
 
-  startUpload(String _customer_id, String _product_id) async {
+  startUpload(String _customer_id, String _product_id, String _location) async {
     if (null == tmpFile) {
       setUploadStatus('Eroorrr');
     }
@@ -137,12 +147,14 @@ class _AssetcheckPageState extends State<AssetcheckPage> {
     // print('checklist is ${addCheckList}');
 
     bool issave = await Provider.of<CustomerData>(context, listen: false)
-        .addChecklist(base64Image, addCheckList, _customer_id, _product_id);
+        .addChecklist(
+            base64Image2, addCheckList, _customer_id, _product_id, _location);
     if (issave == true) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => AssetchecksuccessPage(),
+          builder: (_) =>
+              AssetchecksuccessPage(customer_selected: _customer_id),
         ),
       );
     }
@@ -271,6 +283,172 @@ class _AssetcheckPageState extends State<AssetcheckPage> {
         });
   }
 
+  Future<Position> _getGeoLocationPosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      await Geolocator.openLocationSettings();
+      return Future.error('Location services are disabled.');
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+  }
+
+  Future<String> _currentlocation() async {
+    Position position = await _getGeoLocationPosition();
+    //String location = 'Lat: ${position.latitude} , Long: ${position.longitude}';
+    String location = '${position.latitude},${position.longitude}';
+    // print('my location is ${location}');
+    return location;
+  }
+
+  void _editBottomSheet(
+    context,
+    List<File> _image2,
+  ) {
+    final double deviceWidth = MediaQuery.of(context).size.width;
+    final double targetWidth = deviceWidth > 550.0 ? 500.0 : deviceWidth * 0.75;
+
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SingleChildScrollView(
+            child: Container(
+              //  height: MediaQuery.of(context).size.height * 0.9,
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      // Icon(
+                      //   Icons.check,
+                      //   color: Colors.green,
+                      // ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: _deleteimage_selected.length <= 0
+                            ? Text('')
+                            : ElevatedButton(
+                                child: Text(
+                                  "ลบ ${_deleteimage_selected.length}",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  _deleteimage_selected.forEach((element) {
+                                    setState(() {
+                                      base64Image2.removeAt(element);
+                                      image2.removeAt(element);
+                                    });
+                                  });
+                                  setState(() {
+                                    _deleteimage_selected.clear();
+                                  });
+                                },
+                              ),
+                      ),
+                      SizedBox(width: 10),
+                      Spacer(),
+                      IconButton(
+                          icon: Icon(Icons.cancel,
+                              color: Colors.orange, size: 25),
+                          onPressed: () => Navigator.of(context).pop())
+                    ],
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GridView.builder(
+                          itemCount: _image2.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3),
+                          itemBuilder: (BuildContext context, int index) {
+                            return Stack(children: [
+                              Container(
+                                width: double.infinity,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: GestureDetector(
+                                    onLongPress: () {
+                                      if (_deleteimage_selected.length > 0) {
+                                        if (_deleteimage_selected
+                                            .contains(index)) {
+                                          setState(() {
+                                            _deleteimage_selected.removeWhere(
+                                                (item) => item == index);
+                                          });
+                                        } else {
+                                          setState(() {
+                                            _deleteimage_selected.add(index);
+                                          });
+                                        }
+                                      } else {
+                                        setState(() {
+                                          _deleteimage_selected.add(index);
+                                        });
+                                      }
+                                      print(_deleteimage_selected);
+                                    },
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.file(
+                                        File(_image2[index].path),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              _deleteimage_selected.contains(index)
+                                  ? Positioned(
+                                      top: 0,
+                                      right:
+                                          0, //give the values according to your requirement
+                                      child: Icon(
+                                        Icons.check_circle,
+                                        color: Colors.red,
+                                      ),
+                                    )
+                                  : Text(''),
+                            ]);
+                          }),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     final asset_date = ModalRoute.of(context).settings.arguments as Map; //
@@ -334,41 +512,60 @@ class _AssetcheckPageState extends State<AssetcheckPage> {
               SizedBox(
                 height: 10,
               ),
-              Container(
-                  width: 250,
-                  height: 250,
-                  child: image != null ? Image.file(image) : Text("")),
+              // Container(
+              //     width: 250,
+              //     height: 250,
+              //     child: image != null ? Image.file(image) : Text("")),
+              image2.length == 0
+                  ? Text("")
+                  : Container(
+                      child: Center(
+                        child: SizedBox(
+                          height: 45.0,
+                          width: targetWidth,
+                          child: OutlinedButton(
+                            child: Text(
+                              'จำนวนรูปภาพ ${image2.length}',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            onPressed: () => _editBottomSheet(context, image2),
+                          ),
+                        ),
+                      ),
+                    ),
               SizedBox(
                 height: 10,
               ),
-
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0.0, 45.0, 10.0, 0.0),
-                  child: SizedBox(
-                    height: 45.0,
-                    width: targetWidth,
-                    child: new OutlinedButton(
-                      // elevation: 0,
-                      // splashColor: Colors.grey,
-                      // shape: new RoundedRectangleBorder(
-                      //     borderRadius: new BorderRadius.circular(30.0)),
-                      // color: Colors.orange[300],
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(child: Icon(Icons.camera_alt_rounded)),
-                          Expanded(
-                            child: new Text('ถ่ายรูป',
-                                style: new TextStyle(
-                                    fontSize: 18.0, color: Colors.black)),
+              image2.length < 4
+                  ? Center(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(0.0, 45.0, 10.0, 0.0),
+                        child: SizedBox(
+                          height: 45.0,
+                          width: targetWidth,
+                          child: new OutlinedButton(
+                            // elevation: 0,
+                            // splashColor: Colors.grey,
+                            // shape: new RoundedRectangleBorder(
+                            //     borderRadius: new BorderRadius.circular(30.0)),
+                            // color: Colors.orange[300],
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(child: Icon(Icons.camera_alt_rounded)),
+                                Expanded(
+                                  child: new Text('ถ่ายรูป',
+                                      style: new TextStyle(
+                                          fontSize: 18.0, color: Colors.black)),
+                                ),
+                              ],
+                            ),
+                            onPressed: () => chooseImage(),
                           ),
-                        ],
+                        ),
                       ),
-                      onPressed: () => chooseImage(),
-                    ),
-                  ),
-                ),
-              ),
+                    )
+                  : Text(''),
               SizedBox(
                 height: 10,
               ),
@@ -397,12 +594,19 @@ class _AssetcheckPageState extends State<AssetcheckPage> {
                         ),
                       ),
                       onTap: () {
-                        startUpload(_customer_id, _product_id);
+                        startUpload(
+                            _customer_id, _product_id, current_location);
                       },
                     ),
                   ),
                 ],
               ),
+              // FutureBuilder<String>(
+              //     future: _currentlocation(),
+              //     builder: (context, snapshot) {
+              //       final latlong = snapshot.data.toString();
+              //       return Text("${latlong}");
+              //     }),
             ],
           ),
         ),

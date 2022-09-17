@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ice_app_new/page_offline/orderofflinecheckout.dart';
 //import 'package:ice_app_new/models/car.dart';
 import 'package:ice_app_new/pages/ordercheckout.dart';
 import 'package:ice_app_new/providers/paymentreceive.dart';
@@ -42,7 +43,7 @@ class _CreateorderNewOfflinePageState extends State<CreateorderNewOfflinePage> {
   var _isLoading = false;
   @override
   initState() {
-    _checkinternet();
+    //_checkinternet();
     // try {
     //   widget.model.fetchOrders();
     // } on TimeoutException catch (_) {
@@ -694,7 +695,7 @@ class _CreateorderNewOfflinePageState extends State<CreateorderNewOfflinePage> {
                             return false;
                           } else {
                             Navigator.of(context).pushNamed(
-                                OrdercheckoutPage.routeName,
+                                OrderofflinecheckoutPage.routeName,
                                 arguments: {
                                   'orderitemlist': orderItems,
                                 });

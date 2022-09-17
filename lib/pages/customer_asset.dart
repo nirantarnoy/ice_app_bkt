@@ -20,7 +20,10 @@ import 'package:ice_app_new/models/addorder.dart';
 // import 'package:ice_app_new/models/products.dart';
 
 class CustomerAssetPage extends StatefulWidget {
-  static const routeName = '/createordernew';
+  static const routeName = '/customerassetpage';
+
+  const CustomerAssetPage({Key key, this.customer_selected}) : super(key: key);
+  final String customer_selected;
   @override
   _CustomerAssetPageState createState() => _CustomerAssetPageState();
 }
@@ -37,6 +40,7 @@ class _CustomerAssetPageState extends State<CustomerAssetPage> {
   @override
   initState() {
     _checkinternet();
+    selectedValue = widget.customer_selected;
     // try {
     //   widget.model.fetchOrders();
     // } on TimeoutException catch (_) {

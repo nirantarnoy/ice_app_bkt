@@ -39,6 +39,8 @@ class _PaymentPageState extends State<PaymentPage> {
   final TextEditingController _paydateTextController = TextEditingController();
   final DateFormat dateformatter = DateFormat('dd-MM-yyyy');
 
+  bool _networkisok = false;
+
   final Paymentreceive all_pay_checked = Paymentreceive(
     order_id: '0',
     order_no: '',
@@ -133,12 +135,21 @@ class _PaymentPageState extends State<PaymentPage> {
     var result = await Connectivity().checkConnectivity();
 
     if (result == ConnectivityResult.none) {
+      setState(() {
+        _networkisok = false;
+      });
       _showdialog('พบปัญหา', 'ไม่สามารถเชื่อมต่ออินเตอร์เน็ตได้');
     } else if (result == ConnectivityResult.mobile) {
       //_showdialog('Intenet access', 'You are connect mobile data');
+      setState(() {
+        _networkisok = true;
+      });
     }
     if (result == ConnectivityResult.wifi) {
       //_showdialog('Intenet access', 'You are connect wifi');
+      setState(() {
+        _networkisok = true;
+      });
     }
   }
 
@@ -434,319 +445,344 @@ class _PaymentPageState extends State<PaymentPage> {
 
     return SafeArea(
       child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            title: Text(
-              'รับชำระเงิน',
-              style: TextStyle(color: Colors.white),
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: Text(
+            'รับชำระเงิน',
+            style: TextStyle(color: Colors.white),
+          ),
+          leading: new IconButton(
+            icon: new Icon(
+              Icons.arrow_back,
+              color: Colors.white,
             ),
-            leading: new IconButton(
-              icon: new Icon(
-                Icons.arrow_back,
+            onPressed: () {
+              Navigator.of(context).pop(MainTest());
+            },
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.alarm,
                 color: Colors.white,
               ),
-              onPressed: () {
-                Navigator.of(context).pop(MainTest());
-              },
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => PaymenthistoryPage())),
             ),
-            actions: [
-              IconButton(
-                icon: Icon(
-                  Icons.alarm,
-                  color: Colors.white,
-                ),
-                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => PaymenthistoryPage())),
-              ),
-            ],
-          ),
-          body: Container(
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: <Widget>[
-                      FutureBuilder(builder: (context, dataSapshort) {
-                        if (dataSapshort.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else {
-                          if (dataSapshort.error != null) {
-                            return Center(child: Text('Data Error'));
-                          } else {
-                            return Expanded(
-                              child: Consumer<CustomerData>(
-                                builder: (context, _customer, _) =>
-                                    TypeAheadField(
-                                  textFieldConfiguration:
-                                      TextFieldConfiguration(
-                                          controller: _typeAheadController,
-                                          autofocus: false,
-                                          style: DefaultTextStyle.of(context)
-                                              .style
-                                              .copyWith(
-                                                  fontStyle: FontStyle.normal),
-                                          decoration: InputDecoration(
-                                              border: OutlineInputBorder(),
-                                              hintText: 'เลือกลูกค้า')),
-                                  // suggestionsCallback: (pattern) async {
-                                  //   return await BackendService.getSuggestions(pattern);
-                                  // },
-                                  suggestionsCallback: (pattern) async {
-                                    return await _customer
-                                        .findCustomer(pattern);
-                                  },
-                                  itemBuilder: (context, suggestion) {
-                                    return ListTile(
-                                      // leading: Icon(Icons.shopping_cart),
-                                      title: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(suggestion.name),
-                                          Divider(
-                                            color: Colors.cyan,
+          ],
+        ),
+        body: _networkisok == true
+            ? Container(
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          FutureBuilder(builder: (context, dataSapshort) {
+                            if (dataSapshort.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else {
+                              if (dataSapshort.error != null) {
+                                return Center(child: Text('Data Error'));
+                              } else {
+                                return Expanded(
+                                  child: Consumer<CustomerData>(
+                                    builder: (context, _customer, _) =>
+                                        TypeAheadField(
+                                      textFieldConfiguration:
+                                          TextFieldConfiguration(
+                                              controller: _typeAheadController,
+                                              autofocus: false,
+                                              style:
+                                                  DefaultTextStyle.of(context)
+                                                      .style
+                                                      .copyWith(
+                                                          fontStyle:
+                                                              FontStyle.normal),
+                                              decoration: InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                  hintText: 'เลือกลูกค้า')),
+                                      // suggestionsCallback: (pattern) async {
+                                      //   return await BackendService.getSuggestions(pattern);
+                                      // },
+                                      suggestionsCallback: (pattern) async {
+                                        return await _customer
+                                            .findCustomer(pattern);
+                                      },
+                                      itemBuilder: (context, suggestion) {
+                                        return ListTile(
+                                          // leading: Icon(Icons.shopping_cart),
+                                          title: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(suggestion.name),
+                                              Divider(
+                                                color: Colors.cyan,
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                      // subtitle: Text('\$${suggestion['price']}'),
-                                    );
-                                  },
-                                  onSuggestionSelected: (items) {
-                                    //print("niran");
-                                    //print(items.id);
-                                    setState(() {
-                                      selectedValue = items.id;
-                                      Provider.of<PaymentreceiveData>(context,
-                                              listen: false)
-                                          .fetPaymentreceive(selectedValue);
-                                      this._typeAheadController.text =
-                                          items.name;
-                                      _isChecked =
-                                          List<bool>.filled(200, false);
-                                    });
-                                  },
-                                  noItemsFoundBuilder: (context) {
-                                    return Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            'ไม่พบข้อมูล',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.red),
+                                          // subtitle: Text('\$${suggestion['price']}'),
+                                        );
+                                      },
+                                      onSuggestionSelected: (items) {
+                                        //print("niran");
+                                        //print(items.id);
+                                        setState(() {
+                                          selectedValue = items.id;
+                                          Provider.of<PaymentreceiveData>(
+                                                  context,
+                                                  listen: false)
+                                              .fetPaymentreceive(selectedValue);
+                                          this._typeAheadController.text =
+                                              items.name;
+                                          _isChecked =
+                                              List<bool>.filled(200, false);
+                                        });
+                                      },
+                                      noItemsFoundBuilder: (context) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(
+                                                'ไม่พบข้อมูล',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.red),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            );
-                          }
-                        }
-                      }),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: FutureBuilder(
-                    future: _paymentlistFuture,
-                    builder: (context, dataSnapshort) {
-                      if (dataSnapshort.connectionState ==
-                          ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      } else {
-                        if (dataSnapshort.error != null) {
-                          return Center(child: Text('Data Error'));
-                        } else {
-                          return Card(
-                            margin: EdgeInsets.all(3),
-                            child: Padding(
-                              padding: EdgeInsets.all(8),
-                              child: Column(
-                                children: <Widget>[
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text(
-                                          "ยอดค้างชำระ",
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              color: Colors.black87),
-                                        ),
-                                        SizedBox(width: 10),
-                                        Chip(
-                                          label: Consumer<PaymentreceiveData>(
-                                              builder: (context, payments, _) =>
-                                                  Text(
-                                                    payments.totalAmount == null
-                                                        ? 0
-                                                        : "${formatter.format(payments.totalAmount)}",
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 20),
-                                                  )),
-                                          backgroundColor:
-                                              Theme.of(context).primaryColor,
-                                        ),
-                                        Text("บาท",
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                color: Colors.black87))
-                                      ]),
-                                ],
-                              ),
-                            ),
-                          );
-                        }
-                      }
-                    },
-                  ),
-                ),
-
-                SizedBox(height: 5),
-                Expanded(
-                  flex: 0,
-                  child: Consumer<PaymentreceiveData>(
-                    builder: (context, payments, _) =>
-                        _buildGroupList(payments.listpaymentreceive),
-                  ),
-                ),
-                Expanded(
-                  child: Consumer<PaymentreceiveData>(
-                    builder: (context, payments, _) =>
-                        _buildpaymentsList(payments.listpaymentreceive),
-                  ),
-                ),
-                Container(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          color: Colors.grey[200],
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: Consumer<PaymentreceiveData>(
-                                    builder: (context, totals, _) => Row(
-                                      children: <Widget>[
-                                        Text(
-                                          '${formatter.format(paymentselected.length)}',
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.red),
-                                        ),
-                                        Text(
-                                          ' รายการ',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.normal,
-                                          ),
-                                        ),
-                                      ],
+                                        );
+                                      },
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                                );
+                              }
+                            }
+                          }),
+                        ],
                       ),
-                      Expanded(
-                        child: GestureDetector(
-                          child: Container(
-                            color: paymentselected.length > 0
-                                ? Colors.orange[700]
-                                : Colors.orange[200],
-                            child: Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  SizedBox(width: 5),
-                                  Text(
-                                    'ถัดไป',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 20),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: FutureBuilder(
+                        future: _paymentlistFuture,
+                        builder: (context, dataSnapshort) {
+                          if (dataSnapshort.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(child: CircularProgressIndicator());
+                          } else {
+                            if (dataSnapshort.error != null) {
+                              return Center(child: Text('Data Error'));
+                            } else {
+                              return Card(
+                                margin: EdgeInsets.all(3),
+                                child: Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Column(
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Text(
+                                              "ยอดค้างชำระ",
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Colors.black87),
+                                            ),
+                                            SizedBox(width: 10),
+                                            Chip(
+                                              label:
+                                                  Consumer<PaymentreceiveData>(
+                                                      builder: (context,
+                                                              payments, _) =>
+                                                          Text(
+                                                            payments.totalAmount ==
+                                                                    null
+                                                                ? 0
+                                                                : "${formatter.format(payments.totalAmount)}",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 20),
+                                                          )),
+                                              backgroundColor: Theme.of(context)
+                                                  .primaryColor,
+                                            ),
+                                            Text("บาท",
+                                                style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.black87))
+                                          ]),
+                                    ],
                                   ),
-                                ],
+                                ),
+                              );
+                            }
+                          }
+                        },
+                      ),
+                    ),
+
+                    SizedBox(height: 5),
+                    Expanded(
+                      flex: 0,
+                      child: Consumer<PaymentreceiveData>(
+                        builder: (context, payments, _) =>
+                            _buildGroupList(payments.listpaymentreceive),
+                      ),
+                    ),
+                    Expanded(
+                      child: Consumer<PaymentreceiveData>(
+                        builder: (context, payments, _) =>
+                            _buildpaymentsList(payments.listpaymentreceive),
+                      ),
+                    ),
+                    Container(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              color: Colors.grey[200],
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Consumer<PaymentreceiveData>(
+                                        builder: (context, totals, _) => Row(
+                                          children: <Widget>[
+                                            Text(
+                                              '${formatter.format(paymentselected.length)}',
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.red),
+                                            ),
+                                            Text(
+                                              ' รายการ',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                          onTap: () {
-                            if (paymentselected.length <= 0) {
-                              return false;
-                            } else {
-                              // Fluttertoast.showToast(
-                              //     msg: "ok",
-                              //     toastLength: Toast.LENGTH_LONG,
-                              //     gravity: ToastGravity.BOTTOM,
-                              //     timeInSecForIosWeb: 1,
-                              //     backgroundColor: Colors.green,
-                              //     textColor: Colors.white,
-                              //     fontSize: 16.0);
+                          Expanded(
+                            child: GestureDetector(
+                              child: Container(
+                                color: paymentselected.length > 0
+                                    ? Colors.orange[700]
+                                    : Colors.orange[200],
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      SizedBox(width: 5),
+                                      Text(
+                                        'ถัดไป',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 20),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                if (paymentselected.length <= 0) {
+                                  return false;
+                                } else {
+                                  // Fluttertoast.showToast(
+                                  //     msg: "ok",
+                                  //     toastLength: Toast.LENGTH_LONG,
+                                  //     gravity: ToastGravity.BOTTOM,
+                                  //     timeInSecForIosWeb: 1,
+                                  //     backgroundColor: Colors.green,
+                                  //     textColor: Colors.white,
+                                  //     fontSize: 16.0);
 
-                              Navigator.of(context).pushNamed(
-                                  PaymentcheckoutPage.routeName,
-                                  arguments: {
-                                    'paymentlist': paymentselected,
-                                  });
-                            }
-                          },
-                        ),
+                                  Navigator.of(context).pushNamed(
+                                      PaymentcheckoutPage.routeName,
+                                      arguments: {
+                                        'paymentlist': paymentselected,
+                                      });
+                                }
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    )
+
+                    // RefreshIndicator(
+                    //   onRefresh: _pagerefresh,
+                    //   child: Consumer<PaymentreceiveData>(
+                    //     builder: (context, payments, _) =>
+                    //         _buildpaymentsList(payments.listpaymentreceive),
+                    //   ),
+                    // ),
+
+                    // FutureBuilder(
+                    //   future: _paymentlistFuture,
+                    //   builder: (context, dataSnapshort) {
+                    //     if (dataSnapshort.connectionState ==
+                    //         ConnectionState.waiting) {
+                    //       return Center(child: CircularProgressIndicator());
+                    //     } else {
+                    //       if (dataSnapshort.error != null) {
+                    //         return Center(child: Text('Data Error'));
+                    //       } else {
+                    //         return Expanded(
+                    //           child: Consumer<PaymentreceiveData>(
+                    //             builder: (context, payments, _) =>
+                    //                 _buildpaymentsList(payments.listpaymentreceive),
+                    //           ),
+                    //         );
+                    //       }
+                    //     }
+                    //   },
+                    // ),
+                  ],
+                ),
+              )
+            : Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 150,
                   ),
-                )
-
-                // RefreshIndicator(
-                //   onRefresh: _pagerefresh,
-                //   child: Consumer<PaymentreceiveData>(
-                //     builder: (context, payments, _) =>
-                //         _buildpaymentsList(payments.listpaymentreceive),
-                //   ),
-                // ),
-
-                // FutureBuilder(
-                //   future: _paymentlistFuture,
-                //   builder: (context, dataSnapshort) {
-                //     if (dataSnapshort.connectionState ==
-                //         ConnectionState.waiting) {
-                //       return Center(child: CircularProgressIndicator());
-                //     } else {
-                //       if (dataSnapshort.error != null) {
-                //         return Center(child: Text('Data Error'));
-                //       } else {
-                //         return Expanded(
-                //           child: Consumer<PaymentreceiveData>(
-                //             builder: (context, payments, _) =>
-                //                 _buildpaymentsList(payments.listpaymentreceive),
-                //           ),
-                //         );
-                //       }
-                //     }
-                //   },
-                // ),
-              ],
-            ),
-          )),
+                  Icon(
+                    Icons.wifi_off_outlined,
+                    size: 100,
+                    color: Colors.orange,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Center(child: Text('ไม่พบสัญญาณอินเตอร์เน็ต'))
+                ],
+              ),
+      ),
     );
   }
 }

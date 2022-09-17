@@ -2,16 +2,19 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:ice_app_new/models/paymentdaily.dart';
 import 'package:ice_app_new/models/paymentreceive.dart';
+import 'package:ice_app_new/pages/home_offline.dart';
 import 'package:ice_app_new/pages/main_test.dart';
 // import 'package:ice_app_new/providers/product.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ice_app_new/providers/paymentreceive.dart';
+import 'package:ice_app_new/sqlite/providers/orderoffline.dart';
 
 import 'package:intl/intl.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:ice_app_new/providers/order.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/home';
@@ -21,6 +24,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool _showBackToTopButton = false;
+  bool _networkisok = false;
   ScrollController _scrollController;
 
   Future _orderFuture;
@@ -41,12 +45,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Provider.of<OrderData>(context, listen: false).fetOrderDiscount();
   }
 
+  Future _obtainCheckOrderOfflineFuture() {
+    return Provider.of<OrderOfflineData>(context, listen: false).showItemlist();
+  }
+
   @override
   void initState() {
+    showempid();
     _checkinternet();
     _orderFuture = _obtainOrderFuture();
     _paymentdailyFuture = _obtainPaymentdailyFuture();
     _orderDiscount = _obtainOrderDiscountFuture();
+    _obtainCheckOrderOfflineFuture();
     super.initState();
 
     _scrollController = ScrollController()
@@ -73,16 +83,32 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         duration: Duration(milliseconds: 500), curve: Curves.linear);
   }
 
+  Future<void> showempid() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    //   final String token = prefs.getString('token');
+    final String xxx = prefs.getString('emp_id');
+    print('current emp is ${xxx}');
+  }
+
   Future<void> _checkinternet() async {
     var result = await Connectivity().checkConnectivity();
     if (result == ConnectivityResult.none) {
       Theme.of(context).accentColor;
-      _showdialog('พบปัญหา', 'ไม่สามารถเชื่อมต่ออินเตอร์เน็ตได้');
+      setState(() {
+        _networkisok = false;
+      });
+      _showdialog('พบปัญหา', 'กรุณาตรวจสอบการเชื่อมต่อ หรือ ใช้งานโหมดออฟไลน์');
     } else if (result == ConnectivityResult.mobile) {
       //_showdialog('Intenet access', 'You are connect mobile data');
+      setState(() {
+        _networkisok = true;
+      });
     }
     if (result == ConnectivityResult.wifi) {
       //_showdialog('Intenet access', 'You are connect wifi');
+      setState(() {
+        _networkisok = true;
+      });
     }
   }
 
@@ -355,460 +381,529 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         child: Scaffold(
       body: SingleChildScrollView(
         controller: _scrollController,
-        child: Container(
-          //  color: Theme.of(context).accentColor,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              colors: [
-                Colors.grey[50],
-                Colors.blue,
-              ],
-            ),
-          ),
-          //  color: Colors.lightBlue,
-          child: FutureBuilder(
-              future: _orderFuture,
-              builder: (context, dataSnapshort) {
-                if (dataSnapshort.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      valueColor:
-                          new AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  );
-                } else {
-                  if (dataSnapshort.error != null) {
-                    return Center(
-                      child: Text('Data is error'),
-                    );
-                  } else {
-                    return Column(
-                      children: <Widget>[
-                        SizedBox(height: 20),
-                        Row(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(left: 16.0),
-                              child: Text(
-                                "สรุปรายการขาย",
-                                style: TextStyle(
-                                    fontSize: 25, color: Colors.white),
+        child: _networkisok == true
+            ? Container(
+                //  color: Theme.of(context).accentColor,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [
+                      Colors.grey[50],
+                      Colors.blue,
+                    ],
+                  ),
+                ),
+                //  color: Colors.lightBlue,
+                child: FutureBuilder(
+                    future: _orderFuture,
+                    builder: (context, dataSnapshort) {
+                      if (dataSnapshort.connectionState ==
+                          ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            valueColor:
+                                new AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        );
+                      } else {
+                        if (dataSnapshort.error != null) {
+                          return Center(
+                            child: Text('Data is error'),
+                          );
+                        } else {
+                          return Column(
+                            children: <Widget>[
+                              SizedBox(height: 20),
+                              Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 16.0),
+                                    child: Text(
+                                      "สรุปรายการขาย",
+                                      style: TextStyle(
+                                          fontSize: 25, color: Colors.white),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 16),
-                              child: Text(
-                                'ข้อมูลวันที่ ${dateformatter.format(DateTime.now())}',
-                                style: TextStyle(color: Colors.white),
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 16),
+                                    child: Text(
+                                      'ข้อมูลวันที่ ${dateformatter.format(DateTime.now())}',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 2),
-                        Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Card(
-                            elevation: 8,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            shadowColor: Colors.black,
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: Column(
+                              SizedBox(height: 2),
+                              Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Card(
+                                  elevation: 8,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  shadowColor: Colors.black,
+                                  child: Row(
                                     children: <Widget>[
-                                      SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        'ขายสด',
-                                        style: TextStyle(
-                                            color: Colors.red,
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      //Divider(),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: DottedLine(
-                                          direction: Axis.horizontal,
-                                          lineLength: double.infinity,
-                                          lineThickness: 1.0,
-                                          dashLength: 4.0,
-                                          dashColor: Colors.grey,
-                                          dashRadius: 0.0,
-                                          dashGapLength: 4.0,
-                                          dashGapColor: Colors.transparent,
-                                          dashGapRadius: 0.0,
+                                      Expanded(
+                                        child: Column(
+                                          children: <Widget>[
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              'ขายสด',
+                                              style: TextStyle(
+                                                  color: Colors.red,
+                                                  fontSize: 18.0,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            //Divider(),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: DottedLine(
+                                                direction: Axis.horizontal,
+                                                lineLength: double.infinity,
+                                                lineThickness: 1.0,
+                                                dashLength: 4.0,
+                                                dashColor: Colors.grey,
+                                                dashRadius: 0.0,
+                                                dashGapLength: 4.0,
+                                                dashGapColor:
+                                                    Colors.transparent,
+                                                dashGapRadius: 0.0,
+                                              ),
+                                            ),
+                                            Row(
+                                              children: <Widget>[
+                                                Expanded(
+                                                  child: Consumer<OrderData>(
+                                                    builder:
+                                                        (context, orders, _) =>
+                                                            Column(
+                                                      children: <Widget>[
+                                                        Text('จำนวน'),
+                                                        Text(
+                                                          '${formatter.format(orders.cashTotalQty)}',
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black54,
+                                                              fontSize: 30,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                        VerticalDivider(
+                                                          width: 2.0,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Consumer<OrderData>(
+                                                    builder:
+                                                        (context, orders, _) =>
+                                                            Column(
+                                                      children: <Widget>[
+                                                        Text('ยอดขาย'),
+                                                        Text(
+                                                          '${formatter.format(orders.cashTotalAmount)}',
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black54,
+                                                              fontSize: 30,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 15),
+                                          ],
                                         ),
                                       ),
-                                      Row(
-                                        children: <Widget>[
-                                          Expanded(
-                                            child: Consumer<OrderData>(
-                                              builder: (context, orders, _) =>
-                                                  Column(
-                                                children: <Widget>[
-                                                  Text('จำนวน'),
-                                                  Text(
-                                                    '${formatter.format(orders.cashTotalQty)}',
-                                                    style: TextStyle(
-                                                        color: Colors.black54,
-                                                        fontSize: 30,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  VerticalDivider(
-                                                    width: 2.0,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: Consumer<OrderData>(
-                                              builder: (context, orders, _) =>
-                                                  Column(
-                                                children: <Widget>[
-                                                  Text('ยอดขาย'),
-                                                  Text(
-                                                    '${formatter.format(orders.cashTotalAmount)}',
-                                                    style: TextStyle(
-                                                        color: Colors.black54,
-                                                        fontSize: 30,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 15),
                                     ],
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        //  SizedBox(height: 2),
-                        Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Card(
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            shadowColor: Colors.black,
-                            //color: Colors.transparent,
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: Column(children: <Widget>[
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      'ขายเชื่อ',
-                                      style: TextStyle(
-                                          color: Colors.red,
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    //Divider(),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: DottedLine(
-                                        direction: Axis.horizontal,
-                                        lineLength: double.infinity,
-                                        lineThickness: 1.0,
-                                        dashLength: 4.0,
-                                        dashColor: Colors.grey,
-                                        dashRadius: 0.0,
-                                        dashGapLength: 4.0,
-                                        dashGapColor: Colors.transparent,
-                                        dashGapRadius: 0.0,
+                              ),
+                              //  SizedBox(height: 2),
+                              Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Card(
+                                  elevation: 4,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  shadowColor: Colors.black,
+                                  //color: Colors.transparent,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Column(children: <Widget>[
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            'ขายเชื่อ',
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          //Divider(),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: DottedLine(
+                                              direction: Axis.horizontal,
+                                              lineLength: double.infinity,
+                                              lineThickness: 1.0,
+                                              dashLength: 4.0,
+                                              dashColor: Colors.grey,
+                                              dashRadius: 0.0,
+                                              dashGapLength: 4.0,
+                                              dashGapColor: Colors.transparent,
+                                              dashGapRadius: 0.0,
+                                            ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Consumer<OrderData>(
+                                                  builder:
+                                                      (context, orders, _) =>
+                                                          Column(
+                                                    children: <Widget>[
+                                                      Text('จำนวน'),
+                                                      Text(
+                                                        '${formatter.format(orders.creditTotalQty)}',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black54,
+                                                            fontSize: 30,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Consumer<OrderData>(
+                                                  builder:
+                                                      (context, orders, _) =>
+                                                          Column(
+                                                    children: <Widget>[
+                                                      Text('ยอดขาย'),
+                                                      Text(
+                                                        '${formatter.format(orders.creditTotalAmount)}',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black54,
+                                                            fontSize: 30,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 15),
+                                        ]),
                                       ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Consumer<OrderData>(
-                                            builder: (context, orders, _) =>
-                                                Column(
-                                              children: <Widget>[
-                                                Text('จำนวน'),
-                                                Text(
-                                                  '${formatter.format(orders.creditTotalQty)}',
-                                                  style: TextStyle(
-                                                      color: Colors.black54,
-                                                      fontSize: 30,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Consumer<OrderData>(
-                                            builder: (context, orders, _) =>
-                                                Column(
-                                              children: <Widget>[
-                                                Text('ยอดขาย'),
-                                                Text(
-                                                  '${formatter.format(orders.creditTotalAmount)}',
-                                                  style: TextStyle(
-                                                      color: Colors.black54,
-                                                      fontSize: 30,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 15),
-                                  ]),
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        //  SizedBox(height: 2),
-                        Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Card(
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            shadowColor: Colors.black,
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: Column(children: <Widget>[
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      'รวมขายทั้งหมด',
-                                      style: TextStyle(
-                                          color: Colors.red,
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    //Divider(),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: DottedLine(
-                                        direction: Axis.horizontal,
-                                        lineLength: double.infinity,
-                                        lineThickness: 1.0,
-                                        dashLength: 4.0,
-                                        dashColor: Colors.grey,
-                                        dashRadius: 0.0,
-                                        dashGapLength: 4.0,
-                                        dashGapColor: Colors.transparent,
-                                        dashGapRadius: 0.0,
+                              ),
+                              //  SizedBox(height: 2),
+                              Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Card(
+                                  elevation: 4,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  shadowColor: Colors.black,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Column(children: <Widget>[
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            'รวมขายทั้งหมด',
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          //Divider(),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: DottedLine(
+                                              direction: Axis.horizontal,
+                                              lineLength: double.infinity,
+                                              lineThickness: 1.0,
+                                              dashLength: 4.0,
+                                              dashColor: Colors.grey,
+                                              dashRadius: 0.0,
+                                              dashGapLength: 4.0,
+                                              dashGapColor: Colors.transparent,
+                                              dashGapRadius: 0.0,
+                                            ),
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Consumer<OrderData>(
+                                                  builder:
+                                                      (context, orders, _) =>
+                                                          Column(
+                                                    children: [
+                                                      Text('ยอดขายรวม'),
+                                                      Text(
+                                                        '${formatter.format(orders.creditTotalAmount + orders.cashTotalAmount)}',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black54,
+                                                            fontSize: 30,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 15),
+                                        ]),
                                       ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Consumer<OrderData>(
-                                            builder: (context, orders, _) =>
-                                                Column(
-                                              children: [
-                                                Text('ยอดขายรวม'),
-                                                Text(
-                                                  '${formatter.format(orders.creditTotalAmount + orders.cashTotalAmount)}',
-                                                  style: TextStyle(
-                                                      color: Colors.black54,
-                                                      fontSize: 30,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                )
-                                              ],
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              // SizedBox(
+                              //   height: 5,
+                              // ),
+                              Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Card(
+                                  elevation: 4,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  shadowColor: Colors.black,
+                                  color: Colors.lightGreen[300],
+                                  child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Column(children: <Widget>[
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            'รับชำระหนี้',
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          //Divider(),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: DottedLine(
+                                              direction: Axis.horizontal,
+                                              lineLength: double.infinity,
+                                              lineThickness: 1.0,
+                                              dashLength: 4.0,
+                                              dashColor: Colors.grey,
+                                              dashRadius: 0.0,
+                                              dashGapLength: 4.0,
+                                              dashGapColor: Colors.transparent,
+                                              dashGapRadius: 0.0,
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 15),
-                                  ]),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        // SizedBox(
-                        //   height: 5,
-                        // ),
-                        Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Card(
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            shadowColor: Colors.black,
-                            color: Colors.lightGreen[300],
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: Column(children: <Widget>[
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      'รับชำระหนี้',
-                                      style: TextStyle(
-                                          color: Colors.red,
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    //Divider(),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: DottedLine(
-                                        direction: Axis.horizontal,
-                                        lineLength: double.infinity,
-                                        lineThickness: 1.0,
-                                        dashLength: 4.0,
-                                        dashColor: Colors.grey,
-                                        dashRadius: 0.0,
-                                        dashGapLength: 4.0,
-                                        dashGapColor: Colors.transparent,
-                                        dashGapRadius: 0.0,
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Consumer<
+                                                    PaymentreceiveData>(
+                                                  builder: (context,
+                                                          _paymentdaily, _) =>
+                                                      Column(
+                                                    children: [
+                                                      Text('รวมเงิน'),
+                                                      Text(
+                                                        '${formatter.format(_paymentdaily.orderStatus > 0 ? 0 : _paymentdaily.totalPayment)}',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black54,
+                                                            fontSize: 30,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 15),
+                                        ]),
                                       ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Consumer<PaymentreceiveData>(
-                                            builder:
-                                                (context, _paymentdaily, _) =>
-                                                    Column(
-                                              children: [
-                                                Text('รวมเงิน'),
-                                                Text(
-                                                  '${formatter.format(_paymentdaily.orderStatus > 0 ? 0 : _paymentdaily.totalPayment)}',
-                                                  style: TextStyle(
-                                                      color: Colors.black54,
-                                                      fontSize: 30,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                )
-                                              ],
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 15),
+                              Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Card(
+                                  elevation: 4,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  shadowColor: Colors.black,
+                                  color: Colors.lightBlue[200],
+                                  child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Column(children: <Widget>[
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            'ส่วนลด',
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          //Divider(),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: DottedLine(
+                                              direction: Axis.horizontal,
+                                              lineLength: double.infinity,
+                                              lineThickness: 1.0,
+                                              dashLength: 4.0,
+                                              dashColor: Colors.grey,
+                                              dashRadius: 0.0,
+                                              dashGapLength: 4.0,
+                                              dashGapColor: Colors.transparent,
+                                              dashGapRadius: 0.0,
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 15),
-                                  ]),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 15),
-                        Padding(
-                          padding: EdgeInsets.all(10.0),
-                          child: Card(
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            shadowColor: Colors.black,
-                            color: Colors.lightBlue[200],
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: Column(children: <Widget>[
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      'ส่วนลด',
-                                      style: TextStyle(
-                                          color: Colors.red,
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    //Divider(),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: DottedLine(
-                                        direction: Axis.horizontal,
-                                        lineLength: double.infinity,
-                                        lineThickness: 1.0,
-                                        dashLength: 4.0,
-                                        dashColor: Colors.grey,
-                                        dashRadius: 0.0,
-                                        dashGapLength: 4.0,
-                                        dashGapColor: Colors.transparent,
-                                        dashGapRadius: 0.0,
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Consumer<OrderData>(
+                                                  builder: (context,
+                                                          _order_discount, _) =>
+                                                      Column(
+                                                    children: [
+                                                      Text('รวมเงิน'),
+                                                      Text(
+                                                        '${formatter.format((_order_discount.sumcashdiscount + _order_discount.sumcreditdiscount))}',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black54,
+                                                            fontSize: 30,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 15),
+                                        ]),
                                       ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Consumer<OrderData>(
-                                            builder:
-                                                (context, _order_discount, _) =>
-                                                    Column(
-                                              children: [
-                                                Text('รวมเงิน'),
-                                                Text(
-                                                  '${formatter.format((_order_discount.sumcashdiscount + _order_discount.sumcreditdiscount))}',
-                                                  style: TextStyle(
-                                                      color: Colors.black54,
-                                                      fontSize: 30,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                )
-                                              ],
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 15),
+                              Consumer<OrderOfflineData>(
+                                builder: (context, _orderoffline, _) =>
+                                    _orderoffline.listorderoffline.length > 0
+                                        ? Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0.0, 35.0, 10.0, 0.0),
+                                            child: RaisedButton(
+                                              elevation: 5,
+                                              shape: new RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      new BorderRadius.circular(
+                                                          10.0)),
+                                              color: Colors.grey,
+                                              child: Text(
+                                                'ส่งมอบขาย OFFLINE',
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Colors.white),
+                                              ),
+                                              onPressed: () => Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          HomeOfflinePage())),
+                                            ),
+                                          )
+                                        : Padding(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0.0, 35.0, 10.0, 0.0),
+                                            child: SizedBox(
+                                              height: 50.0,
+                                              //   width: targetWidth,
+                                              child: Consumer<OrderData>(
+                                                builder: (context, orders, _) =>
+                                                    orders.listorder.length > 0
+                                                        ? _buildclosebutton()
+                                                        : Text(''),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 15),
-                                  ]),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 15),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(0.0, 35.0, 10.0, 0.0),
-                          child: SizedBox(
-                            height: 50.0,
-                            //   width: targetWidth,
-                            child: Consumer<OrderData>(
-                              builder: (context, orders, _) =>
-                                  orders.listorder.length > 0
-                                      ? _buildclosebutton()
-                                      : Text(''),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 25),
-                      ],
-                    );
-                  }
-                }
-              }),
-        ),
+                              ),
+
+                              SizedBox(height: 25),
+                            ],
+                          );
+                        }
+                      }
+                    }),
+              )
+            : Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 150,
+                  ),
+                  Icon(
+                    Icons.wifi_off_outlined,
+                    size: 100,
+                    color: Colors.orange,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Center(child: Text('ไม่พบสัญญาณอินเตอร์เน็ต'))
+                ],
+              ),
       ),
       floatingActionButton: _showBackToTopButton == false
           ? null

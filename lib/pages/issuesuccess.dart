@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:ice_app_new/models/issueitems.dart';
 // import 'package:ice_app_new/pages/journalissue.dart';
 import 'package:ice_app_new/pages/main_test.dart';
+import 'package:ice_app_new/providers/issuedata.dart';
+import 'package:provider/provider.dart';
+
+import '../sqlite/models/product.dart';
+import '../sqlite/providers/db_provider.dart';
 // import 'package:ice_app_new/pages/order.dart';
 
 class IssuesuccessPage extends StatefulWidget {
@@ -9,6 +15,11 @@ class IssuesuccessPage extends StatefulWidget {
 }
 
 class _IssuesuccessPageState extends State<IssuesuccessPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(

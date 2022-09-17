@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:ice_app_new/page_offline/createorder_new_offline.dart';
+import 'package:ice_app_new/page_offline/orderofflinecheckout.dart';
+import 'package:ice_app_new/page_offline/orderofflinedetail.dart';
 // import 'package:ice_app_new/models/transfer_total.dart';
 import 'package:ice_app_new/pages/assetcheck.dart';
 import 'package:ice_app_new/pages/carload_review.dart';
@@ -12,6 +14,7 @@ import 'package:ice_app_new/pages/createorder_boot.dart';
 import 'package:ice_app_new/pages/createorder_new.dart';
 import 'package:ice_app_new/pages/createplan.dart';
 import 'package:ice_app_new/pages/home.dart';
+import 'package:ice_app_new/pages/home_offline.dart';
 import 'package:ice_app_new/pages/journalissue.dart';
 import 'package:ice_app_new/pages/offlinetest.dart';
 import 'package:ice_app_new/pages/ordercheckout.dart';
@@ -28,6 +31,7 @@ import 'package:ice_app_new/providers/transferin.dart';
 import 'package:ice_app_new/providers/transferout.dart';
 import 'package:ice_app_new/sqlite/providers/Offlineitem.dart';
 import 'package:ice_app_new/sqlite/providers/customer_price.dart';
+import 'package:ice_app_new/sqlite/providers/orderoffline.dart';
 import 'package:provider/provider.dart';
 //import 'package:shared_preferences/shared_preferences.dart';
 
@@ -110,7 +114,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<PlanData>.value(value: PlanData()),
         ChangeNotifierProvider<OfflineitemData>.value(value: OfflineitemData()),
         ChangeNotifierProvider<CustomerpriceData>.value(
-            value: CustomerpriceData())
+            value: CustomerpriceData()),
+        ChangeNotifierProvider<OrderOfflineData>.value(
+            value: OrderOfflineData()),
       ],
       child: Consumer(builder: (context, UserData users, _) {
         // checkAuthen(users);
@@ -157,6 +163,10 @@ class _MyAppState extends State<MyApp> {
             PlanDetailPage.routeName: (ctx) => PlanDetailPage(),
             CreateorderNewOfflinePage.routeName: (ctx) =>
                 CreateorderNewOfflinePage(),
+            OrderofflinecheckoutPage.routeName: (ctx) =>
+                OrderofflinecheckoutPage(),
+            OrderOfflineDetailPage.routeName: (ctx) => OrderOfflineDetailPage(),
+            HomeOfflinePage.routeName: (ctx) => HomeOfflinePage(),
             //TakePictureScreen.routeName: (ctx) => TakePictureScreen(),
           },
         );

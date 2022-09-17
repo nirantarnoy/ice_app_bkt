@@ -83,7 +83,8 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
     var result = await Connectivity().checkConnectivity();
 
     if (result == ConnectivityResult.none) {
-      _showdialog('No intenet', 'You are no internet connect');
+      _showdialog(
+          'No intenet', 'กรุณาตรวจสอบการเชื่อมต่อ หรือ ใช้งานโหมดออฟไลน์');
     } else if (result == ConnectivityResult.mobile) {
       //_showdialog('Intenet access', 'You are connect mobile data');
     }

@@ -95,6 +95,8 @@ class UserData with ChangeNotifier {
         final User userresult = User(
           id: res['data'][0]['user_id'].toString(),
           username: res['data'][0]['username'].toString(),
+          emp_id: res['data'][0]['emp_id'].toString(),
+          emp2_id: res['data'][0]['emp2_id'].toString(),
           emp_code: res['data'][0]['emp_code'].toString(),
           emp_name: res['data'][0]['emp_name'].toString(),
           emp_photo: res['data'][0]['emp_photo'].toString(),
@@ -114,6 +116,8 @@ class UserData with ChangeNotifier {
         final SharedPreferences prefs = await SharedPreferences.getInstance();
 
         prefs.setString('user_id', res['data'][0]['user_id'].toString());
+        prefs.setString('emp_id', res['data'][0]['emp_id'].toString());
+        prefs.setString('emp2_id', res['data'][0]['emp2_id'].toString());
         prefs.setString('emp_code', res['data'][0]['emp_code'].toString());
         prefs.setString('emp_name', res['data'][0]['emp_name'].toString());
         prefs.setString('emp_photo', res['data'][0]['emp_photo'].toString());
@@ -175,6 +179,8 @@ class UserData with ChangeNotifier {
         final User userresult = User(
           id: res['data'][0]['user_id'].toString(),
           username: res['data'][0]['username'].toString(),
+          emp_id: res['data'][0]['emp_id'].toString(),
+          emp2_id: res['data'][0]['emp2_id'].toString(),
           emp_code: res['data'][0]['emp_code'].toString(),
           emp_name: res['data'][0]['emp_name'].toString(),
           emp_photo: res['data'][0]['emp_photo'].toString(),
@@ -194,6 +200,8 @@ class UserData with ChangeNotifier {
         final SharedPreferences prefs = await SharedPreferences.getInstance();
 
         prefs.setString('user_id', res['data'][0]['user_id'].toString());
+        prefs.setString('emp_id', res['data'][0]['emp_id'].toString());
+        prefs.setString('emp2_id', res['data'][0]['emp2_id'].toString());
         prefs.setString('emp_code', res['data'][0]['emp_code'].toString());
         prefs.setString('emp_name', res['data'][0]['emp_name'].toString());
         prefs.setString('emp_photo', res['data'][0]['emp_photo'].toString());
@@ -235,6 +243,8 @@ class UserData with ChangeNotifier {
       notifyListeners();
       return;
     }
+    final String emp_id = prefs.getString('emp_id');
+    final String emp2_id = prefs.getString('emp2_id');
     final String emp_code = prefs.getString('emp_code');
     final String emp_name = prefs.getString('emp_name');
     final String userId = prefs.getString('user_id');
@@ -248,6 +258,8 @@ class UserData with ChangeNotifier {
     final int tokenLifespan = parsedExpiryTime.difference(now).inSeconds;
     _authenticatedUser = User(
         id: userId,
+        emp_id: emp_id,
+        emp2_id: emp2_id,
         emp_code: emp_code,
         emp_name: emp_name,
         emp_photo: emp_photo,
@@ -270,6 +282,8 @@ class UserData with ChangeNotifier {
 
       _currentinfo = new User(
           id: prefs.getString('userId'),
+          emp_id: prefs.getString('emp_id'),
+          emp2_id: prefs.getString('emp2_id'),
           emp_code: prefs.getString('emp_code'),
           emp_name: prefs.getString('emp_name'),
           emp_photo: prefs.getString('emp_photo'),

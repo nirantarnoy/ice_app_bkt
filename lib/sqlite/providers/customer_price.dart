@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:ice_app_new/models/issueitems.dart';
+import 'package:ice_app_new/providers/issuedata.dart';
 
 import 'package:ice_app_new/sqlite/models/customer_price.dart';
 import 'package:ice_app_new/sqlite/providers/db_provider.dart';
@@ -46,6 +48,8 @@ class CustomerpriceData with ChangeNotifier {
           // return false;
         }
 
+        _deleteCustomerprice(); // clear sqlite data before insert new data
+
         List<CustomerPrice> data = [];
 
         for (var i = 0; i < res['data'].length; i++) {
@@ -75,7 +79,7 @@ class CustomerpriceData with ChangeNotifier {
           //  data.add(price_result);
 
           if (price_result != null) {
-            _addCustomerprice(price_result);
+            _addCustomerprice(price_result); // insert new data from api
           }
         }
 
@@ -93,7 +97,17 @@ class CustomerpriceData with ChangeNotifier {
     }
   }
 
+  // initial daily data in sqlite
+
   Future _addCustomerprice(CustomerPrice data) async {
     await DbHelper.instance.createCustomerPrice(data);
+  }
+
+  Future _deleteCustomerprice() async {
+    await DbHelper.instance.deleteCustpriceAll();
+  }
+
+  Future _deleteProductAll() async {
+    await DbHelper.instance.deleteProductAll();
   }
 }

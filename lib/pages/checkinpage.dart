@@ -112,9 +112,40 @@ class _CheckinPageState extends State<CheckinPage> {
     if (car_data == '' && driver_data == '') {
       return;
     }
-    // print('car is ${car_data.substring(0, 3)}');
-    if (car_data.substring(0, 3) != "CAR" ||
-        car_data.substring(0, 3) != "BTC") {
+    print('car is ${car_data.substring(0, 3)}');
+    if (car_data.substring(0, 3) == "CAR" ||
+        car_data.substring(0, 3) == "BTC") {
+      List<User> successInformation;
+      successInformation =
+          await loginqrcode(car_data, driver_data, member_data);
+
+      if (successInformation != null) {
+        Navigator.pushReplacementNamed(context, '/');
+        //print(successInformation);
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('พบข้อผิดพลาด!',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.red)),
+              content: Text('ข้อมูลไม่ครบถ้วนหรือไม่ถูกต้อง'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('ตกลง',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.red)),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          },
+        );
+      }
+    } else {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -139,35 +170,6 @@ class _CheckinPageState extends State<CheckinPage> {
       return;
     }
 
-    List<User> successInformation;
-    successInformation = await loginqrcode(car_data, driver_data, member_data);
-
-    if (successInformation != null) {
-      Navigator.pushReplacementNamed(context, '/');
-      //print(successInformation);
-    } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('พบข้อผิดพลาด!',
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
-            content: Text('ข้อมูลไม่ครบถ้วนหรือไม่ถูกต้อง'),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('ตกลง',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.red)),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
-        },
-      );
-    }
     //Navigator.pushReplacementNamed(context, '/');
   }
 
@@ -420,11 +422,11 @@ class _CheckinPageState extends State<CheckinPage> {
                       SizedBox(height: 5),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[Text('version 2.1')],
+                        children: <Widget>[Text('version 2.2')],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[Text('update 21-06-2022')],
+                        children: <Widget>[Text('update 04-09-2022')],
                       )
                     ],
                   ),

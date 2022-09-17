@@ -19,23 +19,23 @@ class CarloadReviewPage extends StatefulWidget {
 class _CarloadReviewState extends State<CarloadReviewPage> {
   @override
   initState() {
-    _callDb();
+    //_callDb();
     super.initState();
   }
 
-  Future _callDb() async {
-    int chk_db = await DbHelper.instance.checkDB();
-    print(chk_db);
-  }
+  // Future _callDb() async {
+  //   int chk_db = await DbHelper.instance.checkDB();
+  //   print(chk_db);
+  // }
 
-  Future deleteData() async {
-    await DbHelper.instance.deleteCustpriceAll();
-  }
+  // Future deleteData() async {
+  //   await DbHelper.instance.deleteCustpriceAll();
+  // }
 
-  Future callapidata() async {
-    await Provider.of<CustomerpriceData>(context, listen: false)
-        .fetpriceonline();
-  }
+  // Future callapidata() async {
+  //   await Provider.of<CustomerpriceData>(context, listen: false)
+  //       .fetpriceonline();
+  // }
 
   Widget _buildlist(List<ReviewLoadData> issue_items) {
     Widget productCards;
@@ -199,6 +199,10 @@ class _CarloadReviewState extends State<CarloadReviewPage> {
                               onPressed: () {
                                 Provider.of<IssueData>(context, listen: false)
                                     .issueconfirm();
+
+                                Provider.of<CustomerpriceData>(context,
+                                        listen: false)
+                                    .fetpriceonline(); // get customer price for offline
                                 // Navigator.of(context).pop(true);
                                 // deleteData(); // clear data before
                                 // callapidata(); // insert data to sqlite

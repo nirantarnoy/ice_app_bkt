@@ -478,6 +478,8 @@ class OrderData with ChangeNotifier {
     String discount,
   ) async {
     String _user_id = "";
+    String _emp_id = "";
+    String _emp2_id = "";
     String _route_id = "";
     String _car_id = "";
     String _company_id = "";
@@ -489,6 +491,8 @@ class OrderData with ChangeNotifier {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.getString('user_id') != null) {
       _user_id = prefs.getString('user_id');
+      _emp_id = prefs.getString('emp_id');
+      _emp2_id = prefs.getString('emp2_id');
       _route_id = prefs.getString('emp_route_id');
       _car_id = prefs.getString('emp_car_id');
       _company_id = prefs.getString('company_id');
@@ -509,6 +513,8 @@ class OrderData with ChangeNotifier {
       'order_date': _order_date,
       'customer_id': customer_id,
       'user_id': _user_id,
+      'emp_id': _emp_id,
+      'emp2_id': _emp2_id,
       'route_id': _route_id,
       'car_id': _car_id,
       'company_id': _company_id,
