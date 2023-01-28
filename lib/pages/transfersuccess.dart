@@ -38,8 +38,10 @@ class _TransfersuccessPageState extends State<TransfersuccessPage> {
                         // ignore: deprecated_member_use
                         child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: FlatButton(
-                        color: Colors.blue[500],
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.blue[500])),
                         child: Text(
                           'กลับหน้าหลัก',
                           style: TextStyle(fontSize: 18, color: Colors.white),

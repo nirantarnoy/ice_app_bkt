@@ -190,7 +190,7 @@ class _JournalissuePageState extends State<JournalissuePage> {
             title: Text(title),
             content: Text(text),
             actions: <Widget>[
-              FlatButton(
+              ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },

@@ -55,7 +55,7 @@ class _QrcreatePageState extends State<QrcreatePage> {
                 SizedBox(
                   height: 8,
                 ),
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
                     setState(() {
                       controller.text = qr_text;

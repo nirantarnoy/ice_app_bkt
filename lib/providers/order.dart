@@ -14,36 +14,36 @@ class OrderData with ChangeNotifier {
   final String server_api = "";
   final String url_to_order =
       //   "http://192.168.1.120/icesystem/frontend/web/api/order/list";
-      "http://103.253.73.108/icesystem/frontend/web/api/order/listnew";
+      "http://141.98.16.4/icesystem/frontend/web/api/order/listnew";
   final String url_to_order_detail =
       //   "http://192.168.1.120/icesystem/frontend/web/api/order/listbycustomer";
-      "http://103.253.73.108/icesystem/frontend/web/api/order/listbycustomer";
+      "http://141.98.16.4/icesystem/frontend/web/api/order/listbycustomer";
   final String url_to_order_discount =
       //   "http://192.168.1.120/icesystem/frontend/web/api/order/listbycustomer";
-      "http://103.253.73.108/icesystem/frontend/web/api/order/orderdiscount";
+      "http://141.98.16.4/icesystem/frontend/web/api/order/orderdiscount";
   final String url_to_add_order =
-      "http://103.253.73.108/icesystem/frontend/web/api/order/addorder";
+      "http://141.98.16.4/icesystem/frontend/web/api/order/addorder";
   final String url_to_add_order_new =
-      "http://103.253.73.108/icesystem/frontend/web/api/order/addordernew";
+      "http://141.98.16.4/icesystem/frontend/web/api/order/addordernew";
   // "http://192.168.1.120/icesystem/frontend/web/api/order/addorder";
   final String url_to_add_order_transfer =
-      "http://103.253.73.108/icesystem/frontend/web/api/order/addordertransfer";
+      "http://141.98.16.4/icesystem/frontend/web/api/order/addordertransfer";
   // "http://192.168.1.120/icesystem/frontend/web/api/order/addorder";
   final String url_to_update_order =
-      "http://103.253.73.108/icesystem/frontend/web/api/order/updateorder";
+      "http://141.98.16.4/icesystem/frontend/web/api/order/updateorder";
   //   "http://192.168.1.120/icesystem/frontend/web/api/order/updateorder";
   final String url_to_delete_order_customer =
       //    "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorder";
-      "http://103.253.73.108/icesystem/frontend/web/api/order/deleteordercustomer";
+      "http://141.98.16.4/icesystem/frontend/web/api/order/deleteordercustomer";
   final String url_to_update_order_detail =
       //   "http://192.168.1.120/icesystem/frontend/web/api/order/updateorderdetail";
-      "http://103.253.73.108/icesystem/frontend/web/api/order/updateorderdetail";
+      "http://141.98.16.4/icesystem/frontend/web/api/order/updateorderdetail";
   final String url_to_delete_order_detail =
-      "http://103.253.73.108/icesystem/frontend/web/api/order/deleteorderline";
+      "http://141.98.16.4/icesystem/frontend/web/api/order/deleteorderline";
   final String url_to_close_order =
-      "http://103.253.73.108/icesystem/frontend/web/api/order/closeorder";
+      "http://141.98.16.4/icesystem/frontend/web/api/order/closeorder";
   final String url_to_cancel_order =
-      "http://103.253.73.108/icesystem/frontend/web/api/order/cancelorder";
+      "http://141.98.16.4/icesystem/frontend/web/api/order/cancelorder";
   //  "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorderline";
 
   ///// for common
@@ -712,21 +712,21 @@ class OrderData with ChangeNotifier {
       'return_stock': _return_stock
     };
     print('data will save close order is ${orderData}');
-    try {
-      http.Response response;
-      response = await http.post(Uri.parse(url_to_close_order),
-          headers: {'Content-Type': 'application/json'},
-          body: json.encode(orderData));
+    // try {
+    //   http.Response response;
+    //   response = await http.post(Uri.parse(url_to_close_order),
+    //       headers: {'Content-Type': 'application/json'},
+    //       body: json.encode(orderData));
 
-      if (response.statusCode == 200) {
-        Map<String, dynamic> res = json.decode(response.body);
-        print('data close order is  ${res["data"]}');
-        completed = true;
-      }
-    } catch (_) {
-      print('cannot close order');
-    }
-    print(completed);
+    //   if (response.statusCode == 200) {
+    //     Map<String, dynamic> res = json.decode(response.body);
+    //     print('data close order is  ${res["data"]}');
+    //     completed = true;
+    //   }
+    // } catch (_) {
+    //   print('cannot close order');
+    // }
+    // print(completed);
     return completed;
   }
 

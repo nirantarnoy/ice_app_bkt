@@ -66,13 +66,13 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
                   //     title: Text('แจ้งเตือน'),
                   //     content: Text('ต้องการลบข้อมูลใช่หรือไม่'),
                   //     actions: <Widget>[
-                  //       FlatButton(
+                  //       ElevatedButton(
                   //         onPressed: () {
                   //           Navigator.of(context).pop(true);
                   //         },
                   //         child: Text('ยืนยัน'),
                   //       ),
-                  //       FlatButton(
+                  //       ElevatedButton(
                   //         onPressed: () {
                   //           Navigator.of(context).pop(false);
                   //         },
@@ -95,7 +95,7 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
                     });
                     // paymentlist.removeAt(index);
                   });
-                  Scaffold.of(context).showSnackBar(SnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Row(
                       children: <Widget>[
                         Icon(
@@ -263,7 +263,7 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
         ),
       );
     } else {
-      Scaffold.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Row(
           children: <Widget>[
             Icon(
@@ -555,14 +555,14 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
                               content:
                                   Text('ต้องการบันทึกการชำระเงินใช่หรือไม่'),
                               actions: <Widget>[
-                                FlatButton(
+                                ElevatedButton(
                                   onPressed: () {
                                     //Navigator.of(context).pop(true);
                                     _submitForm(paymentselected);
                                   },
                                   child: Text('ยืนยัน'),
                                 ),
-                                FlatButton(
+                                ElevatedButton(
                                   onPressed: () {
                                     Navigator.of(context).pop(false);
                                   },

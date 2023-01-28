@@ -241,7 +241,7 @@ class _ItemsState extends State<Items> {
                   ),
                   content: Text('จำนวนขายมากกว่าจำนวนคงเหลือ'),
                   actions: <Widget>[
-                    FlatButton(
+                    ElevatedButton(
                       onPressed: () {
                         setState(() {
                           _textqtyController.text = value.toString();
@@ -278,7 +278,7 @@ class _ItemsState extends State<Items> {
     )
         .then(
       (_) {
-        Scaffold.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Row(
             children: <Widget>[
               Icon(
@@ -453,12 +453,14 @@ class _ItemsState extends State<Items> {
                               child: SizedBox(
                                 height: 55.0,
                                 width: targetWidth,
-                                child: new RaisedButton(
-                                    elevation: 0.2,
-                                    shape: new RoundedRectangleBorder(
-                                        borderRadius:
-                                            new BorderRadius.circular(30.0)),
-                                    color: Colors.blue[700],
+                                child: new ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue[700],
+                                      elevation: 0.2,
+                                      shape: new RoundedRectangleBorder(
+                                          borderRadius:
+                                              new BorderRadius.circular(30.0)),
+                                    ),
                                     child: new Text('เงินสด',
                                         style: new TextStyle(
                                             fontSize: 20.0,
@@ -475,12 +477,14 @@ class _ItemsState extends State<Items> {
                               child: SizedBox(
                                 height: 55.0,
                                 width: targetWidth,
-                                child: new RaisedButton(
-                                    elevation: 0.2,
-                                    shape: new RoundedRectangleBorder(
-                                        borderRadius:
-                                            new BorderRadius.circular(30.0)),
-                                    color: Colors.orange[700],
+                                child: new ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.orange[700],
+                                      elevation: 0.2,
+                                      shape: new RoundedRectangleBorder(
+                                          borderRadius:
+                                              new BorderRadius.circular(30.0)),
+                                    ),
                                     child: new Text('เงินเชื่อ',
                                         style: new TextStyle(
                                             fontSize: 20.0,
@@ -497,7 +501,7 @@ class _ItemsState extends State<Items> {
                             //     Row(
                             //       mainAxisAlignment: MainAxisAlignment.center,
                             //       children: <Widget>[
-                            //         RaisedButton(
+                            //         ElevatedButton(
                             //           padding: EdgeInsets.only(right: 8),
                             //           shape: RoundedRectangleBorder(
                             //               borderRadius:
@@ -510,7 +514,7 @@ class _ItemsState extends State<Items> {
                             //           child: Text("บันทีก"),
                             //         ),
                             //         SizedBox(width: 20),
-                            //         RaisedButton(
+                            //         ElevatedButton(
                             //           padding: EdgeInsets.only(left: 8),
                             //           shape: RoundedRectangleBorder(
                             //               borderRadius:

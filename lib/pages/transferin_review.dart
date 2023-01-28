@@ -127,7 +127,7 @@ class _TransferInReviewPageState extends State<TransferInReviewPage> {
                             //           content:
                             //               Text('คุณต้องการยืนยันการใช่หรือไม่'),
                             //           actions: <Widget>[
-                            //             FlatButton(
+                            //             ElevatedButton(
                             //               onPressed: () {
                             //                 Provider.of<TransferinData>(context,
                             //                         listen: false)
@@ -145,7 +145,7 @@ class _TransferInReviewPageState extends State<TransferInReviewPage> {
                             //               },
                             //               child: Text('ยืนยัน'),
                             //             ),
-                            //             FlatButton(
+                            //             ElevatedButton(
                             //               onPressed: () {
                             //                 Navigator.of(context).pop(false);
                             //               },
@@ -189,7 +189,7 @@ class _TransferInReviewPageState extends State<TransferInReviewPage> {
                                       content:
                                           Text('คุณต้องการยืนยันการใช่หรือไม่'),
                                       actions: <Widget>[
-                                        FlatButton(
+                                        ElevatedButton(
                                           onPressed: () {
                                             Provider.of<TransferinData>(context,
                                                     listen: false)
@@ -208,7 +208,7 @@ class _TransferInReviewPageState extends State<TransferInReviewPage> {
                                           },
                                           child: Text('ยืนยัน'),
                                         ),
-                                        FlatButton(
+                                        ElevatedButton(
                                           onPressed: () {
                                             Navigator.of(context).pop(false);
                                           },

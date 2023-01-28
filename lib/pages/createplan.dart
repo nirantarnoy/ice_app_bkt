@@ -46,6 +46,8 @@ class _CreateplanPageState extends State<CreateplanPage> {
     // }
     Provider.of<ProductData>(context, listen: false)
         .fetProductissue(selectedValue);
+
+    // Provider.of<ProductData>(context, listen: false).fetProducts(selectedValue);
     isuserconfirm = 1;
     super.initState();
   }
@@ -101,7 +103,7 @@ class _CreateplanPageState extends State<CreateplanPage> {
             title: Text(title),
             content: Text(text),
             actions: <Widget>[
-              FlatButton(
+              ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -242,7 +244,7 @@ class _CreateplanPageState extends State<CreateplanPage> {
                             //           content:
                             //               Text('จำนวนขายมากกว่าจำนวนคงเหลือ'),
                             //           actions: <Widget>[
-                            //             FlatButton(
+                            //             ElevatedButton(
                             //                 onPressed: () {
                             //                   Navigator.of(context).pop(false);
                             //                 },
@@ -266,12 +268,14 @@ class _CreateplanPageState extends State<CreateplanPage> {
                       child: SizedBox(
                         height: 55.0,
                         width: targetWidth,
-                        child: new RaisedButton(
-                            elevation: 5,
-                            splashColor: Colors.grey,
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(15.0)),
-                            color: Colors.green[700],
+                        child: new ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green[700],
+                              elevation: 5,
+                              shape: new RoundedRectangleBorder(
+                                  borderRadius:
+                                      new BorderRadius.circular(15.0)),
+                            ),
                             child: new Text('เพิ่มรายการ',
                                 style: new TextStyle(
                                     fontSize: 20.0, color: Colors.white)),
@@ -581,7 +585,7 @@ class _CreateplanPageState extends State<CreateplanPage> {
               //           // SizedBox(
               //           //   width: 5,
               //           // ),
-              //           FlatButton(
+              //           ElevatedButton(
               //             color: Colors.grey[100],
               //             height: 30,
               //             onPressed: () {

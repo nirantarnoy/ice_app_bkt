@@ -63,7 +63,7 @@ class _CustomerpriceState extends State<CustomerpricePage> {
           children: [
             Row(
               children: [
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
                     print('get api');
                     callapidata();
@@ -74,7 +74,7 @@ class _CustomerpriceState extends State<CustomerpricePage> {
             ),
             Row(
               children: [
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () => refreshData(),
                   child: Text('pull data'),
                 ),
@@ -82,7 +82,7 @@ class _CustomerpriceState extends State<CustomerpricePage> {
             ),
             Row(
               children: [
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () => deleteData(),
                   child: Text('delete data'),
                 ),
@@ -90,7 +90,7 @@ class _CustomerpriceState extends State<CustomerpricePage> {
             ),
             Row(
               children: [
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () => Navigator.push(context,
                       MaterialPageRoute(builder: (context) => ProductsPage())),
                   child: Text('get product issue'),
@@ -99,7 +99,7 @@ class _CustomerpriceState extends State<CustomerpricePage> {
             ),
             Row(
               children: [
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -110,7 +110,7 @@ class _CustomerpriceState extends State<CustomerpricePage> {
             ),
             Row(
               children: [
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () => deleteOrder(),
                   child: Text('delete all order'),
                 ),

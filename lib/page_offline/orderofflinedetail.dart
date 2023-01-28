@@ -235,7 +235,7 @@ class _OrderOfflineDetailPageState extends State<OrderOfflineDetailPage> {
             product_code, _formData['cancel_reason'])
         .then(
       (_) {
-        Scaffold.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Row(
             children: <Widget>[
               Icon(
@@ -300,13 +300,13 @@ class _OrderOfflineDetailPageState extends State<OrderOfflineDetailPage> {
                   title: Text('แจ้งเตือน'),
                   content: Text('ต้องการลบข้อมูลใช่หรือไม่'),
                   actions: <Widget>[
-                    FlatButton(
+                    ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).pop(true);
                       },
                       child: Text('ยืนยัน'),
                     ),
-                    FlatButton(
+                    ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).pop(false);
                       },
@@ -323,7 +323,7 @@ class _OrderOfflineDetailPageState extends State<OrderOfflineDetailPage> {
                     .deleteOrderline(widget.order_id, orders[index].product_id);
                 orders.removeAt(index);
               });
-              Scaffold.of(context).showSnackBar(SnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Row(
                   children: <Widget>[
                     Icon(

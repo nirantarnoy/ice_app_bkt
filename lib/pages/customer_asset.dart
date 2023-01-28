@@ -101,7 +101,7 @@ class _CustomerAssetPageState extends State<CustomerAssetPage> {
             title: Text(title),
             content: Text(text),
             actions: <Widget>[
-              FlatButton(
+              ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -265,9 +265,10 @@ class _CustomerAssetPageState extends State<CustomerAssetPage> {
                         SizedBox(
                           width: 5,
                         ),
-                        FlatButton(
-                          color: Colors.grey[100],
-                          height: 30,
+                        ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.grey[100])),
                           onPressed: () {
                             selectedValue = '';
                             selectedValue = '';

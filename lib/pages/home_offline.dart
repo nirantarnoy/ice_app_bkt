@@ -82,7 +82,7 @@ class _HomeOfflinePageState extends State<HomeOfflinePage>
             title: Text(title),
             content: Text(text),
             actions: <Widget>[
-              FlatButton(
+              ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -93,11 +93,13 @@ class _HomeOfflinePageState extends State<HomeOfflinePage>
   }
 
   Widget _buildclosebutton() {
-    return RaisedButton(
-        elevation: 5,
-        shape: new RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(10.0)),
-        color: Colors.grey,
+    return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.grey,
+          elevation: 5,
+          shape: new RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(10.0)),
+        ),
         child: new Text('จบการขาย [OFFLINE]',
             style: new TextStyle(fontSize: 20.0, color: Colors.white)),
         onPressed: () {
@@ -292,7 +294,7 @@ class _HomeOfflinePageState extends State<HomeOfflinePage>
           //     title: Text('ยืนยัน'),
           //     content: Text('ต้องการส่งข้อมูลการขายประจำวันใช่หรือไม่'),
           //     actions: <Widget>[
-          //       FlatButton(
+          //       ElevatedButton(
           //         onPressed: () async {
           //           bool res =
           //               await Provider.of<OrderData>(context, listen: false)
@@ -324,7 +326,7 @@ class _HomeOfflinePageState extends State<HomeOfflinePage>
           //         },
           //         child: Text('ยืนยัน'),
           //       ),
-          //       FlatButton(
+          //       ElevatedButton(
           //         onPressed: () {
           //           Navigator.of(context).pop(false);
           //         },

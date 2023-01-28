@@ -382,12 +382,18 @@ class _ItemsState extends State<Items> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            RaisedButton(
-                              padding: EdgeInsets.only(right: 8),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              color: Colors.blue[500],
-                              textColor: Colors.white,
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue[500],
+                                textStyle: TextStyle(color: Colors.white),
+                                padding: EdgeInsets.only(
+                                  right: 8,
+                                ),
+                                elevation: 0.2,
+                                shape: new RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(15.0)),
+                              ),
                               onPressed: () {},
                               child: Text("บันทีก"),
                             ),
@@ -395,7 +401,7 @@ class _ItemsState extends State<Items> {
                         ),
                         // Row(
                         //   children: <Widget>[
-                        //     RaisedButton(
+                        //     ElevatedButton(
                         //       padding: EdgeInsets.only(left: 8),
                         //       shape: RoundedRectangleBorder(
                         //           borderRadius: BorderRadius.circular(15)),
@@ -418,7 +424,7 @@ class _ItemsState extends State<Items> {
       child: Column(
         children: <Widget>[
           ListTile(
-            // leading: RaisedButton(
+            // leading: ElevatedButton(
             //     color:
             //         _payment_method_id == "1" ? Colors.green : Colors.purple[300],
             //     onPressed: () {},

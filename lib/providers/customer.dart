@@ -16,28 +16,28 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CustomerData with ChangeNotifier {
   final String url_to_customer_list =
       //  "http://192.168.1.120/icesystem/frontend/web/api/customer/list";
-      "http://103.253.73.108/icesystem/frontend/web/api/customer/list";
-  //"http://103.253.73.108/icesystem/frontend/web/api/customer/list";
+      "http://141.98.16.4/icesystem/frontend/web/api/customer/list";
+  //"http://141.98.16.4/icesystem/frontend/web/api/customer/list";
   final String url_to_customer_boot_list =
       //  "http://192.168.1.120/icesystem/frontend/web/api/customer/list";
-      "http://103.253.73.108/icesystem/frontend/web/api/customer/bootlist";
-  //"http://103.253.73.108/icesystem/frontend/web/api/customer/list";
+      "http://141.98.16.4/icesystem/frontend/web/api/customer/bootlist";
+  //"http://141.98.16.4/icesystem/frontend/web/api/customer/list";
   final String url_to_customer_detail =
       // "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
-      "http://103.253.73.108/icesystem/frontend/web/api/customer/detail";
+      "http://141.98.16.4/icesystem/frontend/web/api/customer/detail";
 
   final String url_to_customer_asset =
       // "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
-      "http://103.253.73.108/icesystem/frontend/web/api/customer/assetlist";
+      "http://141.98.16.4/icesystem/frontend/web/api/customer/assetlist";
   final String url_to_asset_change_photo =
       // "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
-      "http://103.253.73.108/icesystem/frontend/web/api/customer/updatephoto";
+      "http://141.98.16.4/icesystem/frontend/web/api/customer/updatephoto";
   final String url_to_asset_checklist_save =
       // "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
-      "http://103.253.73.108/icesystem/frontend/web/api/customer/assetchecklist";
+      "http://141.98.16.4/icesystem/frontend/web/api/customer/assetchecklist";
   final String url_to_asset_checklist =
       // "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
-      "http://103.253.73.108/icesystem/frontend/web/api/customer/checklist";
+      "http://141.98.16.4/icesystem/frontend/web/api/customer/checklist";
 
   List<Customers> _customer;
   List<CustomerAsset> _customer_asset;

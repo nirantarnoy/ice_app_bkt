@@ -34,18 +34,18 @@ class _AuthPageState extends State<AuthPage> {
 
   Widget _showLogo() {
     return new Hero(
-      tag: 'vorapat ice',
+      tag: 'bkt ice',
       child: Padding(
         padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 0.0),
         child: CircleAvatar(
           backgroundColor: Colors.transparent,
           radius: 70.0,
-          child: Image.asset('assets/VP.png'),
-          // child: Text('ICE',
-          //     style: TextStyle(
-          //         fontSize: 38.0,
-          //         fontWeight: FontWeight.bold,
-          //         color: Colors.white)),
+          // child: Image.asset('assets/VP.png'),
+          child: Text('BKT ICE',
+              style: TextStyle(
+                  fontSize: 38.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white)),
         ),
       ),
     );
@@ -144,7 +144,7 @@ class _AuthPageState extends State<AuthPage> {
     //       title: Text('Sucess!'),
     //       content: Text(''),
     //       actions: <Widget>[
-    //         FlatButton(
+    //         ElevatedButton(
     //           child: Text('ตกลง'),
     //           onPressed: () {
     //             Navigator.of(context).pop();
@@ -156,8 +156,33 @@ class _AuthPageState extends State<AuthPage> {
     // );
 
     if (successInformation != null) {
-      Navigator.pushReplacementNamed(context, '/');
-      print(successInformation);
+      if (successInformation[0].emp_route_id.toString() == '0') {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('พบข้อผิดพลาด!',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.red)),
+              content: Text('ตรวจสอบว่ามีการจัดรายการรถประจำวันหรือยัง'),
+              actions: <Widget>[
+                ElevatedButton(
+                  child: Text('OK',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.red)),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          },
+        );
+      } else {
+        Navigator.pushReplacementNamed(context, '/');
+        print(successInformation);
+      }
+
       // showDialog(
       //   context: context,
       //   builder: (BuildContext context) {
@@ -165,7 +190,7 @@ class _AuthPageState extends State<AuthPage> {
       //       title: Text('Sucess!'),
       //       content: Text(''),
       //       actions: <Widget>[
-      //         FlatButton(
+      //         ElevatedButton(
       //           child: Text('ตกลง'),
       //           onPressed: () {
       //             Navigator.of(context).pop();
@@ -185,7 +210,7 @@ class _AuthPageState extends State<AuthPage> {
                     TextStyle(fontWeight: FontWeight.bold, color: Colors.red)),
             content: Text('ชื่อหรือรหัสผ่านไม่ถูกต้อง'),
             actions: <Widget>[
-              FlatButton(
+              ElevatedButton(
                 child: Text('OK',
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.red)),
@@ -230,14 +255,14 @@ class _AuthPageState extends State<AuthPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: <Widget>[
-                      _showLogo(),
-                      // Text(
-                      //   'VP ICE',
-                      //   style: TextStyle(
-                      //       fontSize: 50,
-                      //       fontWeight: FontWeight.bold,
-                      //       color: Colors.blue[700]),
-                      // ),
+                      // _showLogo(),
+                      Text(
+                        'BKT ICE',
+                        style: TextStyle(
+                            fontSize: 50,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue[700]),
+                      ),
                       SizedBox(
                         height: 20,
                       ),
@@ -247,7 +272,7 @@ class _AuthPageState extends State<AuthPage> {
                       ),
                       _buildPasswordTextField(),
 
-                      // FlatButton(
+                      // ElevatedButton(
                       //   child: Text(
                       //       'Switch to ${_authMode == AuthMode.Login ? 'Signup' : 'Login'}'),
                       //   onPressed: () {
@@ -266,13 +291,14 @@ class _AuthPageState extends State<AuthPage> {
                         child: SizedBox(
                           height: 45.0,
                           width: targetWidth,
-                          child: new RaisedButton(
-                              elevation: 5,
-                              splashColor: Colors.grey,
-                              shape: new RoundedRectangleBorder(
-                                  borderRadius:
-                                      new BorderRadius.circular(30.0)),
-                              color: Colors.blue[700],
+                          child: new ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue[700],
+                                elevation: 5,
+                                shape: new RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(30.0)),
+                              ),
                               child: new Text('เข้าสู่ระบบ',
                                   style: new TextStyle(
                                       fontSize: 20.0, color: Colors.white)),
@@ -284,11 +310,11 @@ class _AuthPageState extends State<AuthPage> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[Text('version 2.2')],
+                        children: <Widget>[Text('version 2.3')],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[Text('update 04-09-2022')],
+                        children: <Widget>[Text('update 02-11-2022')],
                       )
                     ],
                   ),

@@ -52,13 +52,13 @@ class _PlancheckoutPageState extends State<PlancheckoutPage> {
                         title: Text('แจ้งเตือน'),
                         content: Text('ต้องการลบข้อมูลใช่หรือไม่'),
                         actions: <Widget>[
-                          FlatButton(
+                          ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).pop(true);
                             },
                             child: Text('ยืนยัน'),
                           ),
-                          FlatButton(
+                          ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).pop(false);
                             },
@@ -81,7 +81,7 @@ class _PlancheckoutPageState extends State<PlancheckoutPage> {
                       itemlist.removeAt(index);
                     });
 
-                    Scaffold.of(context).showSnackBar(SnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Row(
                         children: <Widget>[
                           Icon(
@@ -374,7 +374,7 @@ class _PlancheckoutPageState extends State<PlancheckoutPage> {
                               content:
                                   Text('ต้องการบันทึกการชำระเงินใช่หรือไม่'),
                               actions: <Widget>[
-                                FlatButton(
+                                ElevatedButton(
                                   onPressed: () {
                                     //Navigator.of(context).pop(true);
                                     _submitForm(order_items[0].customer_id,
@@ -382,7 +382,7 @@ class _PlancheckoutPageState extends State<PlancheckoutPage> {
                                   },
                                   child: Text('ยืนยัน'),
                                 ),
-                                FlatButton(
+                                ElevatedButton(
                                   onPressed: () {
                                     Navigator.of(context).pop(false);
                                   },

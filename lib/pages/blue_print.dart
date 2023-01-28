@@ -240,8 +240,9 @@ class _BluePrintState extends State<BluePrintPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        RaisedButton(
-                          color: Colors.blue,
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue[700]),
                           onPressed: () {
                             initPlatformState();
                           },
@@ -253,8 +254,10 @@ class _BluePrintState extends State<BluePrintPage> {
                         SizedBox(
                           width: 20,
                         ),
-                        RaisedButton(
-                          color: _connected ? Colors.red : Colors.green,
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  _connected ? Colors.red : Colors.green),
                           onPressed: _connected ? _disconnect : _connect,
                           child: Text(
                             _connected ? 'Disconnect' : 'Connect',
@@ -266,8 +269,9 @@ class _BluePrintState extends State<BluePrintPage> {
                     Padding(
                       padding: const EdgeInsets.only(
                           left: 10.0, right: 10.0, top: 50),
-                      child: RaisedButton(
-                        color: Colors.blue[700],
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue[700]),
                         onPressed: () {
                           // testPrint.sample(pathImage);
                           _connected ? _testPrint() : print('not connect');
@@ -276,7 +280,7 @@ class _BluePrintState extends State<BluePrintPage> {
                             style: TextStyle(color: Colors.white)),
                       ),
                     ),
-                    RaisedButton(
+                    ElevatedButton(
                       child: Text('Print Screensort'),
                       onPressed: () async {
                         final image = await screenshotController
@@ -444,7 +448,7 @@ class _BluePrintState extends State<BluePrintPage> {
     Duration duration: const Duration(seconds: 3),
   }) async {
     await new Future.delayed(new Duration(milliseconds: 100));
-    Scaffold.of(context).showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       new SnackBar(
         content: new Text(
           message,

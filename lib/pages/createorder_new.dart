@@ -101,7 +101,7 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
             title: Text(title),
             content: Text(text),
             actions: <Widget>[
-              FlatButton(
+              ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -242,7 +242,7 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
                                       content:
                                           Text('จำนวนขายมากกว่าจำนวนคงเหลือ'),
                                       actions: <Widget>[
-                                        FlatButton(
+                                        ElevatedButton(
                                             onPressed: () {
                                               Navigator.of(context).pop(false);
                                             },
@@ -266,12 +266,14 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
                       child: SizedBox(
                         height: 55.0,
                         width: targetWidth,
-                        child: new RaisedButton(
-                            elevation: 5,
-                            splashColor: Colors.grey,
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(15.0)),
-                            color: Colors.green[700],
+                        child: new ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green[700],
+                              elevation: 5,
+                              shape: new RoundedRectangleBorder(
+                                  borderRadius:
+                                      new BorderRadius.circular(15.0)),
+                            ),
                             child: new Text('เพิ่มรายการ',
                                 style: new TextStyle(
                                     fontSize: 20.0, color: Colors.white)),
@@ -384,7 +386,7 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
                           //     .avl_qty;
                           String _avl = products[index].onhand;
                           if (selectedValue == null || selectedValue == '') {
-                            Scaffold.of(context).showSnackBar(
+                            ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Row(
                                   children: <Widget>[
@@ -601,9 +603,13 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
                         SizedBox(
                           width: 5,
                         ),
-                        FlatButton(
-                          color: Colors.grey[100],
-                          height: 30,
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey[100],
+                            elevation: 0.2,
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(15.0)),
+                          ),
                           onPressed: () {
                             selectedValue = '';
                             selectedValue = '';

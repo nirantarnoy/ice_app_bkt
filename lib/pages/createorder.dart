@@ -92,7 +92,7 @@ class _CreateorderPageState extends State<CreateorderPage> {
             title: Text(title),
             content: Text(text),
             actions: <Widget>[
-              FlatButton(
+              ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -452,7 +452,7 @@ class Items extends StatelessWidget {
                                       content:
                                           Text('จำนวนขายมากกว่าจำนวนคงเหลือ'),
                                       actions: <Widget>[
-                                        FlatButton(
+                                        ElevatedButton(
                                             onPressed: () {
                                               Navigator.of(context).pop(false);
                                             },
@@ -482,12 +482,14 @@ class Items extends StatelessWidget {
                       child: SizedBox(
                         height: 55.0,
                         width: targetWidth,
-                        child: new RaisedButton(
-                            elevation: 5,
-                            splashColor: Colors.grey,
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(15.0)),
-                            color: Colors.green[700],
+                        child: new ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green[700],
+                              elevation: 5,
+                              shape: new RoundedRectangleBorder(
+                                  borderRadius:
+                                      new BorderRadius.circular(15.0)),
+                            ),
                             child: new Text('เงินสด',
                                 style: new TextStyle(
                                     fontSize: 20.0, color: Colors.white)),
@@ -502,12 +504,14 @@ class Items extends StatelessWidget {
                       child: SizedBox(
                         height: 55.0,
                         width: targetWidth,
-                        child: new RaisedButton(
-                            elevation: 5,
-                            splashColor: Colors.grey,
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(15.0)),
-                            color: Colors.blue[700],
+                        child: new ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue[700],
+                              elevation: 5,
+                              shape: new RoundedRectangleBorder(
+                                  borderRadius:
+                                      new BorderRadius.circular(15.0)),
+                            ),
                             child: new Text('เงินเชื่อ',
                                 style: new TextStyle(
                                     fontSize: 20.0, color: Colors.white)),
@@ -522,12 +526,14 @@ class Items extends StatelessWidget {
                       child: SizedBox(
                         height: 55.0,
                         width: targetWidth,
-                        child: new RaisedButton(
-                            elevation: 5,
-                            splashColor: Colors.grey,
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(15.0)),
-                            color: Colors.grey,
+                        child: new ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey,
+                              elevation: 5,
+                              shape: new RoundedRectangleBorder(
+                                  borderRadius:
+                                      new BorderRadius.circular(15.0)),
+                            ),
                             child: new Text('ฟรี',
                                 style: new TextStyle(
                                     fontSize: 20.0, color: Colors.white)),
@@ -539,7 +545,7 @@ class Items extends StatelessWidget {
                     ),
                     // Row(
                     //   children: <Widget>[
-                    //     RaisedButton(
+                    //     ElevatedButton(
                     //       padding: EdgeInsets.all(20.0),
                     //       onPressed: () {
                     //         _addorder(context);
@@ -555,7 +561,7 @@ class Items extends StatelessWidget {
                     // Row(
                     //   mainAxisAlignment: MainAxisAlignment.center,
                     //   children: <Widget>[
-                    //     RaisedButton(
+                    //     ElevatedButton(
                     //       color: Colors.orange,
                     //       padding: EdgeInsets.all(20.0),
                     //       onPressed: () {
@@ -649,7 +655,7 @@ class Items extends StatelessWidget {
               ),
               content: Text('กรุณาป้อนจำนวนที่ต้องการขาย'),
               actions: <Widget>[
-                FlatButton(
+                ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -668,7 +674,7 @@ class Items extends StatelessWidget {
         payment_type_id,
       );
       if (issave == true) {
-        Scaffold.of(context).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
               children: <Widget>[
@@ -689,7 +695,7 @@ class Items extends StatelessWidget {
           ),
         );
       } else {
-        Scaffold.of(context).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
               children: <Widget>[
@@ -728,7 +734,7 @@ class Items extends StatelessWidget {
                 //     .avl_qty;
                 String _avl = _onhand;
                 if (selectedValue == null || selectedValue == '') {
-                  Scaffold.of(context).showSnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Row(
                         children: <Widget>[

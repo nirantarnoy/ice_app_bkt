@@ -8,14 +8,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ProductData with ChangeNotifier {
   final String url_to_product_list =
       //  "http://192.168.1.120/icesystem/frontend/web/api/product/list";
-      "http://103.253.73.108/icesystem/frontend/web/api/product/list";
+      "http://141.98.16.4/icesystem/frontend/web/api/product/list";
   final String url_to_product_issue_list =
       //  "http://192.168.1.120/icesystem/frontend/web/api/product/list";
-      "http://103.253.73.108/icesystem/frontend/web/api/product/issuelist2";
-  // "http://103.253.73.108/icesystem/frontend/web/api/product/list";
+      "http://141.98.16.4/icesystem/frontend/web/api/product/issuelist2";
+  // "http://141.98.16.4/icesystem/frontend/web/api/product/list";
   final String url_to_product_detail =
       //   "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
-      "http://103.253.73.108/icesystem/frontend/web/api/product/detail";
+      "http://141.98.16.4/icesystem/frontend/web/api/product/detail";
 
   List<Products> _product;
   List<Products> get listproduct => _product;

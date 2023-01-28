@@ -66,12 +66,13 @@ class _QrscanPageState extends State<QrscanPage> {
                 child: SizedBox(
                   height: 45.0,
                   width: targetWidth,
-                  child: new RaisedButton(
-                      elevation: 0,
-                      splashColor: Colors.grey,
-                      shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(30.0)),
-                      color: Colors.blue[700],
+                  child: new ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue[700],
+                        elevation: 0,
+                        shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0)),
+                      ),
                       child: new Text('สแกน QR code',
                           style: new TextStyle(
                               fontSize: 18.0, color: Colors.white)),
@@ -86,12 +87,13 @@ class _QrscanPageState extends State<QrscanPage> {
                 child: SizedBox(
                   height: 45.0,
                   width: targetWidth,
-                  child: new RaisedButton(
-                    elevation: 0,
-                    splashColor: Colors.grey,
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30.0)),
-                    color: Colors.orange[300],
+                  child: new ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green[300],
+                      elevation: 0,
+                      shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(30.0)),
+                    ),
                     child: new Text('สร้าง QR code',
                         style:
                             new TextStyle(fontSize: 18.0, color: Colors.white)),

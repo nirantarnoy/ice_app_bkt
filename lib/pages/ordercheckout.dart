@@ -60,13 +60,13 @@ class _OrdercheckoutPageState extends State<OrdercheckoutPage> {
                         title: Text('แจ้งเตือน'),
                         content: Text('ต้องการลบข้อมูลใช่หรือไม่'),
                         actions: <Widget>[
-                          FlatButton(
+                          ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).pop(true);
                             },
                             child: Text('ยืนยัน'),
                           ),
-                          FlatButton(
+                          ElevatedButton(
                             onPressed: () {
                               Navigator.of(context).pop(false);
                             },
@@ -89,7 +89,7 @@ class _OrdercheckoutPageState extends State<OrdercheckoutPage> {
                       itemlist.removeAt(index);
                     });
 
-                    Scaffold.of(context).showSnackBar(SnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Row(
                         children: <Widget>[
                           Icon(
@@ -252,12 +252,14 @@ class _OrdercheckoutPageState extends State<OrdercheckoutPage> {
                       child: SizedBox(
                         height: 55.0,
                         width: targetWidth,
-                        child: new RaisedButton(
-                            elevation: 5,
-                            splashColor: Colors.grey,
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(15.0)),
-                            color: Colors.blue[500],
+                        child: new ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue[500],
+                              elevation: 5,
+                              shape: new RoundedRectangleBorder(
+                                  borderRadius:
+                                      new BorderRadius.circular(15.0)),
+                            ),
                             child: new Text('ตกลง',
                                 style: new TextStyle(
                                     fontSize: 20.0, color: Colors.white)),
@@ -606,7 +608,7 @@ class _OrdercheckoutPageState extends State<OrdercheckoutPage> {
                               content:
                                   Text('ต้องการบันทึกการชำระเงินใช่หรือไม่'),
                               actions: <Widget>[
-                                FlatButton(
+                                ElevatedButton(
                                   onPressed: () {
                                     //Navigator.of(context).pop(true);
                                     _submitForm(
@@ -617,7 +619,7 @@ class _OrdercheckoutPageState extends State<OrdercheckoutPage> {
                                   },
                                   child: Text('ยืนยัน'),
                                 ),
-                                FlatButton(
+                                ElevatedButton(
                                   onPressed: () {
                                     Navigator.of(context).pop(false);
                                   },
@@ -676,7 +678,7 @@ class _OrdercheckoutPageState extends State<OrdercheckoutPage> {
                               content:
                                   Text('ต้องการบันทึกการชำระเงินใช่หรือไม่'),
                               actions: <Widget>[
-                                FlatButton(
+                                ElevatedButton(
                                   onPressed: () {
                                     //Navigator.of(context).pop(true);
                                     _submitForm(
@@ -687,7 +689,7 @@ class _OrdercheckoutPageState extends State<OrdercheckoutPage> {
                                   },
                                   child: Text('ยืนยัน'),
                                 ),
-                                FlatButton(
+                                ElevatedButton(
                                   onPressed: () {
                                     Navigator.of(context).pop(false);
                                   },
@@ -746,7 +748,7 @@ class _OrdercheckoutPageState extends State<OrdercheckoutPage> {
                               content:
                                   Text('ต้องการบันทึกการชำระเงินใช่หรือไม่'),
                               actions: <Widget>[
-                                FlatButton(
+                                ElevatedButton(
                                   onPressed: () {
                                     //Navigator.of(context).pop(true);
                                     _submitForm(
@@ -757,7 +759,7 @@ class _OrdercheckoutPageState extends State<OrdercheckoutPage> {
                                   },
                                   child: Text('ยืนยัน'),
                                 ),
-                                FlatButton(
+                                ElevatedButton(
                                   onPressed: () {
                                     Navigator.of(context).pop(false);
                                   },

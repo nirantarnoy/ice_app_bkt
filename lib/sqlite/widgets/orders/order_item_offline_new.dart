@@ -186,9 +186,10 @@ class _OrderItemOfflineNewState extends State<OrderOfflineItemNew> {
                     SizedBox(
                       width: 5,
                     ),
-                    FlatButton(
-                        color: Colors.grey[100],
-                        height: 30,
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey[100],
+                        ),
                         onPressed: () {
                           selectedValue = '';
                           //orders.searchBycustomer = selectedValue;
@@ -213,7 +214,7 @@ class _OrderItemOfflineNewState extends State<OrderOfflineItemNew> {
                     //     onPressed: () => Navigator.of(context)
                     //         .pushNamed(CreateorderPage.routeName),
                     //     child: Icon(Icons.add, color: Colors.white)
-                    //     //   FlatButton(onPressed: () {}, child: Text("เพิ่มรายการขาย")),
+                    //     //   ElevatedButton(onPressed: () {}, child: Text("เพิ่มรายการขาย")),
                     //     ),
                   ]),
             ),
@@ -451,13 +452,13 @@ class _ItemsState extends State<Items> {
             title: Text('แจ้งเตือน'),
             content: Text('ต้องการลบข้อมูลใช่หรือไม่'),
             actions: <Widget>[
-              FlatButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop(true);
                 },
                 child: Text('ยืนยัน'),
               ),
-              FlatButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pop(false);
                 },
@@ -473,7 +474,7 @@ class _ItemsState extends State<Items> {
           //     .removeOrderDetail(widget._order_line_id);
           // widget._orders.removeAt(widget._index);
         });
-        Scaffold.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Row(
             children: <Widget>[
               Icon(

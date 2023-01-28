@@ -12,16 +12,16 @@ class PlanData with ChangeNotifier {
   final String server_api = "";
   final String url_to_plan =
       //   "http://192.168.1.120/icesystem/frontend/web/api/order/list";
-      "http://103.253.73.108/icesystem/frontend/web/api/plan/listplan";
+      "http://141.98.16.4/icesystem/frontend/web/api/plan/listplan";
   final String url_to_add_plan =
-      "http://103.253.73.108/icesystem/frontend/web/api/plan/addplan";
+      "http://141.98.16.4/icesystem/frontend/web/api/plan/addplan";
   final String url_to_delete_plan =
-      "http://103.253.73.108/icesystem/frontend/web/api/plan/deleteplan";
+      "http://141.98.16.4/icesystem/frontend/web/api/plan/deleteplan";
   //  "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorderline";
   final String url_to_plan_by_customer =
-      "http://103.253.73.108/icesystem/frontend/web/api/plan/listplanbycustomer";
+      "http://141.98.16.4/icesystem/frontend/web/api/plan/listplanbycustomer";
   final String url_to_delete_plan_line =
-      "http://103.253.73.108/icesystem/frontend/web/api/plan/deleteplanline";
+      "http://141.98.16.4/icesystem/frontend/web/api/plan/deleteplanline";
 
   ///// for common
   bool _isLoading = false;

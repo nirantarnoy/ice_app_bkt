@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.ice_app">
+    package="com.example.ice_app_bkt">
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
          calls FlutterMain.startInitialization(this); in its onCreate method.
          In most cases you can leave this as-is, but you if you want to provide
@@ -17,7 +17,7 @@
     
     <application
         android:name="${applicationName}"
-        android:label="ice_app"
+        android:label="ice_app_bkt"
         android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"

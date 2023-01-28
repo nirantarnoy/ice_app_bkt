@@ -41,7 +41,7 @@ class _ActivityConState extends State<ActivityCon> {
             title: Text(title),
             content: Text(text),
             actions: <Widget>[
-              FlatButton(
+              ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },

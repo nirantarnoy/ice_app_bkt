@@ -82,7 +82,7 @@ class _JournalissueitemState extends State<Journalissueitem> {
         return Center(
           child: Text(
             "ไม่พบข้อมูล",
-            style: TextStyle(fontSize: 20, color: Colors.red),
+            style: TextStyle(fontSize: 20, color: Colors.grey),
           ),
         );
       }
@@ -92,7 +92,7 @@ class _JournalissueitemState extends State<Journalissueitem> {
       return Center(
         child: Text(
           "ไม่พบข้อมูล",
-          style: TextStyle(fontSize: 20, color: Colors.red),
+          style: TextStyle(fontSize: 20, color: Colors.grey),
         ),
       );
     }
@@ -114,13 +114,15 @@ class _JournalissueitemState extends State<Journalissueitem> {
                         issues.hasissue_open
                             ? Expanded(
                                 // ignore: deprecated_member_use
-                                child: new RaisedButton(
-                                    elevation: 0.5,
-                                    splashColor: Colors.grey,
-                                    shape: new RoundedRectangleBorder(
-                                        borderRadius:
-                                            new BorderRadius.circular(0.0)),
-                                    color: Colors.green,
+                                child: new ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.green,
+                                      textStyle: TextStyle(color: Colors.white),
+                                      elevation: 0.5,
+                                      shape: new RoundedRectangleBorder(
+                                          borderRadius:
+                                              new BorderRadius.circular(0)),
+                                    ),
                                     child: Column(
                                       children: [
                                         new Text(
@@ -146,7 +148,7 @@ class _JournalissueitemState extends State<Journalissueitem> {
                                       //     content: Text(
                                       //         'คุณต้องการยืนยันการรับของขึ้นรถใช่หรือไม่'),
                                       //     actions: <Widget>[
-                                      //       FlatButton(
+                                      //       ElevatedButton(
                                       //         onPressed: () {
                                       //           Provider.of<IssueData>(context,
                                       //                   listen: false)
@@ -162,7 +164,7 @@ class _JournalissueitemState extends State<Journalissueitem> {
                                       //         },
                                       //         child: Text('ยืนยัน'),
                                       //       ),
-                                      //       FlatButton(
+                                      //       ElevatedButton(
                                       //         onPressed: () {
                                       //           Navigator.of(context)
                                       //               .pop(false);
@@ -279,12 +281,17 @@ class _JournalissueitemState extends State<Journalissueitem> {
                         height: 5,
                       ),
                       // ignore: deprecated_member_use
-                      new RaisedButton(
-                          elevation: 0.2,
-                          splashColor: Colors.grey,
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(15.0)),
-                          color: Colors.blue[600],
+                      new ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue[600],
+                            textStyle: TextStyle(color: Colors.white),
+                            padding: EdgeInsets.only(
+                              right: 8,
+                            ),
+                            elevation: 0.2,
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(15.0)),
+                          ),
                           child: Column(
                             children: [
                               SizedBox(
@@ -342,13 +349,18 @@ class _JournalissueitemState extends State<Journalissueitem> {
                             SizedBox(
                               height: 5,
                             ),
-                            new RaisedButton(
-                                elevation: 0.2,
-                                splashColor: Colors.grey,
-                                shape: new RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(15.0)),
-                                color: Colors.blue[600],
+                            new ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue[600],
+                                  textStyle: TextStyle(color: Colors.white),
+                                  padding: EdgeInsets.only(
+                                    right: 8,
+                                  ),
+                                  elevation: 0.2,
+                                  shape: new RoundedRectangleBorder(
+                                      borderRadius:
+                                          new BorderRadius.circular(15.0)),
+                                ),
                                 child: Column(
                                   children: [
                                     SizedBox(
@@ -382,7 +394,7 @@ class _JournalissueitemState extends State<Journalissueitem> {
                                   //     content: Text(
                                   //         'คุณต้องการยืนยันการรับของขึ้นรถใช่หรือไม่'),
                                   //     actions: <Widget>[
-                                  //       FlatButton(
+                                  //       ElevatedButton(
                                   //         onPressed: () {
                                   //           // Provider.of<IssueData>(context,
                                   //           //         listen: false)
@@ -407,7 +419,7 @@ class _JournalissueitemState extends State<Journalissueitem> {
                                   //         },
                                   //         child: Text('ยืนยัน'),
                                   //       ),
-                                  //       FlatButton(
+                                  //       ElevatedButton(
                                   //         onPressed: () {
                                   //           Navigator.of(context).pop(false);
                                   //         },
@@ -434,9 +446,11 @@ class _JournalissueitemState extends State<Journalissueitem> {
                         ),
                       ],
                     )
-                  : Text(
-                      "ไม่พบข้อมูล",
-                      style: TextStyle(fontSize: 20, color: Colors.red),
+                  : Center(
+                      child: Text(
+                        "ไม่พบข้อมูล",
+                        style: TextStyle(fontSize: 20, color: Colors.grey),
+                      ),
                     ),
             ),
     );

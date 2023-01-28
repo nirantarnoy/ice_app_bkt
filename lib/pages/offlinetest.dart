@@ -118,7 +118,7 @@ class _OfflinePageState extends State<OfflinePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            RaisedButton(
+            ElevatedButton(
                 onPressed: () async {
                   int i = await DatabaseHelper.instance.insert(
                     {DatabaseHelper.columnName: 'niranxxx'},
@@ -127,7 +127,7 @@ class _OfflinePageState extends State<OfflinePage> {
                   print('the inserted id is');
                 },
                 child: Text('insert')),
-            FlatButton(
+            ElevatedButton(
                 onPressed: () {
                   Provider.of<OfflineitemData>(context, listen: false)
                       .showItemlist();
@@ -138,7 +138,7 @@ class _OfflinePageState extends State<OfflinePage> {
                   });
                 },
                 child: Text('query')),
-            FlatButton(
+            ElevatedButton(
                 onPressed: () async {
                   int updatedId = await DatabaseHelper.instance.update(
                     {
@@ -149,7 +149,7 @@ class _OfflinePageState extends State<OfflinePage> {
                   print(updatedId);
                 },
                 child: Text('update')),
-            FlatButton(
+            ElevatedButton(
               onPressed: () async {
                 int updatedId = await DatabaseHelper.instance.delete(2);
                 print(updatedId);

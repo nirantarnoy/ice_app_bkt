@@ -9,20 +9,20 @@ import 'package:ice_app_new/models/user.dart';
 class UserData with ChangeNotifier {
   final String url_to_user_list =
       //    "http://192.168.1.120/icesystem/frontend/web/api/customer/list";
-      // "http://103.253.73.108/icesystem/frontend/web/api/customer/list";
-      //  "http://103.253.73.108/icesystem/frontend/web/api/customer/list";
-      "http://103.253.73.108/icesystem/frontend/web/api/customer/list";
-  // "http://103.253.73.108/icesystem/frontend/web/api/customer/list";
+      // "http://141.98.16.4/icesystem/frontend/web/api/customer/list";
+      //  "http://141.98.16.4/icesystem/frontend/web/api/customer/list";
+      "http://141.98.16.4/icesystem/frontend/web/api/customer/list";
+  // "http://141.98.16.4/icesystem/frontend/web/api/customer/list";
   final String url_to_user_login =
       //  "http://192.168.1.120/icesystem/frontend/web/api/authen/login";
-      // "http://103.253.73.108/icesystem/frontend/web/api/authen/login";
-      // "http://103.253.73.108/icesystem/frontend/web/api/authen/login";
-      "http://103.253.73.108/icesystem/frontend/web/api/authen/login";
+      // "http://141.98.16.4/icesystem/frontend/web/api/authen/login";
+      // "http://141.98.16.4/icesystem/frontend/web/api/authen/login";
+      "http://141.98.16.4/icesystem/frontend/web/api/authen/login";
   final String url_to_user_login_qrcode =
       //  "http://192.168.1.120/icesystem/frontend/web/api/authen/login";
-      // "http://103.253.73.108/icesystem/frontend/web/api/authen/login";
-      // "http://103.253.73.108/icesystem/frontend/web/api/authen/login";
-      "http://103.253.73.108/icesystem/frontend/web/api/authen/loginqrcode";
+      // "http://141.98.16.4/icesystem/frontend/web/api/authen/login";
+      // "http://141.98.16.4/icesystem/frontend/web/api/authen/login";
+      "http://141.98.16.4/icesystem/frontend/web/api/authen/loginqrcode";
 
   User _authenticatedUser;
   Timer _authTimer;
@@ -138,6 +138,8 @@ class UserData with ChangeNotifier {
         // set route type
         routeType = res['data'][0]['route_type'].toString();
 
+        print('route type is ${routeType}');
+
         listuserlogin = data;
         _isauthenuser = true;
         _isLoading = false;
@@ -218,6 +220,8 @@ class UserData with ChangeNotifier {
 
         prefs.setString('expiryTime', expiryTime.toIso8601String());
         prefs.setString('working_mode', 'online');
+
+        routeType = res['data'][0]['route_type'].toString();
 
         listuserlogin = data;
         _isauthenuser = true;

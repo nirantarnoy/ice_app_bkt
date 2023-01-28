@@ -117,7 +117,7 @@ class _PlanDetailPageState extends State<PlanDetailPage> {
             _formData['cancel_reason'])
         .then(
       (_) {
-        Scaffold.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Row(
             children: <Widget>[
               Icon(
@@ -179,13 +179,13 @@ class _PlanDetailPageState extends State<PlanDetailPage> {
                   title: Text('แจ้งเตือน'),
                   content: Text('ต้องการลบข้อมูลใช่หรือไม่'),
                   actions: <Widget>[
-                    FlatButton(
+                    ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).pop(true);
                       },
                       child: Text('ยืนยัน'),
                     ),
-                    FlatButton(
+                    ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).pop(false);
                       },
@@ -202,7 +202,7 @@ class _PlanDetailPageState extends State<PlanDetailPage> {
                     .removePlanDetail(plans[index].id);
                 plans.removeAt(index);
               });
-              Scaffold.of(context).showSnackBar(SnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Row(
                   children: <Widget>[
                     Icon(
@@ -288,13 +288,15 @@ class _PlanDetailPageState extends State<PlanDetailPage> {
                                     child: SizedBox(
                                       height: 55.0,
                                       width: targetWidth,
-                                      child: new RaisedButton(
-                                          elevation: 0.2,
-                                          shape: new RoundedRectangleBorder(
-                                              borderRadius:
-                                                  new BorderRadius.circular(
-                                                      15.0)),
-                                          color: Colors.green[700],
+                                      child: new ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.green[700],
+                                            elevation: 0.2,
+                                            shape: new RoundedRectangleBorder(
+                                                borderRadius:
+                                                    new BorderRadius.circular(
+                                                        15.0)),
+                                          ),
                                           child: new Text('บันทึก',
                                               style: new TextStyle(
                                                   fontSize: 20.0,
@@ -322,13 +324,15 @@ class _PlanDetailPageState extends State<PlanDetailPage> {
                                     child: SizedBox(
                                       height: 55.0,
                                       width: targetWidth,
-                                      child: new RaisedButton(
-                                          elevation: 0.2,
-                                          shape: new RoundedRectangleBorder(
-                                              borderRadius:
-                                                  new BorderRadius.circular(
-                                                      15.0)),
-                                          color: Colors.grey[400],
+                                      child: new ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.grey[400],
+                                            elevation: 0.2,
+                                            shape: new RoundedRectangleBorder(
+                                                borderRadius:
+                                                    new BorderRadius.circular(
+                                                        15.0)),
+                                          ),
                                           child: new Text('ยกเลิก',
                                               style: new TextStyle(
                                                   fontSize: 20.0,
@@ -709,7 +713,7 @@ class _PlanDetailPageState extends State<PlanDetailPage> {
 //           child: Column(
 //             children: <Widget>[
 //               ListTile(
-//                 // leading: RaisedButton(
+//                 // leading: ElevatedButton(
 //                 //     color:
 //                 //         _payment_method_id == "1" ? Colors.green : Colors.purple[300],
 //                 //     onPressed: () {},

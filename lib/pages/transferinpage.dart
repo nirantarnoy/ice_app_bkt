@@ -75,7 +75,7 @@ class _TransferinPageState extends State<TransferinNewPage> {
             title: Text(title),
             content: Text(text),
             actions: <Widget>[
-              FlatButton(
+              ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },

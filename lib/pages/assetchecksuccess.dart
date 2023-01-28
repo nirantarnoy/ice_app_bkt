@@ -44,8 +44,9 @@ class _AssetchecksuccessPageState extends State<AssetchecksuccessPage> {
                         // ignore: deprecated_member_use
                         child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: FlatButton(
-                        color: Colors.green[600],
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green[600]),
                         child: Text(
                           'ตรวจสอบต่อ',
                           style: TextStyle(fontSize: 18, color: Colors.white),
@@ -78,8 +79,9 @@ class _AssetchecksuccessPageState extends State<AssetchecksuccessPage> {
                         // ignore: deprecated_member_use
                         child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: FlatButton(
-                        color: Colors.blue[500],
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue[500]),
                         child: Text(
                           'กลับหน้าหลัก',
                           style: TextStyle(fontSize: 18, color: Colors.white),

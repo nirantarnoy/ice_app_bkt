@@ -125,7 +125,7 @@ class _OrderPrintPageState extends State<OrderPrintPage> {
             Container(
               child: Row(
                 children: [
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text('Print Slip'),
                     onPressed: () async {
                       final image =

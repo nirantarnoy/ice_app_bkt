@@ -2,12 +2,14 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:ice_app_new/models/paymentdaily.dart';
 import 'package:ice_app_new/models/paymentreceive.dart';
+import 'package:ice_app_new/pages/checkinpage.dart';
 import 'package:ice_app_new/pages/home_offline.dart';
 import 'package:ice_app_new/pages/main_test.dart';
 // import 'package:ice_app_new/providers/product.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ice_app_new/providers/paymentreceive.dart';
+import 'package:ice_app_new/providers/user.dart';
 import 'package:ice_app_new/sqlite/providers/orderoffline.dart';
 
 import 'package:intl/intl.dart';
@@ -120,7 +122,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             title: Text(title),
             content: Text(text),
             actions: <Widget>[
-              FlatButton(
+              ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -131,11 +133,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   Widget _buildclosebutton() {
-    return RaisedButton(
-        elevation: 5,
-        shape: new RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(10.0)),
-        color: Colors.blue,
+    return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue,
+          elevation: 5,
+          shape: new RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(10.0)),
+        ),
         child: new Text('จบการขาย',
             style: new TextStyle(fontSize: 20.0, color: Colors.white)),
         onPressed: () {
@@ -180,128 +184,135 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     Row(
                       children: <Widget>[
                         Expanded(
-                          child: MaterialButton(
-                            color: Colors.lightGreen,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50)),
-                            onPressed: () async {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return Dialog(
-                                    child: Container(
-                                      height: 200,
-                                      child: new Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          new CircularProgressIndicator(),
-                                          SizedBox(
-                                            width: 20,
-                                          ),
-                                          new Text("กำลังบันทึกข้อมูล"),
-                                        ],
+                          child: Consumer<UserData>(
+                            builder: (context, _users, _) => MaterialButton(
+                              color: Colors.lightGreen,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50)),
+                              onPressed: () async {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return Dialog(
+                                      child: Container(
+                                        height: 200,
+                                        child: new Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            new CircularProgressIndicator(),
+                                            SizedBox(
+                                              width: 20,
+                                            ),
+                                            new Text("กำลังบันทึกข้อมูล"),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              );
-                              bool res = await Provider.of<OrderData>(context,
-                                      listen: false)
-                                  .closeOrder("1"); // จบขายคืนสต๊อก
-                              print(res);
-                              if (res == true) {
-                                Fluttertoast.showToast(
-                                    msg: "ทำรายการสำเร็จ",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.green,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
-                              } else {
-                                Fluttertoast.showToast(
-                                    msg: "ทำรายการไม่สำเร็จ",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
-                              }
-                              //Navigator.of(context).pop(true);
-                              // Navigator.pushNamed(context, '/home');
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MainTest()));
-                            },
-                            child: Text('คืนสินค้า'),
+                                    );
+                                  },
+                                );
+                                bool res = await Provider.of<OrderData>(context,
+                                        listen: false)
+                                    .closeOrder("1"); // จบขายคืนสต๊อก
+                                print(res);
+                                if (res == true) {
+                                  Fluttertoast.showToast(
+                                      msg: "ทำรายการสำเร็จ",
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.green,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg: "ทำรายการไม่สำเร็จ",
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.red,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                }
+                                //Navigator.of(context).pop(true);
+                                // Navigator.pushNamed(context, '/home');
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => MainTest()));
+
+                                _logout(_users);
+                              },
+                              child: Text('คืนสินค้า'),
+                            ),
                           ),
                         ),
                         Spacer(),
                         Expanded(
-                          child: MaterialButton(
-                            color: Colors.amber,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50)),
-                            onPressed: () async {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return Dialog(
-                                    child: Container(
-                                      height: 200,
-                                      child: new Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          new CircularProgressIndicator(),
-                                          SizedBox(
-                                            width: 20,
-                                          ),
-                                          new Text("กำลังบันทึกข้อมูล"),
-                                        ],
+                          child: Consumer<UserData>(
+                            builder: (context, _users, _) => MaterialButton(
+                              color: Colors.amber,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50)),
+                              onPressed: () async {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return Dialog(
+                                      child: Container(
+                                        height: 200,
+                                        child: new Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            new CircularProgressIndicator(),
+                                            SizedBox(
+                                              width: 20,
+                                            ),
+                                            new Text("กำลังบันทึกข้อมูล"),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              );
-                              bool res = await Provider.of<OrderData>(context,
-                                      listen: false)
-                                  .closeOrder("0"); // จบขายไม่คืนสต๊อก
-                              print(res);
-                              if (res == true) {
-                                Fluttertoast.showToast(
-                                    msg: "ทำรายการสำเร็จ",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.green,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
-                              } else {
-                                Fluttertoast.showToast(
-                                    msg: "ทำรายการไม่สำเร็จ",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
-                              }
-                              //Navigator.of(context).pop(true);
-                              // Navigator.pushNamed(context, '/home');
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MainTest()));
-                            },
-                            child: Text('ไม่คืนสินค้า'),
+                                    );
+                                  },
+                                );
+                                bool res = await Provider.of<OrderData>(context,
+                                        listen: false)
+                                    .closeOrder("0"); // จบขายไม่คืนสต๊อก
+                                print(res);
+                                if (res == true) {
+                                  Fluttertoast.showToast(
+                                      msg: "ทำรายการสำเร็จ",
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.green,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg: "ทำรายการไม่สำเร็จ",
+                                      toastLength: Toast.LENGTH_LONG,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.red,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                }
+                                //Navigator.of(context).pop(true);
+                                // Navigator.pushNamed(context, '/home');
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => MainTest()));
+                                _logout(_users);
+                              },
+                              child: Text('ไม่คืนสินค้า'),
+                            ),
                           ),
                         ),
                         Spacer(),
@@ -329,7 +340,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           //     title: Text('ยืนยัน'),
           //     content: Text('ต้องการส่งข้อมูลการขายประจำวันใช่หรือไม่'),
           //     actions: <Widget>[
-          //       FlatButton(
+          //       ElevatedButton(
           //         onPressed: () async {
           //           bool res =
           //               await Provider.of<OrderData>(context, listen: false)
@@ -361,7 +372,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           //         },
           //         child: Text('ยืนยัน'),
           //       ),
-          //       FlatButton(
+          //       ElevatedButton(
           //         onPressed: () {
           //           Navigator.of(context).pop(false);
           //         },
@@ -371,6 +382,86 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           //   ),
           // );
         });
+  }
+
+  void _logoutaction(Function logout) async {
+    Map<String, dynamic> successInformation;
+    successInformation = await logout();
+    if (successInformation['success']) {
+      print('logout success');
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => CheckinPage()));
+      // Navigator.of(context).pop();
+    }
+  }
+
+  void _logout(UserData users) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                height: 12,
+              ),
+              Icon(
+                Icons.privacy_tip_outlined,
+                size: 32,
+                color: Colors.lightGreen,
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              Text(
+                'ยืนยันการทำรายการ',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              Text(
+                'ต้องการออกจากระบบใช่หรือไม่',
+                style: TextStyle(fontWeight: FontWeight.normal),
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: MaterialButton(
+                      color: Colors.lightGreen,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50)),
+                      onPressed: () => _logoutaction(users.logout),
+                      child: Text('ใช่'),
+                    ),
+                  ),
+                  Spacer(),
+                  Expanded(
+                    child: MaterialButton(
+                      color: Colors.grey[400],
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50)),
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: Text('ไม่ใช่'),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -845,13 +936,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                         ? Padding(
                                             padding: EdgeInsets.fromLTRB(
                                                 0.0, 35.0, 10.0, 0.0),
-                                            child: RaisedButton(
-                                              elevation: 5,
-                                              shape: new RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      new BorderRadius.circular(
-                                                          10.0)),
-                                              color: Colors.grey,
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.grey,
+                                                elevation: 5,
+                                                shape:
+                                                    new RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            new BorderRadius
+                                                                    .circular(
+                                                                10.0)),
+                                              ),
                                               child: Text(
                                                 'ส่งมอบขาย OFFLINE',
                                                 style: TextStyle(

@@ -139,7 +139,7 @@ class _CarloadReviewState extends State<CarloadReviewPage> {
                           title: Text('ยืนยัน'),
                           content: Text('คุณต้องการยืนยันการใช่หรือไม่'),
                           actions: <Widget>[
-                            FlatButton(
+                            ElevatedButton(
                               onPressed: () {
                                 Provider.of<IssueData>(context, listen: false)
                                     .issueconfirmcancel();
@@ -155,7 +155,7 @@ class _CarloadReviewState extends State<CarloadReviewPage> {
                               },
                               child: Text('ยืนยัน'),
                             ),
-                            FlatButton(
+                            ElevatedButton(
                               onPressed: () {
                                 Navigator.of(context).pop(false);
                               },
@@ -195,7 +195,7 @@ class _CarloadReviewState extends State<CarloadReviewPage> {
                           title: Text('ยืนยัน'),
                           content: Text('คุณต้องการยืนยันการใช่หรือไม่'),
                           actions: <Widget>[
-                            FlatButton(
+                            ElevatedButton(
                               onPressed: () {
                                 Provider.of<IssueData>(context, listen: false)
                                     .issueconfirm();
@@ -217,7 +217,7 @@ class _CarloadReviewState extends State<CarloadReviewPage> {
                               },
                               child: Text('ยืนยัน'),
                             ),
-                            FlatButton(
+                            ElevatedButton(
                               onPressed: () {
                                 Navigator.of(context).pop(false);
                               },
