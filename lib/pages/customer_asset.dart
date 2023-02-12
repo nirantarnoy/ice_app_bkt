@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // import 'package:ice_app_new/models/car.dart';
 import 'package:ice_app_new/models/customer_asset.dart';
 import 'package:ice_app_new/pages/assetcheck.dart';
+import 'package:ice_app_new/pages/customer_asset_req.dart';
 // import 'package:ice_app_new/pages/ordercheckout.dart';
 // import 'package:ice_app_new/providers/paymentreceive.dart';
 // import 'package:ice_app_new/providers/product.dart';
@@ -101,7 +102,7 @@ class _CustomerAssetPageState extends State<CustomerAssetPage> {
             title: Text(title),
             content: Text(text),
             actions: <Widget>[
-              ElevatedButton(
+              TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -265,10 +266,9 @@ class _CustomerAssetPageState extends State<CustomerAssetPage> {
                         SizedBox(
                           width: 5,
                         ),
-                        ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.grey[100])),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                              backgroundColor: Colors.grey[100]),
                           onPressed: () {
                             selectedValue = '';
                             selectedValue = '';
@@ -306,6 +306,31 @@ class _CustomerAssetPageState extends State<CustomerAssetPage> {
                 child: Consumer<CustomerData>(
                   builder: (context, assets, _) =>
                       _buildproductList(assets.listcustomerasset),
+                ),
+              ),
+              Container(
+                height: 50.0,
+                width: double.infinity,
+                color: Colors.green,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: GestureDetector(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CustomerAssetRequest(
+                                  asset_customer_id: selectedValue,
+                                  asset_customer_name: selectedValueName,
+                                ))),
+                    child: Text(
+                      'เพิ่มรายการใหม่',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],

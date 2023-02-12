@@ -712,20 +712,20 @@ class OrderData with ChangeNotifier {
       'return_stock': _return_stock
     };
     print('data will save close order is ${orderData}');
-    // try {
-    //   http.Response response;
-    //   response = await http.post(Uri.parse(url_to_close_order),
-    //       headers: {'Content-Type': 'application/json'},
-    //       body: json.encode(orderData));
+    try {
+      http.Response response;
+      response = await http.post(Uri.parse(url_to_close_order),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(orderData));
 
-    //   if (response.statusCode == 200) {
-    //     Map<String, dynamic> res = json.decode(response.body);
-    //     print('data close order is  ${res["data"]}');
-    //     completed = true;
-    //   }
-    // } catch (_) {
-    //   print('cannot close order');
-    // }
+      if (response.statusCode == 200) {
+        Map<String, dynamic> res = json.decode(response.body);
+        print('data close order is  ${res["data"]}');
+        completed = true;
+      }
+    } catch (_) {
+      print('cannot close order');
+    }
     // print(completed);
     return completed;
   }
