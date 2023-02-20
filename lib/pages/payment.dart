@@ -161,7 +161,7 @@ class _PaymentPageState extends State<PaymentPage> {
             title: Text(title),
             content: Text(text),
             actions: <Widget>[
-              ElevatedButton(
+              TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -270,7 +270,7 @@ class _PaymentPageState extends State<PaymentPage> {
   //           _formData['pay_amount'], _formData['pay_date'])
   //       .then(
   //     (_) {
-  //       Scaffold.of(context).showSnackBar(SnackBar(
+  //       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
   //         content: Row(
   //           children: <Widget>[
   //             Icon(
@@ -300,7 +300,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
   Widget _buildpaymentsList(List<Paymentreceive> payments) {
     Widget orderCards;
-    var formatter = NumberFormat('#,##,##0');
+    var formatter = NumberFormat('#,##,##0.0#');
     // final double deviceWidth = MediaQuery.of(context).size.width;
     // final double targetWidth = deviceWidth > 550.0 ? 500.0 : deviceWidth * 0.75;
     if (payments != null) {
@@ -441,7 +441,7 @@ class _PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     //CustomerData _customer = Provider.of<CustomerData>(context, listen: false);
-    var formatter = NumberFormat('#,##,##0');
+    var formatter = NumberFormat('#,##,##0.0#');
 
     return SafeArea(
       child: Scaffold(
@@ -664,7 +664,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                         builder: (context, totals, _) => Row(
                                           children: <Widget>[
                                             Text(
-                                              '${formatter.format(paymentselected.length)}',
+                                              '${paymentselected.length}',
                                               style: TextStyle(
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.bold,
@@ -904,7 +904,7 @@ class _PaymentPageState extends State<PaymentPage> {
 //             _formData['pay_amount'], _formData['pay_date'])
 //         .then(
 //       (_) {
-//         Scaffold.of(context).showSnackBar(SnackBar(
+//         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
 //           content: Row(
 //             children: <Widget>[
 //               Icon(

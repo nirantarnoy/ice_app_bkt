@@ -34,6 +34,7 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
 
   Widget _buildList(List<Paymentselected> paymentlist) {
     Widget orderCards;
+    var formatter = NumberFormat('#,##,##0.0#');
 
     if (paymentlist.isNotEmpty) {
       if (paymentlist.length > 0) {
@@ -66,13 +67,13 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
                   //     title: Text('แจ้งเตือน'),
                   //     content: Text('ต้องการลบข้อมูลใช่หรือไม่'),
                   //     actions: <Widget>[
-                  //       ElevatedButton(
+                  //       FlatButton(
                   //         onPressed: () {
                   //           Navigator.of(context).pop(true);
                   //         },
                   //         child: Text('ยืนยัน'),
                   //       ),
-                  //       ElevatedButton(
+                  //       FlatButton(
                   //         onPressed: () {
                   //           Navigator.of(context).pop(false);
                   //         },
@@ -142,7 +143,7 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Text(
-                              "${paymentlist[index].order_amount}",
+                              "${formatter.format(double.parse(paymentlist[index].order_amount))}",
                               style: TextStyle(
                                   color: Colors.green[500],
                                   fontWeight: FontWeight.bold),
@@ -293,7 +294,7 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
     //         builder: (_) => PaymentsuccessPage(),
     //       ),
     //     );
-    //     // Scaffold.of(context).showSnackBar(SnackBar(
+    //     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
     //     //   content: Row(
     //     //     children: <Widget>[
     //     //       Icon(
@@ -328,7 +329,7 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
   //         .addTransfer(car_id, transferdata);
   //     Navigator.of(context).pop();
   //     if (res == true) {
-  //       Scaffold.of(context).showSnackBar(
+  //       ScaffoldMessenger.of(context).showSnackBar(
   //         SnackBar(
   //           content: Row(
   //             children: <Widget>[
@@ -354,13 +355,14 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
 
   @override
   Widget build(BuildContext context) {
-    int total_amount = 0;
+    double total_amount = 0;
+    var formatter = NumberFormat('#,##,##0.0#');
     final payment_data = ModalRoute.of(context).settings.arguments as Map; //
     List<Paymentselected> paymentselected = payment_data['paymentlist'];
     //print('list length = ${paymentselected.length.toString()}');
     //paymentselected[0].order_amount
     paymentselected.forEach((elm) {
-      total_amount = (total_amount + int.parse(elm.order_amount));
+      total_amount = (total_amount + double.parse(elm.order_amount));
     });
     return SafeArea(
       child: Scaffold(
@@ -435,7 +437,7 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
                   ),
                   Expanded(
                     child: Text(
-                      '${total_amount}',
+                      '${formatter.format(total_amount)}',
                       style: TextStyle(
                           fontWeight: FontWeight.bold, color: Colors.red),
                     ),
@@ -555,14 +557,14 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
                               content:
                                   Text('ต้องการบันทึกการชำระเงินใช่หรือไม่'),
                               actions: <Widget>[
-                                ElevatedButton(
+                                TextButton(
                                   onPressed: () {
                                     //Navigator.of(context).pop(true);
                                     _submitForm(paymentselected);
                                   },
                                   child: Text('ยืนยัน'),
                                 ),
-                                ElevatedButton(
+                                TextButton(
                                   onPressed: () {
                                     Navigator.of(context).pop(false);
                                   },

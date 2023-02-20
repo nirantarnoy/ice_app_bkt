@@ -178,6 +178,10 @@ class UserData with ChangeNotifier {
           return false;
         }
 
+        if (res['status'].toString() == "1") {
+          return false;
+        }
+
         final User userresult = User(
           id: res['data'][0]['user_id'].toString(),
           username: res['data'][0]['username'].toString(),
