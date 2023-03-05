@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:double_back_to_close/double_back_to_close.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:ice_app_new/page_offline/createorder_new_offline.dart';
 import 'package:ice_app_new/page_offline/orderofflinecheckout.dart';
 import 'package:ice_app_new/page_offline/orderofflinedetail.dart';
@@ -59,7 +60,26 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(MyApp());
+
+  void configLoading() {
+  EasyLoading.instance
+    ..displayDuration = const Duration(milliseconds: 5000)
+    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    ..loadingStyle = EasyLoadingStyle.dark
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..progressColor = Colors.yellow
+    ..backgroundColor = Colors.green
+    ..indicatorColor = Colors.yellow
+    ..textColor = Colors.yellow
+    ..maskColor = Colors.blue.withOpacity(0.5)
+    ..userInteractions = true
+    ..dismissOnTap = false;
+  //..customAnimation = CustomAnimation();
 }
+}
+
+
 
 class MyApp extends StatefulWidget {
   @override

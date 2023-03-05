@@ -308,13 +308,13 @@ class _AuthPageState extends State<AuthPage> {
                       SizedBox(
                         height: 10.0,
                       ),
-                      Row(
+                     Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[Text('version 2.4')],
+                        children: <Widget>[Text('version 2.6')],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[Text('update 10-02-2023')],
+                        children: <Widget>[Text('update 25-02-2023')],
                       )
                     ],
                   ),

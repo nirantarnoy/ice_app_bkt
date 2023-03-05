@@ -10,6 +10,7 @@ import 'package:ice_app_new/pages/blue_print.dart';
 import 'package:ice_app_new/pages/checkinpage.dart';
 import 'package:ice_app_new/pages/createorder_boot.dart';
 import 'package:ice_app_new/pages/customer_asset.dart';
+import 'package:ice_app_new/pages/customerpaymentlist.dart';
 import 'package:ice_app_new/pages/home.dart';
 import 'package:ice_app_new/pages/home_offline.dart';
 // import 'package:ice_app_new/pages/issuesuccess.dart';
@@ -497,6 +498,21 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
                 onTap: () => {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => BluePrintPage()))
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => PrintBluetoothPage()))
+                },
+              ),
+              Divider(),
+              ListTile(
+                title: Text("ลูกค้าที่ต้องชำระเงิน"),
+                trailing: Icon(Icons.money),
+                onTap: () => {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CustomerPaymentListPage()))
                   // Navigator.push(
                   //     context,
                   //     MaterialPageRoute(
