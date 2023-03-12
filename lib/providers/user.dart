@@ -179,58 +179,62 @@ class UserData with ChangeNotifier {
         }
 
         if (res['status'].toString() == "1") {
-          return false;
+          final User userresult = User(
+            id: res['data'][0]['user_id'].toString(),
+            username: res['data'][0]['username'].toString(),
+            emp_id: res['data'][0]['emp_id'].toString(),
+            emp2_id: res['data'][0]['emp2_id'].toString(),
+            emp_code: res['data'][0]['emp_code'].toString(),
+            emp_name: res['data'][0]['emp_name'].toString(),
+            emp_photo: res['data'][0]['emp_photo'].toString(),
+            emp_route_id: res['data'][0]['emp_route_id'].toString(),
+            emp_route_name: res['data'][0]['emp_route_name'].toString(),
+            emp_car_id: res['data'][0]['emp_car_id'].toString(),
+            emp_car_name: res['data'][0]['emp_car_name'].toString(),
+            company_id: res['data'][0]['company_id'].toString(),
+            branch_id: res['data'][0]['branch_id'].toString(),
+            route_type: res['data'][0]['route_type'].toString(),
+          );
+
+          data.add(userresult);
+
+          final DateTime now = DateTime.now();
+          final DateTime expiryTime = now.add(Duration(seconds: 160000));
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+          prefs.setString('user_id', res['data'][0]['user_id'].toString());
+          prefs.setString('emp_id', res['data'][0]['emp_id'].toString());
+          prefs.setString('emp2_id', res['data'][0]['emp2_id'].toString());
+          prefs.setString('emp_code', res['data'][0]['emp_code'].toString());
+          prefs.setString('emp_name', res['data'][0]['emp_name'].toString());
+          prefs.setString('emp_photo', res['data'][0]['emp_photo'].toString());
+          prefs.setString(
+              'emp_route_name', res['data'][0]['emp_route_name'].toString());
+          prefs.setString(
+              'emp_route_id', res['data'][0]['emp_route_id'].toString());
+          prefs.setString(
+              'emp_car_id', res['data'][0]['emp_car_id'].toString());
+          prefs.setString(
+              'emp_car_name', res['data'][0]['emp_car_name'].toString());
+          prefs.setString(
+              'company_id', res['data'][0]['company_id'].toString());
+          prefs.setString('branch_id', res['data'][0]['branch_id'].toString());
+          // prefs.setString('route_type', res['data'][0]['route_type'].toString());
+
+          prefs.setString('expiryTime', expiryTime.toIso8601String());
+          prefs.setString('working_mode', 'online');
+
+          routeType = res['data'][0]['route_type'].toString();
+
+          listuserlogin = data;
+          _isauthenuser = true;
+          _isLoading = false;
+          return listuserlogin;
+        } else {
+          _isauthenuser = false;
+          _isLoading = false;
+          return listuserlogin;
         }
-
-        final User userresult = User(
-          id: res['data'][0]['user_id'].toString(),
-          username: res['data'][0]['username'].toString(),
-          emp_id: res['data'][0]['emp_id'].toString(),
-          emp2_id: res['data'][0]['emp2_id'].toString(),
-          emp_code: res['data'][0]['emp_code'].toString(),
-          emp_name: res['data'][0]['emp_name'].toString(),
-          emp_photo: res['data'][0]['emp_photo'].toString(),
-          emp_route_id: res['data'][0]['emp_route_id'].toString(),
-          emp_route_name: res['data'][0]['emp_route_name'].toString(),
-          emp_car_id: res['data'][0]['emp_car_id'].toString(),
-          emp_car_name: res['data'][0]['emp_car_name'].toString(),
-          company_id: res['data'][0]['company_id'].toString(),
-          branch_id: res['data'][0]['branch_id'].toString(),
-          route_type: res['data'][0]['route_type'].toString(),
-        );
-
-        data.add(userresult);
-
-        final DateTime now = DateTime.now();
-        final DateTime expiryTime = now.add(Duration(seconds: 160000));
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-        prefs.setString('user_id', res['data'][0]['user_id'].toString());
-        prefs.setString('emp_id', res['data'][0]['emp_id'].toString());
-        prefs.setString('emp2_id', res['data'][0]['emp2_id'].toString());
-        prefs.setString('emp_code', res['data'][0]['emp_code'].toString());
-        prefs.setString('emp_name', res['data'][0]['emp_name'].toString());
-        prefs.setString('emp_photo', res['data'][0]['emp_photo'].toString());
-        prefs.setString(
-            'emp_route_name', res['data'][0]['emp_route_name'].toString());
-        prefs.setString(
-            'emp_route_id', res['data'][0]['emp_route_id'].toString());
-        prefs.setString('emp_car_id', res['data'][0]['emp_car_id'].toString());
-        prefs.setString(
-            'emp_car_name', res['data'][0]['emp_car_name'].toString());
-        prefs.setString('company_id', res['data'][0]['company_id'].toString());
-        prefs.setString('branch_id', res['data'][0]['branch_id'].toString());
-        // prefs.setString('route_type', res['data'][0]['route_type'].toString());
-
-        prefs.setString('expiryTime', expiryTime.toIso8601String());
-        prefs.setString('working_mode', 'online');
-
-        routeType = res['data'][0]['route_type'].toString();
-
-        listuserlogin = data;
-        _isauthenuser = true;
-        _isLoading = false;
-        return listuserlogin;
       } else {
         print('server not status 200');
       }

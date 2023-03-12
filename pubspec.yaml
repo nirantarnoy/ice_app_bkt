@@ -52,7 +52,7 @@ dependencies:
   barcode_widget: ^2.0.2
   screenshot: ^1.2.1
   image_gallery_saver: ^1.7.1
-  intl: ^0.17.0
+  intl: ^0.18.0
   esc_pos_printer: ^4.1.0
   geolocator: ^9.0.1
   flutter_easyloading: ^3.0.5
@@ -62,7 +62,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_launcher_icons: ^0.10.0
+  flutter_launcher_icons: ^0.11.0
 flutter_icons:
   image_path: "assets/logo_head.png"
   ios: true
