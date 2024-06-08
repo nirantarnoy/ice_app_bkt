@@ -8,17 +8,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ProductData with ChangeNotifier {
   final String url_to_product_list =
       //  "http://192.168.1.120/icesystem/frontend/web/api/product/list";
-      "http://141.98.16.4/icesystem/frontend/web/api/product/list";
+      "http://103.13.28.31/icesystem/frontend/web/api/product/list";
   final String url_to_product_issue_list =
       //  "http://192.168.1.120/icesystem/frontend/web/api/product/list";
-      "http://141.98.16.4/icesystem/frontend/web/api/product/issuelist2";
-  // "http://141.98.16.4/icesystem/frontend/web/api/product/list";
+      "http://103.13.28.31/icesystem/frontend/web/api/product/issuelist2";
+  // "http://103.13.28.31/icesystem/frontend/web/api/product/list";
   final String url_to_product_detail =
       //   "http://203.203.1.224/icesystem/frontend/web/api/product/detail";
-      "http://141.98.16.4/icesystem/frontend/web/api/product/detail";
+      "http://103.13.28.31/icesystem/frontend/web/api/product/detail";
 
   List<Products> _product;
+  List<Products> _productplan;
   List<Products> get listproduct => _product;
+  List<Products> get listproductplan => _productplan;
   bool _isLoading = false;
 
   int _id = 0;
@@ -32,6 +34,11 @@ class ProductData with ChangeNotifier {
   set listproduct(List<Products> val) {
     _product = val;
     notifyListeners();
+  }
+
+  set listproductplan(List<Products> val) {
+    _productplan = val;
+    // notifyListeners();
   }
 
   bool get is_loading {
@@ -55,6 +62,7 @@ class ProductData with ChangeNotifier {
     };
 
     print(filterData);
+
     try {
       http.Response response;
       response = await http.post(
@@ -81,6 +89,13 @@ class ProductData with ChangeNotifier {
           return;
         }
 
+        if (listproduct != null) {
+          if (listproduct.length > 0) {
+            listproduct.clear();
+            print("clear list before add");
+          }
+        }
+
         for (var i = 0; i < res['data'].length; i++) {
           // var product = Products.fromJson(res[i]);
           //print(res['data'][i]['code']);
@@ -101,6 +116,7 @@ class ProductData with ChangeNotifier {
         }
 
         listproduct = data;
+        listproductplan = data;
         _isLoading = false;
         notifyListeners();
         return listproduct;
@@ -142,6 +158,13 @@ class ProductData with ChangeNotifier {
           _isLoading = false;
           notifyListeners();
           return;
+        }
+
+        if (listproduct != null) {
+          if (listproduct.length > 0) {
+            listproduct.clear();
+            print("clear list before add");
+          }
         }
 
         for (var i = 0; i < res['data'].length; i++) {

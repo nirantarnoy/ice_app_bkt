@@ -15,6 +15,7 @@ class User {
   final String company_id;
   final String branch_id;
   final String route_type;
+  final String login_shift;
 
   User({
     @required this.id,
@@ -31,5 +32,6 @@ class User {
     @required this.company_id,
     @required this.branch_id,
     @required this.route_type,
+    @required this.login_shift,
   });
 }

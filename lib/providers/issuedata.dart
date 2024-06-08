@@ -10,16 +10,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class IssueData with ChangeNotifier {
   final String url_to_issue_list_open =
-      "http://141.98.16.4/icesystem/frontend/web/api/journalissue/checkopen";
+      "http://103.13.28.31/icesystem/frontend/web/api/journalissue/checkopen";
 
   final String url_to_issue_list =
-      "http://141.98.16.4/icesystem/frontend/web/api/journalissue/list2";
+      "http://103.13.28.31/icesystem/frontend/web/api/journalissue/list2";
   final String url_to_oldstockroute_list =
-      "http://141.98.16.4/icesystem/frontend/web/api/journalissue/oldstockroute";
+      "http://103.13.28.31/icesystem/frontend/web/api/journalissue/oldstockroute";
   final String url_to_user_confirm =
-      "http://141.98.16.4/icesystem/frontend/web/api/journalissue/issueconfirm2";
+      "http://103.13.28.31/icesystem/frontend/web/api/journalissue/issueconfirm2";
   final String url_to_user_confirm_cancel =
-      "http://141.98.16.4/icesystem/frontend/web/api/journalissue/issueconfirmcancel";
+      "http://103.13.28.31/icesystem/frontend/web/api/journalissue/issueconfirmcancel";
 
   List<Issueitems> _issue;
   List<Issueitems> get listissue => _issue;

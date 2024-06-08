@@ -44,10 +44,10 @@ class _CreateplanPageState extends State<CreateplanPage> {
     // } on TimeoutException catch (_) {
     //   _showdialog('Noity', 'Connection time out!');
     // }
-    Provider.of<ProductData>(context, listen: false)
-        .fetProductissue(selectedValue);
+    // Provider.of<ProductData>(context, listen: false)
+    //     .fetProductissue(selectedValue);
 
-    // Provider.of<ProductData>(context, listen: false).fetProducts(selectedValue);
+    //  Provider.of<ProductData>(context, listen: false).fetProducts(selectedValue);
     isuserconfirm = 1;
     super.initState();
   }
@@ -629,11 +629,11 @@ class _CreateplanPageState extends State<CreateplanPage> {
                 child: isuserconfirm == 1
                     ? Consumer<ProductData>(
                         builder: (context, products, _) =>
-                            _buildproductList(products.listproduct),
+                            _buildproductList(products.listproductplan),
                       )
                     : Center(
                         child: Text(
-                        'ไม่พบรายการ',
+                        'ไม่พบรายการสินค้า',
                         style: TextStyle(fontSize: 16, color: Colors.grey),
                       )),
               ),

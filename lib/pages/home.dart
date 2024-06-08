@@ -28,6 +28,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   bool _showBackToTopButton = false;
   bool _networkisok = false;
   ScrollController _scrollController;
+  String current_shift = '';
 
   Future _orderFuture;
   Future _paymentdailyFuture;
@@ -59,6 +60,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _paymentdailyFuture = _obtainPaymentdailyFuture();
     _orderDiscount = _obtainOrderDiscountFuture();
     _obtainCheckOrderOfflineFuture();
+    getloginshift();
     super.initState();
 
     _scrollController = ScrollController()
@@ -90,6 +92,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     //   final String token = prefs.getString('token');
     final String xxx = prefs.getString('emp_id');
     print('current emp is ${xxx}');
+  }
+
+  Future<void> getloginshift() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    //   final String token = prefs.getString('token');
+    final String loginshift = prefs.getString('login_shift');
+    current_shift = loginshift;
   }
 
   Future<void> _checkinternet() async {
@@ -235,6 +244,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       backgroundColor: Colors.red,
                                       textColor: Colors.white,
                                       fontSize: 16.0);
+
+                                  Navigator.of(context).pop(true);
                                 }
                                 //Navigator.of(context).pop(true);
                                 // Navigator.pushNamed(context, '/home');
@@ -468,6 +479,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     var formatter = NumberFormat('#,##,##0.#');
     DateFormat dateformatter = DateFormat('dd-MM-yyyy');
+
+    // String current_shift = getloginshift().toString();
     return SafeArea(
         child: Scaffold(
       body: SingleChildScrollView(
@@ -511,7 +524,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   Padding(
                                     padding: const EdgeInsets.only(left: 16.0),
                                     child: Text(
-                                      "สรุปรายการขาย",
+                                      "สรุปรายการขาย (${current_shift})",
                                       style: TextStyle(
                                           fontSize: 25, color: Colors.white),
                                     ),

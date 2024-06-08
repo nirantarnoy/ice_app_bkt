@@ -425,11 +425,11 @@ class _CheckinPageState extends State<CheckinPage> {
                       SizedBox(height: 5),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[Text('version 2.6')],
+                        children: <Widget>[Text('version 2.8.3')],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[Text('update 25-02-2023')],
+                        children: <Widget>[Text('update 08-06-2024')],
                       )
                     ],
                   ),

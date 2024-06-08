@@ -7,6 +7,7 @@ import 'package:ice_app_new/models/order_discount.dart';
 import 'package:ice_app_new/models/orders.dart';
 import 'package:ice_app_new/models/order_detail.dart';
 import 'package:ice_app_new/models/orders_new.dart';
+import 'package:ice_app_new/models/seqlist.dart';
 import 'package:ice_app_new/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,37 +15,49 @@ class OrderData with ChangeNotifier {
   final String server_api = "";
   final String url_to_order =
       //   "http://192.168.1.120/icesystem/frontend/web/api/order/list";
-      "http://141.98.16.4/icesystem/frontend/web/api/order/listnew";
+      "http://103.13.28.31/icesystem/frontend/web/api/order/listnew";
   final String url_to_order_detail =
       //   "http://192.168.1.120/icesystem/frontend/web/api/order/listbycustomer";
-      "http://141.98.16.4/icesystem/frontend/web/api/order/listbycustomer";
+      "http://103.13.28.31/icesystem/frontend/web/api/order/listbycustomer";
   final String url_to_order_discount =
       //   "http://192.168.1.120/icesystem/frontend/web/api/order/listbycustomer";
-      "http://141.98.16.4/icesystem/frontend/web/api/order/orderdiscount";
+      "http://103.13.28.31/icesystem/frontend/web/api/order/orderdiscount";
   final String url_to_add_order =
-      "http://141.98.16.4/icesystem/frontend/web/api/order/addorder";
+      "http://103.13.28.31/icesystem/frontend/web/api/order/addorder";
   final String url_to_add_order_new =
-      "http://141.98.16.4/icesystem/frontend/web/api/order/addordernew";
+      "http://103.13.28.31/icesystem/frontend/web/api/order/addordernew";
   // "http://192.168.1.120/icesystem/frontend/web/api/order/addorder";
+  final String url_to_add_order_new_go_api =
+      "http://103.13.28.31:1223/api/order/addorder";
+  // final String url_to_add_order_new_go_api =
+  //     "http://192.168.60.195:1223/api/order/addorder";
   final String url_to_add_order_transfer =
-      "http://141.98.16.4/icesystem/frontend/web/api/order/addordertransfer";
+      "http://103.13.28.31/icesystem/frontend/web/api/order/addordertransfer";
   // "http://192.168.1.120/icesystem/frontend/web/api/order/addorder";
   final String url_to_update_order =
-      "http://141.98.16.4/icesystem/frontend/web/api/order/updateorder";
+      "http://103.13.28.31/icesystem/frontend/web/api/order/updateorder";
   //   "http://192.168.1.120/icesystem/frontend/web/api/order/updateorder";
   final String url_to_delete_order_customer =
       //    "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorder";
-      "http://141.98.16.4/icesystem/frontend/web/api/order/deleteordercustomer";
+      "http://103.13.28.31/icesystem/frontend/web/api/order/deleteordercustomer";
   final String url_to_update_order_detail =
       //   "http://192.168.1.120/icesystem/frontend/web/api/order/updateorderdetail";
-      "http://141.98.16.4/icesystem/frontend/web/api/order/updateorderdetail";
+      "http://103.13.28.31/icesystem/frontend/web/api/order/updateorderdetail";
   final String url_to_delete_order_detail =
-      "http://141.98.16.4/icesystem/frontend/web/api/order/deleteorderline";
+      "http://103.13.28.31/icesystem/frontend/web/api/order/deleteorderline";
   final String url_to_close_order =
-      "http://141.98.16.4/icesystem/frontend/web/api/order/closeorder";
+      "http://103.13.28.31/icesystem/frontend/web/api/order/closeorder";
+  final String url_to_close_order_new =
+      "http://103.13.28.31:1223/api/order/closeorder";
   final String url_to_cancel_order =
-      "http://141.98.16.4/icesystem/frontend/web/api/order/cancelorder";
+      "http://103.13.28.31/icesystem/frontend/web/api/order/cancelorder";
   //  "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorderline";
+  final String url_to_cancel_ordervp19 =
+      "http://103.13.28.31/icesystem/frontend/web/api/order/cancelordervp19";
+  //  "http://192.168.1.120/icesystem/frontend/web/api/order/deleteorderline";
+
+  final String url_to_fetch_last_no =
+      "http://103.13.28.31/icesystem/frontend/web/api/order/getlastorderno";
 
   ///// for common
   bool _isLoading = false;
@@ -62,6 +75,9 @@ class OrderData with ChangeNotifier {
 
   List<OrderDiscount> _order_discount;
   List<OrderDiscount> get listorder_discount => _order_discount;
+
+  List<SequenceList> _seqlist;
+  List<SequenceList> get sequencelist => _seqlist;
 
   int get idOrder => _id;
 
@@ -90,6 +106,11 @@ class OrderData with ChangeNotifier {
 
   set listorder_discount(List<OrderDiscount> val) {
     _order_discount = val;
+    notifyListeners();
+  }
+
+  set sequencelist(List<SequenceList> val) {
+    _seqlist = val;
     notifyListeners();
   }
 
@@ -226,6 +247,74 @@ class OrderData with ChangeNotifier {
     return listorder.firstWhere((order) => order.customer_id == id);
   }
 
+  void clearSequenceList() {
+    if (sequencelist != null) {
+      sequencelist.clear();
+      // notifyListeners();
+    }
+  }
+
+  Future<dynamic> fetchLastNo() async {
+    String _route_id;
+    String _company_id;
+    String _branch_id;
+    String _route_code;
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('user_id') != null) {
+      _route_id = prefs.getString('emp_route_id');
+      _company_id = prefs.getString('company_id');
+      _branch_id = prefs.getString('branch_id');
+      _route_code = prefs.getString('emp_route_name');
+    }
+    final Map<String, dynamic> filterData = {
+      'route_id': _route_id,
+      'company_id': _company_id,
+      'branch_id': _branch_id,
+      'route_code': _route_code,
+    };
+    print('data fetch seq no is ${filterData}');
+    _isLoading = true;
+    notifyListeners();
+    try {
+      http.Response response;
+      response = await http.post(Uri.parse(url_to_fetch_last_no),
+          headers: {'Content-Type': 'application/json'},
+          body: json.encode(filterData));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> res = json.decode(response.body);
+        List<SequenceList> data = [];
+        print('data seq no length is ${res["data"].length}');
+        print('data is ${res["data"]}');
+
+        if (res == null) {
+          _isLoading = false;
+          notifyListeners();
+          return;
+        }
+
+        for (var i = 0; i < res['data'].length; i++) {
+          if (res['data'][i]['last_no'].toString() != 'EMPTY') {
+            final SequenceList orderresult = SequenceList(
+              seq_no: res['data'][i]['last_no'].toString(),
+            );
+            data.add(orderresult);
+            print('Last seq no is ${res['data'][i]['last_no'].toString()}');
+            sequencelist = data;
+          }
+        }
+
+        _isLoading = false;
+        notifyListeners();
+        return sequencelist;
+      }
+    } catch (_) {
+      _isApicon = false;
+      print('order cannot fetch data');
+    }
+  }
+
   Future<dynamic> fetOrders() async {
     String _car_id;
     String _order_date = new DateTime.now().toString();
@@ -252,7 +341,7 @@ class OrderData with ChangeNotifier {
         Map<String, dynamic> res = json.decode(response.body);
         List<OrdersNew> data = [];
         print('data length is ${res["data"].length}');
-        //  print('data is ${res["data"]}');
+        print('data is ${res["data"]}');
 
         if (res == null) {
           _isLoading = false;
@@ -484,6 +573,9 @@ class OrderData with ChangeNotifier {
     String _car_id = "";
     String _company_id = "";
     String _branch_id = "";
+    String _route_code = "";
+    double _order_total_amt = 0;
+    String _login_shift = "0";
 
     bool _iscomplated = false;
 
@@ -497,48 +589,127 @@ class OrderData with ChangeNotifier {
       _car_id = prefs.getString('emp_car_id');
       _company_id = prefs.getString('company_id');
       _branch_id = prefs.getString('branch_id');
+      _route_code = prefs.getString('emp_route_name');
+      _login_shift = prefs.getString('login_shift');
     }
+
+// for php api
+    // final Map<String, dynamic> orderData = {
+    //   'payment_type_id': pay_type,
+    //   'order_date': _order_date,
+    //   'customer_id': customer_id,
+    //   'user_id': _user_id,
+    //   'emp_id': _emp_id,
+    //   'emp2_id': _emp2_id,
+    //   'route_id': _route_id,
+    //   'car_id': _car_id,
+    //   'company_id': _company_id,
+    //   'branch_id': _branch_id,
+    //   'data': jsonx,
+    //   'discount': discount,
+    //   'route_code': _route_code,
+    // };
+
+    // for go api
+
+    // create sequence no
+
+    String seqNo = genSeqNo(_route_code);
+
+    // check is free or not
+
+    listdata.forEach((element) {
+      if (pay_type == "3") {
+        element.sale_price = "0";
+      } else {
+        _order_total_amt = (_order_total_amt +
+            (double.parse(element.qty) * double.parse(element.sale_price)));
+      }
+    });
 
     var jsonx = listdata
         .map((e) => {
-              'product_id': e.product_id,
-              'qty': e.qty,
-              'price': e.sale_price,
-              'price_group_id': e.price_group_id,
+              'product_id': int.parse(e.product_id),
+              'qty': double.parse(e.qty),
+              'price': double.parse(e.sale_price),
+              'price_group_id': int.parse(e.price_group_id),
             })
         .toList();
 
     final Map<String, dynamic> orderData = {
-      'payment_type_id': pay_type,
+      'order_no': seqNo,
+      'payment_type_id': int.parse(pay_type),
       'order_date': _order_date,
-      'customer_id': customer_id,
-      'user_id': _user_id,
-      'emp_id': _emp_id,
-      'emp2_id': _emp2_id,
-      'route_id': _route_id,
-      'car_id': _car_id,
-      'company_id': _company_id,
-      'branch_id': _branch_id,
+      'customer_id': int.parse(customer_id),
+      'user_id': int.parse(_user_id),
+      'emp_id': int.parse(_emp_id),
+      'emp2_id': int.parse(_emp2_id),
+      'route_id': int.parse(_route_id),
+      'car_id': int.parse(_car_id),
+      'company_id': int.parse(_company_id),
+      'branch_id': int.parse(_branch_id),
       'data': jsonx,
-      'discount': discount,
+      'discount': double.parse(discount),
+      'route_code': _route_code,
+      'order_total_amount': _order_total_amt,
+      'login_shift': _login_shift,
     };
     print('data will save order new is ${orderData}');
     try {
       http.Response response;
-      response = await http.post(Uri.parse(url_to_add_order_new),
+      response = await http.post(Uri.parse(url_to_add_order_new_go_api),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(orderData));
 
-      if (response.statusCode == 200) {
-        Map<String, dynamic> res = json.decode(response.body);
-        print('data added order is  ${res["data"]}');
+      if (response.statusCode == 201) {
+        // Map<String, dynamic> res = json.decode(response.body);
+        // print('data added order is  ${res["data"]}');
+        if (sequencelist.length > 0) {
+          // check has data and update value
+          sequencelist.forEach((element) {
+            element.seq_no = seqNo;
+          });
+        } else {
+          // if not add data
+          SequenceList _resSeq = new SequenceList(seq_no: seqNo);
+          sequencelist.add(_resSeq);
+        }
+
+        notifyListeners();
         _iscomplated = true;
+      } else {
+        _iscomplated = false;
       }
     } catch (_) {
       _iscomplated = false;
       // print('cannot create order');
     }
     return _iscomplated;
+  }
+
+  String genSeqNo(String _route_code) {
+    String _year = DateTime.now().year.toString().substring(2, 4);
+    var _month = DateTime.now().month.toString().padLeft(2, "0");
+    var _day = DateTime.now().day.toString().padLeft(2, "0");
+    String runno = 'CO-' + _route_code + '-' + _year + _month + _day + '-';
+
+    String full_runno = "";
+
+    if (sequencelist == null) {
+      runno = runno + '0001';
+      full_runno = runno;
+    } else {
+      String _maxno = sequencelist.last.seq_no; //'CO-VP01-230318-0001';
+      String _num = _maxno.substring(15, 19);
+      String _newnum = (int.parse(_num) + 1).toString();
+      int _loop = 4 - _newnum.length;
+      String _loopnum = '';
+      for (var x = 0; x <= _loop - 1; x++) {
+        _loopnum = _loopnum + "0";
+      }
+      full_runno = runno + _loopnum + _newnum.toString();
+    }
+    return full_runno;
   }
 
   Future<void> addOrderFromtransfer(
@@ -703,30 +874,40 @@ class OrderData with ChangeNotifier {
       _user_id = prefs.getString('user_id');
       _route_id = prefs.getString('emp_route_id');
     }
+    // php api params
+    // final Map<String, dynamic> orderData = {
+    //   'order_id': idOrder,
+    //   'route_id': _route_id,
+    //   'user_id': _user_id,
+    //   'company_id': _company_id,
+    //   'branch_id': _branch_id,
+    //   'return_stock': _return_stock
+    // };
+
+    // go api params
     final Map<String, dynamic> orderData = {
-      'order_id': idOrder,
-      'route_id': _route_id,
-      'user_id': _user_id,
-      'company_id': _company_id,
-      'branch_id': _branch_id,
-      'return_stock': _return_stock
+      'route_id': int.parse(_route_id),
+      'user_id': int.parse(_user_id),
+      'company_id': int.parse(_company_id),
+      'branch_id': int.parse(_branch_id),
+      'return_stock': int.parse(_return_stock)
     };
     print('data will save close order is ${orderData}');
     try {
       http.Response response;
-      response = await http.post(Uri.parse(url_to_close_order),
+      response = await http.post(Uri.parse(url_to_close_order_new),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(orderData));
-
-      if (response.statusCode == 200) {
-        Map<String, dynamic> res = json.decode(response.body);
-        print('data close order is  ${res["data"]}');
+      print("resp status is ${response.statusCode}");
+      if (response.statusCode == 201) {
+        //Map<String, dynamic> res = json.decode(response.body);
+        print('data close order is  OK');
         completed = true;
       }
     } catch (_) {
       print('cannot close order');
     }
-    // print(completed);
+    print(completed);
     return completed;
   }
 
@@ -762,7 +943,7 @@ class OrderData with ChangeNotifier {
     print('data will cancel order is ${orderData}');
     try {
       http.Response response;
-      response = await http.post(Uri.parse(url_to_cancel_order),
+      response = await http.post(Uri.parse(url_to_cancel_ordervp19),
           headers: {'Content-Type': 'application/json'},
           body: json.encode(orderData));
 

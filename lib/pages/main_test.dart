@@ -23,13 +23,14 @@ import 'package:ice_app_new/pages/plan.dart';
 // import 'package:ice_app_new/pages/print_bluetooth.dart';
 import 'package:ice_app_new/pages/qrscan.dart';
 import 'package:ice_app_new/pages/stepper.dart';
+import 'package:ice_app_new/providers/order.dart';
 // import 'package:ice_app_new/pages/take_photo.dart';
 // import 'package:ice_app_new/widgets/journalissue/journalissue_item.dart';
 // import 'package:scoped_model/scoped_model.dart';
 // import 'package:connectivity/connectivity.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flushbar/flushbar_helper.dart';
-import 'package:flushbar/flushbar.dart';
+// import 'package:flushbar/flushbar_helper.dart';
+// import 'package:flushbar/flushbar.dart';
 
 import 'package:provider/provider.dart';
 
@@ -56,6 +57,7 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
   String user_photo = '';
   String user_route_code = '';
   String user_car_name = '';
+  String user_name_2 = '';
 
   bool _networkisok = false;
 
@@ -95,6 +97,7 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
       user_photo = prefs.getString("emp_photo");
       user_route_code = prefs.getString("emp_route_name");
       user_car_name = prefs.getString("emp_car_name");
+      user_name_2 = prefs.getString("emp_name_2");
       //user_email = prefs.getString("");
     });
   }
@@ -132,33 +135,35 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
     });
   }
 
-  void show_Title_n_message_Flushbar(BuildContext context) {
-    Flushbar(
-      title: 'Success',
-      message: 'Form Submitted successfully',
-      icon: Icon(
-        Icons.done_outline,
-        size: 28,
-        color: Colors.green.shade300,
-      ),
-      leftBarIndicatorColor: Colors.blue.shade300,
-      duration: Duration(seconds: 3),
-    )..show(context);
-  }
+  // void show_Title_n_message_Flushbar(BuildContext context) {
+  //   Flushbar(
+  //     title: 'Success',
+  //     message: 'Form Submitted successfully',
+  //     icon: Icon(
+  //       Icons.done_outline,
+  //       size: 28,
+  //       color: Colors.green.shade300,
+  //     ),
+  //     leftBarIndicatorColor: Colors.blue.shade300,
+  //     duration: Duration(seconds: 3),
+  //   )..show(context);
+  // }
 
-  void showInfoFlushbar(BuildContext context) {
-    FlushbarHelper.createInformation(
-      message: 'บันทึกข้อมูลเรียบร้อย',
-      title: 'แจ้งให้ทราบ',
-      duration: const Duration(seconds: 5),
-    ).show(context);
-  }
+  // void showInfoFlushbar(BuildContext context) {
+  //   FlushbarHelper.createInformation(
+  //     message: 'บันทึกข้อมูลเรียบร้อย',
+  //     title: 'แจ้งให้ทราบ',
+  //     duration: const Duration(seconds: 5),
+  //   ).show(context);
+  // }
 
   void _logoutaction(Function logout) async {
     Map<String, dynamic> successInformation;
     successInformation = await logout();
     if (successInformation['success']) {
       print('logout success');
+      await Provider.of<OrderData>(context, listen: false)
+          .clearSequenceList(); // re init sequence be fore logout
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => CheckinPage()));
       // Navigator.of(context).pop();
@@ -363,7 +368,7 @@ class _MainTest extends State<MainTest> with SingleTickerProviderStateMixin {
             children: <Widget>[
               UserAccountsDrawerHeader(
                 accountName: Text(
-                  "${user_name}",
+                  "${user_name},${user_name_2}",
                   style: TextStyle(color: Colors.white),
                 ),
                 accountEmail: Row(

@@ -8,7 +8,7 @@ class Addorder {
   final String product_name;
   final String car_id;
   final String qty;
-  final String sale_price;
+  String sale_price;
   final String price_group_id;
 
   Addorder({

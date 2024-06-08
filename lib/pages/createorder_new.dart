@@ -253,7 +253,6 @@ class _CreateorderNewPageState extends State<CreateorderNewPage> {
                               _saleqtyTextController.text = onhand.toString();
                             } else {
                               // print('can sale');
-
                             }
                           },
                         )),

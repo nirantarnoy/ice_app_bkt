@@ -74,6 +74,15 @@ class _OrderPageState extends State<OrderPage> with TickerProviderStateMixin {
     //   _showdialog('Noity', 'Connection time out!');
     // }
     // Provider.of<OrderData>(context).fetOrders();
+
+    if (Provider.of<OrderData>(context, listen: false).sequencelist == null) {
+      Provider.of<OrderData>(context, listen: false).fetchLastNo();
+      print("not have seq no");
+    } else {
+      String seqno =
+          Provider.of<OrderData>(context, listen: false).sequencelist[0].seq_no;
+      print("has last no already is ${seqno}");
+    }
     super.initState();
   }
 

@@ -9,20 +9,20 @@ import 'package:ice_app_new/models/user.dart';
 class UserData with ChangeNotifier {
   final String url_to_user_list =
       //    "http://192.168.1.120/icesystem/frontend/web/api/customer/list";
-      // "http://141.98.16.4/icesystem/frontend/web/api/customer/list";
-      //  "http://141.98.16.4/icesystem/frontend/web/api/customer/list";
-      "http://141.98.16.4/icesystem/frontend/web/api/customer/list";
-  // "http://141.98.16.4/icesystem/frontend/web/api/customer/list";
+      // "http://103.13.28.31/icesystem/frontend/web/api/customer/list";
+      //  "http://103.13.28.31/icesystem/frontend/web/api/customer/list";
+      "http://103.13.28.31/icesystem/frontend/web/api/customer/list";
+  // "http://103.13.28.31/icesystem/frontend/web/api/customer/list";
   final String url_to_user_login =
       //  "http://192.168.1.120/icesystem/frontend/web/api/authen/login";
-      // "http://141.98.16.4/icesystem/frontend/web/api/authen/login";
-      // "http://141.98.16.4/icesystem/frontend/web/api/authen/login";
-      "http://141.98.16.4/icesystem/frontend/web/api/authen/login";
+      // "http://103.13.28.31/icesystem/frontend/web/api/authen/login";
+      // "http://103.13.28.31/icesystem/frontend/web/api/authen/login";
+      "http://103.13.28.31/icesystem/frontend/web/api/authen/login";
   final String url_to_user_login_qrcode =
       //  "http://192.168.1.120/icesystem/frontend/web/api/authen/login";
-      // "http://141.98.16.4/icesystem/frontend/web/api/authen/login";
-      // "http://141.98.16.4/icesystem/frontend/web/api/authen/login";
-      "http://141.98.16.4/icesystem/frontend/web/api/authen/loginqrcode";
+      // "http://103.13.28.31/icesystem/frontend/web/api/authen/login";
+      // "http://103.13.28.31/icesystem/frontend/web/api/authen/login";
+      "http://103.13.28.31/icesystem/frontend/web/api/authen/loginqrcode";
 
   User _authenticatedUser;
   Timer _authTimer;
@@ -194,6 +194,7 @@ class UserData with ChangeNotifier {
             company_id: res['data'][0]['company_id'].toString(),
             branch_id: res['data'][0]['branch_id'].toString(),
             route_type: res['data'][0]['route_type'].toString(),
+            login_shift: res['data'][0]['login_shift'].toString(),
           );
 
           data.add(userresult);
@@ -207,6 +208,7 @@ class UserData with ChangeNotifier {
           prefs.setString('emp2_id', res['data'][0]['emp2_id'].toString());
           prefs.setString('emp_code', res['data'][0]['emp_code'].toString());
           prefs.setString('emp_name', res['data'][0]['emp_name'].toString());
+          prefs.setString('emp_name_2', res['data'][0]['emp_name2'].toString());
           prefs.setString('emp_photo', res['data'][0]['emp_photo'].toString());
           prefs.setString(
               'emp_route_name', res['data'][0]['emp_route_name'].toString());
@@ -225,6 +227,8 @@ class UserData with ChangeNotifier {
           prefs.setString('working_mode', 'online');
 
           routeType = res['data'][0]['route_type'].toString();
+          prefs.setString(
+              'login_shift', res['data'][0]['login_shift'].toString());
 
           listuserlogin = data;
           _isauthenuser = true;
@@ -323,6 +327,7 @@ class UserData with ChangeNotifier {
     // prefs.remove('userId');
     // prefs.remove('studentId');
     _isLoading = false;
+
     return {'success': true};
   }
 

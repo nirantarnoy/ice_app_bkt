@@ -12,28 +12,28 @@ import 'package:ice_app_new/models/paymentreceive.dart';
 class PaymentreceiveData with ChangeNotifier {
   final String url_to_payment_list =
       //   "http://192.168.1.120/icesystem/frontend/web/api/paymentreceive/list";
-      "http://141.98.16.4/icesystem/frontend/web/api/paymentreceive/list";
-  // "http://141.98.16.4/icesystem/frontend/web/api/product/list";
+      "http://103.13.28.31/icesystem/frontend/web/api/paymentreceive/list";
+  // "http://103.13.28.31/icesystem/frontend/web/api/product/list";
   // final String url_to_add_payment =
   //     //    "http://192.168.1.120/icesystem/frontend/web/api/paymentreceive/addpay";
-  //     "http://141.98.16.4/icesystem/frontend/web/api/paymentreceive/addpay";
+  //     "http://103.13.28.31/icesystem/frontend/web/api/paymentreceive/addpay";
   final String url_to_add_payment2 =
       //    "http://192.168.1.120/icesystem/frontend/web/api/paymentreceive/addpay";
-      "http://141.98.16.4/icesystem/frontend/web/api/paymentreceive/addpay2";
+      "http://103.13.28.31/icesystem/frontend/web/api/paymentreceive/addpay2";
   final String url_to_delete_payment_line =
-      "http://141.98.16.4/icesystem/frontend/web/api/paymentreceive/deletepay";
+      "http://103.13.28.31/icesystem/frontend/web/api/paymentreceive/deletepay";
   //  "http://192.168.1.120/icesystem/frontend/web/api/paymentreceive/deletepay";
   //
   //
   //
   final String url_to_payment_daily =
-      "http://141.98.16.4/icesystem/frontend/web/api/paymentreceive/paymentdaily";
+      "http://103.13.28.31/icesystem/frontend/web/api/paymentreceive/paymentdaily";
   final String url_to_payment_history =
-      "http://141.98.16.4/icesystem/frontend/web/api/paymentreceive/paymenthistory";
+      "http://103.13.28.31/icesystem/frontend/web/api/paymentreceive/paymenthistory";
   final String url_to_payment_history_cancel =
-      "http://141.98.16.4/icesystem/frontend/web/api/paymentreceive/paymentcancel";
+      "http://103.13.28.31/icesystem/frontend/web/api/paymentreceive/paymentcancel";
   final String url_to_customer_payment_list =
-      "http://141.98.16.4/icesystem/frontend/web/api/paymentreceive/paymentcustomerlist";
+      "http://103.13.28.31/icesystem/frontend/web/api/paymentreceive/paymentcustomerlist";
 
   List<Paymentreceive> _paymentreceive;
   List<Paymentreceive> get listpaymentreceive => _paymentreceive;

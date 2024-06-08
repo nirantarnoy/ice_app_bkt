@@ -38,7 +38,6 @@ dependencies:
   carousel_pro: ^1.0.0
   rflutter_alert: ^2.0.4
   connectivity: ^3.0.6
-  flushbar: ^1.5.0
   provider: ^6.0.2
   sqflite: ^2.0.2+1
   numberpicker: ^2.1.1

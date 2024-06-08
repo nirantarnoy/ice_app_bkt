@@ -3,6 +3,9 @@ import 'package:ice_app_new/pages/createorder_new.dart';
 import 'package:ice_app_new/pages/main_test.dart';
 
 class OrdersuccessPage extends StatefulWidget {
+  final String timeused;
+
+  const OrdersuccessPage({Key key, this.timeused}) : super(key: key);
   @override
   _OrdersuccessPageState createState() => _OrdersuccessPageState();
 }
@@ -29,6 +32,13 @@ class _OrdersuccessPageState extends State<OrdersuccessPage> {
                 Text(
                   'บันทึกขายเรียบร้อย',
                   style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "time used is ${widget.timeused} s",
+                  style: TextStyle(color: Colors.grey.shade400),
                 ),
                 SizedBox(
                   height: 20,

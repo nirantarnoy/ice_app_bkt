@@ -316,13 +316,29 @@ class _OrdercheckoutPageState extends State<OrdercheckoutPage> {
         );
       },
     );
+
+    DateTime _start = DateTime.now();
     bool issave = await Provider.of<OrderData>(context, listen: false)
         .addOrderNew(_customer_id, listitems, pay_type, discount);
+    DateTime _end = DateTime.now();
+    Duration diff = _end.difference(_start);
+    int time_used = diff.inSeconds;
     if (issave == true) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => OrdersuccessPage(),
+          builder: (_) => OrdersuccessPage(
+            timeused: time_used.toString(),
+          ),
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => OrdersuccessPage(
+            timeused: time_used.toString(),
+          ),
         ),
       );
     }
