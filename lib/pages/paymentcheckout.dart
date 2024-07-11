@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 //import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ice_app_new/models/enum_paytype.dart';
 import 'package:ice_app_new/models/paymentselected.dart';
@@ -6,6 +10,7 @@ import 'package:ice_app_new/models/paymentselected.dart';
 // import 'package:ice_app_new/pages/payment.dart';
 import 'package:ice_app_new/pages/paymentsuccess.dart';
 import 'package:ice_app_new/providers/paymentreceive.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -23,6 +28,19 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
   Paytype _paytype = Paytype.Cash;
   DateTime _date = DateTime.now();
 
+  Future<XFile> file;
+  String base64Image;
+  List<String> base64Image2 = [];
+  XFile tmpFile;
+
+  File image;
+  List<File> image2 = [];
+
+  XFile pickedImage;
+  ImagePicker _imagePicker = ImagePicker();
+  File _imageUpload;
+  String fileName;
+
   @override
   initState() {
     setState(() {
@@ -30,6 +48,32 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
     });
 
     super.initState();
+  }
+
+  Future chooseImage() async {
+    try {
+      final image = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 80,
+        maxHeight: 400,
+        maxWidth: 400,
+        preferredCameraDevice: CameraDevice.rear,
+      );
+      if (image == null) return;
+      final imageTemp = File(image.path);
+      List<int> imageBytes = imageTemp.readAsBytesSync();
+
+      setState(() async {
+        this.image = imageTemp;
+        // this.image2.add(imageTemp);
+        base64Image = base64Encode(imageBytes);
+        // base64Image2.add(base64Encode(imageBytes));
+      });
+      // print('image is ${base64Image}');
+    } catch (err) {
+      print(err);
+      pickedImage = null;
+    }
   }
 
   Widget _buildList(List<Paymentselected> paymentlist) {
@@ -254,7 +298,8 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
       },
     );
     bool res = await Provider.of<PaymentreceiveData>(context, listen: false)
-        .addPayment2(_formData['pay_type'], _formData['pay_date'], listitems);
+        .addPayment2(_formData['pay_type'], _formData['pay_date'], listitems,
+            base64Image);
 
     if (res == true) {
       Navigator.push(
@@ -381,6 +426,17 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
               Navigator.of(context).pop();
             },
           ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.upload_file,
+                color: base64Image == null ? Colors.white : Colors.red,
+              ),
+              onPressed: () {
+                chooseImage();
+              },
+            ),
+          ],
         ),
         body: Container(
             child: Padding(
@@ -497,6 +553,7 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
                               setState(() {
                                 _paytype = value;
                                 _formData['pay_type'] = '2';
+                                chooseImage();
                               });
                             },
                           ),
@@ -550,29 +607,44 @@ class _PaymentcheckoutPageState extends State<PaymentcheckoutPage> {
                         if (paymentselected.length <= 0) {
                           return false;
                         } else {
-                          return showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text('ยืนยันการทำรายการ'),
-                              content:
-                                  Text('ต้องการบันทึกการชำระเงินใช่หรือไม่'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    //Navigator.of(context).pop(true);
-                                    _submitForm(paymentselected);
-                                  },
-                                  child: Text('ยืนยัน'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop(false);
-                                  },
-                                  child: Text('ไม่'),
-                                ),
-                              ],
-                            ),
-                          );
+                          print("paytype is ${_formData['pay_type']}");
+                          if (_formData['pay_type'] == '2' &&
+                              (this.base64Image == null ||
+                                  this.base64Image == "")) {
+                            Fluttertoast.showToast(
+                                msg: "กรุณาอัพโหลดรูปภาพ",
+                                toastLength: Toast.LENGTH_LONG,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                          } else {
+                            return showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text('ยืนยันการทำรายการ'),
+                                content:
+                                    Text('ต้องการบันทึกการชำระเงินใช่หรือไม่'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      //Navigator.of(context).pop(true);
+                                      _submitForm(paymentselected);
+                                    },
+                                    child: Text('ยืนยัน'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(false);
+                                    },
+                                    child: Text('ไม่'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+
                           // Fluttertoast.showToast(
                           //     msg: "ok",
                           //     toastLength: Toast.LENGTH_LONG,

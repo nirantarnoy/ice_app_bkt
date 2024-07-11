@@ -232,7 +232,7 @@ class PaymentreceiveData with ChangeNotifier {
   // }
 
   Future<bool> addPayment2(String pay_channel_id, String pay_date,
-      List<Paymentselected> paymentlist) async {
+      List<Paymentselected> paymentlist, String image) async {
     String _company_id = "";
     String _branch_id = "";
     String _user_id = "1";
@@ -255,7 +255,8 @@ class PaymentreceiveData with ChangeNotifier {
       'company_id': _company_id,
       'branch_id': _branch_id,
       'user_id': _user_id,
-      'data': jsonx
+      'data': jsonx,
+      'image': image,
     };
 
     print('save payment is $payData');

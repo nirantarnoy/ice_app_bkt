@@ -429,7 +429,7 @@ class _CheckinPageState extends State<CheckinPage> {
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[Text('update 08-06-2024')],
+                        children: <Widget>[Text('update 11-07-2024')],
                       )
                     ],
                   ),

@@ -154,17 +154,18 @@ class ProductData with ChangeNotifier {
           notifyListeners();
           return;
         }
-        if (res['data'] == null) {
-          _isLoading = false;
-          notifyListeners();
-          return;
-        }
 
         if (listproduct != null) {
           if (listproduct.length > 0) {
             listproduct.clear();
             print("clear list before add");
           }
+        }
+
+        if (res['data'] == null) {
+          _isLoading = false;
+          notifyListeners();
+          return;
         }
 
         for (var i = 0; i < res['data'].length; i++) {
